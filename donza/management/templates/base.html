@@ -1,0 +1,45 @@
+{% load static %}
+<html>
+    <head>
+        <title>LDP Donza</title>
+        <link rel="stylesheet"
+            href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet"
+            href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link
+            href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext'
+            rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+        <!-- Header -->
+        <div class="page-header">
+            <div class="container-fluid">
+                <h1><a href="{% url 'management:index' %}">Ledenbeheer</a></h1>
+            </div>
+        </div>
+
+        <!-- Page is filled in here -->
+        <div class="content container">
+            <div class="row">
+                <div class="col-md-8">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="page-footer font-small pt-4">
+            <div class="container-fluid text-center text-md-left">
+                <div class="row">
+                    <hr class="clearfix w-100 d-md-none pb-3">
+                    <div class="mt-md-0 mt-3">
+                        <h5 class="text-uppercase">LDP Donza</h5>
+                        <a href="{% url 'logout' %}">Logout</a> here
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyright text-center py-3">© 2020 Copyright: Tim Van Erum</div>
+        </div>
+    </body>
+</html>
