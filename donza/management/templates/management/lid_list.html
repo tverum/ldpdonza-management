@@ -1,9 +1,27 @@
 {% extends "base.html" %}
-{% load render_table from django_tables2 %}
+
+{% load management_extras %}
 
 {% block title %}
     Ledenlijst
 {% endblock title %}
 {% block content %}
-    {% render_table lid_list %}
+    <table class="table table-hover table-sm table-responsive">
+        <thead>
+            <tr>
+                {% for h in header %}
+                    <th scope="col"><small>{{ h }}</small></th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for lid in lid_list %}
+            <tr class="clickable" data-href="{% url "management:lid" lid.club_id %}">
+                {% for f in fields %}
+                    <td {% if not f == "extra_informatie" %} nowrap {% endif %}>{{ lid|get_attr:f }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock content %}
