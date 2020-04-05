@@ -1,9 +1,12 @@
 {% extends "base.html" %}
+
+{% load bootstrap %}
+
 {% block content %}
-    <h2>Lid</h2>
+    <h2>Bewerk Lid</h2>
     <form method="POST" class="post-form">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form|bootstrap_horizontal }}
         <button type="submit" class="save btn btn-default">Opslaan</button>
     </form>
 {% endblock content %}
