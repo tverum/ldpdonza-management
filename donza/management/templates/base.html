@@ -1,49 +1,54 @@
 {% load static %}
-{% load static %}
-<html>
+<!doctype html>
+<html lang="nl">
     <head>
         <title>LDP Donza</title>
-        <link rel="stylesheet"
-            href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet"
-            href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-        <link
-            href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext'
-            rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="{% static 'management/css/style.css' %}" type='text/css'>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-        <script src="{% static 'management/js/script.js'%}"></script>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+        <!-- Own CSS -->
+        <link rel="stylesheet" href="{% static 'management/css/style.css' %}" type='text/css'>
     </head>
     <body>
         <!-- Header -->
-        <div class="page-header">
-            <div class="container-fluid">
-                <h1><a href="{% url 'management:index' %}">Ledenbeheer</a></h1>
-            </div>
-        </div>
+        <header>
+            {% include "header.html" %}
+        </header>
 
         <!-- Page is filled in here -->
-        <div class="content container-fluid">
-            <div class="row">
-                {% block content %}
-                {% endblock %}
+        <main role="main" class="flex-shrink-0">
+            <div class="content container pt-5">
+                <div class="row">
+                    {% block content %}
+                    {% endblock %}
+                </div>
             </div>
-        </div>
+        </main>
+        
 
         <!-- Footer -->
-        <div class="page-footer font-small pt-4">
-            <div class="container-fluid text-center text-md-left">
-                <div class="row">
-                    <hr class="clearfix w-100 d-md-none pb-3">
-                    <div class="mt-md-0 mt-3">
-                        <h5 class="text-uppercase">LDP Donza</h5>
-                        <a href="{% url 'logout' %}">Logout</a> here
+        <footer class="footer">
+            <div class="container">
+                <div class="row justify-content-between">
+                    <div class="col-4">
+                        <span class="text-muted text-uppercase">LDP Donza</span>
+                    </div>
+                    <div class="col-4">
+                        <span class="float-right"><a href="{% url 'logout' %}">Logout</a></div>
                     </div>
                 </div>
             </div>
             <div class="footer-copyright text-center py-3">© 2020 Copyright: Tim Van Erum</div>
-        </div>
+        </footer>
+
+        <!-- Scripts -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+        <script src="{% static 'management/js/script.js'%}"></script>
     </body>
 
 </html>

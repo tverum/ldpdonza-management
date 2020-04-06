@@ -3,10 +3,12 @@
 {% load bootstrap %}
 
 {% block content %}
-    <h2>Bewerk Lid</h2>
-    <form method="POST" class="post-form">
-        {% csrf_token %}
-        {{ form|bootstrap_horizontal }}
-        <button type="submit" class="save btn btn-default">Opslaan</button>
-    </form>
+    <div class="col">
+        <h2>Bewerk Lid</h2>
+        <form method="POST" class="post-form">
+            {% csrf_token %}
+            {{ form|bootstrap_horizontal }}
+            <button type="submit" class="save btn btn-secondary">Opslaan</button>
+        </form>
+    </div>
 {% endblock content %}

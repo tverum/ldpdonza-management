@@ -3,32 +3,37 @@
 {% load bootstrap %}
 {% block title %}Login to LDP Donza{% endblock %}
 {% block content %}
-<div class="container text-center">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
-        <form class="form-signin" method="post" id="form_login">
-            <img class="img-thumbnail mb-4" src="{% static 'management/images/logo.png' %}">
-            <h1 class="h3 mb-3 font-weight-normal">Gelieve in te loggen</h1>
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="username" class="sr-only">User Name</label>
-                <input type="text" name="username" class="form-control" placeholder="Gebruikersnaam" required autofocus>
-            </div>
-            <div class="form-group">
-                <label for="password" class="sr-only">Password</label>
-                <input type="password" name="password" class="form-control" placeholder="Passwoord" required autofocus>
-            </div>
-            <div class="form-group">
-                <label></label>
-                <div class="submit">
-                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <form class="form-signin" method="post" id="form_login">
+                <img class="img-thumbnail mb-4 rounded-circle" src="{% static 'management/images/logo.png' %}">
+                <h1 class="h3 mb-3 font-weight-normal">Gelieve in te loggen</h1>
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    Combinatie gebruikersnaam en wachtwoord is niet gekend.
+                    {{form.non}}
                 </div>
-            </div>
-        </form>
+                {% endif %}
+                <div class="form-group">
+                    <label for="username" class="sr-only">User Name</label>
+                    <input type="text" name="username" class="form-control" placeholder="Gebruikersnaam" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="sr-only">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Passwoord" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label></label>
+                    <div class="submit">
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4"></div>
     </div>
-    <div class="col-md-4"></div>
 </div>
-
-
-
 {% endblock %}
