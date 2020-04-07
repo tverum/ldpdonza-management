@@ -94,31 +94,28 @@ class Lid(models.Model):
         choices=GESLACHT_CHOICES,
         default=MAN
     )
-    betalend_lid = models.BooleanField(
-        default=False, help_text="Dit moet waar zijn als het lid lidgeld moet betalen")
+    betalend_lid = models.BooleanField(default=False)
     functies = models.ManyToManyField('management.Functie')
     straatnaam = models.CharField(max_length=50)
     huisnummer = models.IntegerField()
     bus = models.CharField(max_length=50, blank=True)
     postcode = models.IntegerField()
     gemeente = models.CharField(max_length=50)
-    geboortedatum = models.DateField()
-    gsmnummer = PhoneNumberField()
+    geboortedatum = models.DateField(null=True)
+    gsmnummer = PhoneNumberField(null=True)
     moeder_id = models.ForeignKey(
         'management.Ouder', related_name='moeder', on_delete=models.SET_NULL, null=True)
     vader_id = models.ForeignKey(
         'management.Ouder', related_name='vader', on_delete=models.SET_NULL, null=True)
-    email = models.EmailField(max_length=254)
-    gescheiden_ouders = models.BooleanField(
-        default=False, help_text="Voor gescheiden ouders worden de mails standaard naar beide ouders gestuurd")
+    email = models.EmailField(max_length=254, null=True)
+    gescheiden_ouders = models.BooleanField(default=False)
     extra_informatie = models.CharField(default="", max_length=500, blank=True)
     # TODO: determine if this is really required
     # rijksregisternummer = models.CharField(max_length=20)
-    rekeningnummer = IBANField()
-    lidnummer_vbl = models.IntegerField(unique=True)
+    rekeningnummer = IBANField(null=True)
+    lidnummer_vbl = models.IntegerField(null=True, unique=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return "{} {} - ({})".format(self.voornaam, self.familienaam, self.lidnummer_vbl)
-
