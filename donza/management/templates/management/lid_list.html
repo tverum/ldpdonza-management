@@ -36,26 +36,71 @@ Ledenlijst
                 </form>
             {% endif %}
         </div>
+    </div>
+    <div class="row mb-3 justify-content-center">
+        <div class="col">
+            <div class="row alert alert-secondary">
+                <p>Voor meer informatie, klik op het het lid</p>
+            </div>
+            <div class="row">
+                {% if is_paginated %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Vorige</a></li>
+                        {% else %}
+                            <li class="disabled"><a class="page-link" href="#">Vorige</a></li>
+                        {% endif %}
+                        {% if page_obj.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Volgende</a></li>
+                        {% else %}
+                            <li class="disabled"><span>Volgende</span></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+            </div>
         </div>
     </div>
-    <table class="table table-hover table-sm table-responsive">
-        <thead>
-            <tr>
-                {% for h in header %}
-                <th scope="col"><small>{{ h }}</small></th>
+    <div class="row justify-content-center">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Naam</th>
+                    <th>Geslacht</th>
+                    <th>Betalend?</th>
+                    <th>Geboortedatum</th>
+                    <th>VBL Lidnummer</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lid in lid_list %}
+                    <tr class="clickable" data-href="{% url 'management:lid' lid.club_id%}">
+                        <td>{{ lid.voornaam }} {{lid.familienaam}}</td>
+                        <td>{{ lid.geslacht }}</td>
+                        <td>{{ lid.betalend_lid }}</td>
+                        <td>{{ lid.geboortedatum }}</td>
+                        <td>{{ lid.lidnummer_vbl }}</td>
+                    </tr>
                 {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for lid in lid_list %}
-            <tr class="clickable" data-href="{% url 'management:lid' lid.club_id%}">
-                {% for f in fields %}
-                <td {% if not f is 'extra_informatie' %} nowrap {% endif %}>{{lid|get_attr:f }}</td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    
+            </tbody>
+        </table>
+        {% if is_paginated %}
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Vorige</a></li>
+                    {% else %}
+                        <li class="disabled"><a class="page-link" href="#">Vorige</a></li>
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Volgende</a></li>
+                    {% else %}
+                        <li class="disabled"><span>Volgende</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
 </div>
 {% endblock content %}

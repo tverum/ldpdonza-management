@@ -1,5 +1,6 @@
 import csv, io, re, datetime
 from django.shortcuts import render, redirect, reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views import generic
 from django.views.generic.edit import FormView, UpdateView
 
@@ -12,25 +13,37 @@ ADRES_PATTERN = r"(\d+)(.*)"
 class IndexView(generic.TemplateView):
     template_name = "management/index.html"
 
+def list_leden(request):
+    lid_list = Lid.objects.all()
+    page = request.GET.get("page", 1)
+
+    paginator = Paginator(lid_list, 20)
+    try:
+        leden = paginator.page(page)
+    except PageNotAnInteger:
+        leden = paginator.page(1)
+    except EmptyPage:
+        leden = paginator.page(paginator.num_pages)
+
+    context = {
+        "leden": leden
+    }
+    return render(request, "management/lid_list.html", context)
 
 class LidListView(generic.ListView):
     model = Lid
     template_name = "management/lid_list.html"
+    paginate_by=20
 
     def get_context_data(self, **kwargs):
-        print(self.object_list)
         context = super().get_context_data(**kwargs)
-        context["header"] = Lid.HEADER_NAMEN
-        context["fields"] = Lid.FIELD_NAMEN
         return context
-    
+
     def post(self, request, *args, **kwargs):
-
         csv_file = request.FILES['file']
-
         if not csv_file.name.endswith(".csv"):
             messages.error(request, "This is not a csv file")
-        
+
         data_set = csv_file.read().decode('UTF-8')
         io_string = io.StringIO(data_set)
 
