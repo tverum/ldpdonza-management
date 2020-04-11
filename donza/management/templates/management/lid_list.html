@@ -54,7 +54,7 @@ Ledenlijst
                         {% if page_obj.has_next %}
                             <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Volgende</a></li>
                         {% else %}
-                            <li class="disabled"><span>Volgende</span></li>
+                            <li class="disabled"><a class="page-link" href="#">Volgende</a></li>
                         {% endif %}
                     </ul>
                 </nav>
@@ -96,7 +96,7 @@ Ledenlijst
                     {% if page_obj.has_next %}
                         <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Volgende</a></li>
                     {% else %}
-                        <li class="disabled"><span>Volgende</span></li>
+                        <li class="disabled"><a class="page-link" href="#">Volgende</a></li>
                     {% endif %}
                 </ul>
             </nav>
