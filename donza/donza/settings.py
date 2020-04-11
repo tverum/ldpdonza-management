@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'localflavor',
     'bootstrapform',
+    'django_seed',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
