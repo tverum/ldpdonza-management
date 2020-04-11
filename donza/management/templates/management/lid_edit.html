@@ -3,12 +3,123 @@
 {% load bootstrap %}
 
 {% block content %}
-    <div class="col">
-        <h2>Bewerk Lid</h2>
-        <form method="POST" class="post-form">
-            {% csrf_token %}
-            {{ form|bootstrap_horizontal }}
-            <button type="submit" class="save btn btn-secondary">Opslaan</button>
-        </form>
+<div class="col">
+    <div class="mb-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger">{{ message }}</li>
+            {% endfor %}
+        {% endif %}
     </div>
+    <div class="mb-3">
+        <h2>Bewerk Lid</h2>
+    </div>
+    <form method="POST" class="post-form">
+        {% csrf_token %}
+        <div class="mb-3">
+            <h4>Algemene informatie</h4>
+        </div>
+        <div class="alert alert-secondary form-row">
+            <div class="col-6">
+                {{form.voornaam|bootstrap}}
+            </div>
+            <div class="col-6">
+                {{form.familienaam|bootstrap}}
+            </div>
+            <div class="col-3">
+                {{form.geslacht|bootstrap}}
+            </div>
+            <div class="col-6">
+                {{form.geboortedatum|bootstrap}}
+            </div>
+            <div class="col-3">
+                {{form.lidnummer_vbl|bootstrap}}
+            </div>
+            <div class="col-3">
+                {{form.sportief_lid|bootstrap}}
+            </div>
+            <div class="col-3">
+                {{form.betalend_lid|bootstrap}}
+            </div>
+            <div class="col-3">
+                {{form.gescheiden_ouders|bootstrap}}
+            </div>
+        </div>
+        <div class="mb-3">
+            <h4>Adres</h4>
+        </div>
+        <div class="alert alert-secondary form-row">
+            <div class="col-6">
+                {{form.straatnaam|bootstrap}}
+            </div>
+            <div class="col-3">
+                {{form.huisnummer|bootstrap}}
+            </div>
+            <div class="col-3">
+                {{form.bus|bootstrap}}
+            </div>
+            <div class="col-3">
+                {{form.postcode|bootstrap}}
+            </div>
+            <div class="col-9">
+                {{form.gemeente|bootstrap}}
+            </div>
+        </div>
+        <div class="mb-3">
+            <h4>Contactgegevens</h4>
+        </div>
+        <div class="alert alert-secondary form-row">
+            <div class="col-4">
+                {{form.gsmnummer|bootstrap}}
+            </div>
+            <div class="col-4">
+                {{form.email|bootstrap}}
+            </div>
+            <div class="col-4">
+                {{form.rekeningnummer|bootstrap}}
+            </div>
+        </div>
+        <div class="alert alert-secondary form-row justify-content-center">
+            <div class="col-6">
+                {{form.moeder|bootstrap}}
+            </div>
+            <div class="col-6">
+                {{form.vader|bootstrap}}
+            </div>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ouderModal">
+                Voeg Toe
+            </button>
+        </div>
+        <div class="mb-3">
+            <h4>Extra informatie</h4>
+        </div>
+        <div class="alert alert-secondary form-row">
+            <div class="col-12">
+                {{form.extra_informatie|bootstrap}}
+            </div>
+        </div>
+        <button type="submit" class="save btn btn-secondary">Opslaan</button>
+    </form>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="ouderModal" tabindex="-1" role="dialog" aria-labelledby="ouderModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="ouderModalLabel">Nieuwe Ouder</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <form action="/management/ouder/new" method="post">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {{ouderform|bootstrap}}
+                    <input type="hidden" name="next" value="{{request.path}}">
+                    <button type="submit" class="btn btn-success">Opslaan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock content %}

@@ -3,32 +3,16 @@ from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views import generic
 from django.views.generic.edit import FormView, UpdateView
+from django.contrib import messages
 
 from .models import Lid, Functie, Ouder
-from .forms import LidForm
+from .forms import LidForm, OuderForm
 
 GSM_PATTERN = "\d{4}\\\d{4}"
 ADRES_PATTERN = r"(\d+)(.*)"
 
 class IndexView(generic.TemplateView):
     template_name = "management/index.html"
-
-def list_leden(request):
-    lid_list = Lid.objects.all()
-    page = request.GET.get("page", 1)
-
-    paginator = Paginator(lid_list, 20)
-    try:
-        leden = paginator.page(page)
-    except PageNotAnInteger:
-        leden = paginator.page(1)
-    except EmptyPage:
-        leden = paginator.page(paginator.num_pages)
-
-    context = {
-        "leden": leden
-    }
-    return render(request, "management/lid_list.html", context)
 
 class LidListView(generic.ListView):
     model = Lid
@@ -43,6 +27,7 @@ class LidListView(generic.ListView):
         csv_file = request.FILES['file']
         if not csv_file.name.endswith(".csv"):
             messages.error(request, "This is not a csv file")
+        # TODO: put this in a separate function
 
         data_set = csv_file.read().decode('UTF-8')
         io_string = io.StringIO(data_set)
@@ -100,6 +85,20 @@ class LidEditView(UpdateView):
     form_class = LidForm
     model = Lid
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["ouderform"] = OuderForm
+        return context
+
     def get_success_url(self):
         return reverse("management:leden")
 
+def create_ouder(request):
+    print(request.POST)
+    ouder_form = OuderForm(request.POST)
+    redirect_path = request.POST.get("next")
+    if ouder_form.is_valid():
+        ouder_form.save()
+    else:
+        messages.add_message(request, messages.ERROR, "Ongeldig formulier voor nieuwe ouder")
+    return redirect(redirect_path)

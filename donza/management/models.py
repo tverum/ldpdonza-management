@@ -1,4 +1,5 @@
 from django.db import models
+from django import forms
 
 from phonenumber_field.modelfields import PhoneNumberField
 from localflavor.generic.models import IBANField
@@ -75,6 +76,7 @@ class Lid(models.Model):
         choices=GESLACHT_CHOICES,
         default=MAN
     )
+    sportief_lid = models.BooleanField(default=False)
     betalend_lid = models.BooleanField(default=False)
     straatnaam = models.CharField(max_length=50)
     huisnummer = models.IntegerField()
@@ -82,15 +84,15 @@ class Lid(models.Model):
     postcode = models.IntegerField()
     gemeente = models.CharField(max_length=50)
     geboortedatum = models.DateField(null=True)
-    gsmnummer = PhoneNumberField(null=True)
-    moeder_id = models.ForeignKey(
-        'management.Ouder', related_name='moeder', on_delete=models.SET_NULL, null=True)
-    vader_id = models.ForeignKey(
-        'management.Ouder', related_name='vader', on_delete=models.SET_NULL, null=True)
-    email = models.EmailField(max_length=254, null=True)
+    gsmnummer = PhoneNumberField(null=True, blank=True)
+    moeder = models.ForeignKey(
+        'management.Ouder', related_name='moeder', on_delete=models.SET_NULL, null=True, blank=True)
+    vader = models.ForeignKey(
+        'management.Ouder', related_name='vader', on_delete=models.SET_NULL, null=True, blank=True)
+    email = models.EmailField(max_length=254, null=True, blank=True)
     gescheiden_ouders = models.BooleanField(default=False)
     extra_informatie = models.CharField(default="", max_length=500, blank=True)
-    rekeningnummer = IBANField(null=True)
+    rekeningnummer = IBANField(null=True, blank=True)
     lidnummer_vbl = models.IntegerField(null=True, unique=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
