@@ -83,7 +83,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-            'read_default_file': '../../config/my.cnf',
+            'read_default_file': 'config/my.cnf',
         },
         'NAME': 'ldpdonza',
     }
