@@ -70,7 +70,11 @@ class LidListView(generic.ListView):
 class LidNewView(FormView):
     template_name = 'management/lid_edit.html'
     form_class = LidForm
-    succes_url = 'management:leden'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["ouderform"] = OuderForm
+        return context
 
     def form_valid(self, form):
         return super().form_valid(form)
