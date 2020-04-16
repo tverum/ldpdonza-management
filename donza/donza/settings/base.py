@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'localflavor',
     'bootstrapform',
     'django_seed',
+    'channels',
+    'reactor',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -73,7 +75,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'donza.wsgi.application'
+# WSGI_APPLICATION = 'donza.wsgi.application'
+
+ASGI_APPLICATION = "donza.asgi.application"
 
 
 # Database

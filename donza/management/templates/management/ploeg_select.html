@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load reactor %}
+{% block title %}
+Ploegsamenstelling
+{% endblock title %}
+{% block content %}
+<div class="col">
+    {% component 'team-selector' eligible_players=eligible_players ploegleden=ploegleden %}
+</div>
+{% endblock %}
