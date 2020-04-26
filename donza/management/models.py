@@ -35,7 +35,7 @@ class Seizoen(models.Model):
     bezig = models.BooleanField()
 
     def __str__(self):
-        return "{} ({}-{})".format(self.naam, self.startdatum.year, self.einddatum.year)
+        return "({}-{})".format(self.startdatum.year, self.einddatum.year)
 
 
 class Ploeg(models.Model):
@@ -55,6 +55,9 @@ class PloegLid(models.Model):
     ploeg_id = models.ForeignKey('management.Ploeg', on_delete=models.DO_NOTHING)
     lid_id = models.ForeignKey('management.Lid', on_delete=models.DO_NOTHING)
     functie = models.ForeignKey('management.Functie', on_delete=models.DO_NOTHING)
+
+    def __str__(self):
+        return "Ploeg: {} -- Lid: {} ({})".format(self.ploeg_id, self.lid_id, self.functie)
 
 
 class Lid(models.Model):
@@ -98,4 +101,4 @@ class Lid(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{} {} - ({})".format(self.voornaam, self.familienaam, self.lidnummer_vbl)
+        return "{} {}".format(self.voornaam, self.familienaam, self.lidnummer_vbl)

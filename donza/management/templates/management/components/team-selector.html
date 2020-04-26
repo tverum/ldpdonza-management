@@ -3,7 +3,7 @@
 <div is="team-selector" class="container" id="{{this.id}}" state="{{this.serialize|tojson}}">
     <div class="row">
         <div class="col-6">
-            <h1>Beschikbare spelers</h1>
+            <h1>Beschikbaar</h1>
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -36,5 +36,8 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    <div class="row justify-content-center">
+        <button class="btn btn-block btn-success" @click="indienen">Indienen</button>
     </div>
 </div>
