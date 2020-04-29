@@ -1,23 +1,32 @@
-import csv, io, re, datetime
-from django.shortcuts import render, redirect, reverse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import csv
+import datetime
+import io
+import re
+
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.http import HttpResponse
+from django.shortcuts import redirect, render, reverse
 from django.views import generic
 from django.views.generic.edit import FormView, UpdateView
-from django.contrib import messages
 
-from .models import Lid, Functie, Ouder
-from .forms import LidForm, OuderForm
+from .components import TeamSelector
+from .forms import LidForm, OuderForm, PloegForm
+from .models import Functie, Lid, Ouder, Ploeg, PloegLid
 
 GSM_PATTERN = "\d{4}\\\d{4}"
 ADRES_PATTERN = r"(\d+)(.*)"
 
+
 class IndexView(generic.TemplateView):
     template_name = "management/index.html"
+
 
 class LidListView(generic.ListView):
     model = Lid
     template_name = "management/lid_list.html"
-    paginate_by=20
+    paginate_by = 20
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -34,14 +43,15 @@ class LidListView(generic.ListView):
 
         next(io_string)
         for index, row in enumerate(csv.reader(io_string, delimiter=';', quotechar="|")):
-            geboortedatum = datetime.datetime.strptime(row[6], '%d/%m/%Y').strftime('%Y-%m-%d') if row[6] else None
+            geboortedatum = datetime.datetime.strptime(
+                row[6], '%d/%m/%Y').strftime('%Y-%m-%d') if row[6] else None
             gescheiden = True if row[13] else False
             gsmnummer = row[7] if bool(re.match(GSM_PATTERN, row[7])) else None
             straatnaam = " ".join(row[3].split()[:-1])
             adres_match = re.match(ADRES_PATTERN, row[3].split()[-1])
             huisnummer = adres_match[1]
             bus = adres_match[2] if adres_match else ""
-            _, created  = Lid.objects.update_or_create(
+            _, created = Lid.objects.update_or_create(
                 voornaam=row[0],
                 familienaam=row[1],
                 straatnaam=straatnaam,
@@ -64,7 +74,6 @@ class LidListView(generic.ListView):
         self.object_list = self.model.objects.all()
         context = self.get_context_data(**kwargs)
         return render(request, template, context)
-
 
 
 class LidNewView(FormView):
@@ -97,12 +106,76 @@ class LidEditView(UpdateView):
     def get_success_url(self):
         return reverse("management:leden")
 
+
+class PloegListView(generic.ListView):
+    model = Ploeg
+    template_name = "management/ploeg_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["ploegForm"] = PloegForm
+        return context
+
+
+class PloegSelectView(generic.DetailView):
+    model = Ploeg
+    template_name = 'management/ploeg_select.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ploeg = context['object']
+        ploegleden = self.get_ploegleden(ploeg)
+        context['eligible_players'] = self.get_eligible_players(ploeg, ploegleden)
+        print(ploegleden)
+        context['ploegleden'] = ploegleden
+        context['ploeg_id'] = ploeg.ploeg_id
+        return context
+
+    @staticmethod
+    def get_eligible_players(ploeg, ploegleden):
+        max_jaar = datetime.date.today().year-ploeg.leeftijdscategorie
+        queryset = Lid.objects.all() \
+            .filter(sportief_lid=True) \
+            .exclude(geboortedatum=None) \
+            .filter(geboortedatum__year__gte=max_jaar)
+        ep = [lid.club_id for lid in queryset if not lid.club_id in ploegleden]
+        print("Eligible_players = {}".format(ep))
+        return ep
+
+    @staticmethod
+    def get_ploegleden(ploeg):
+        leden_ids = [ploeglid.lid_id.club_id for ploeglid in PloegLid.objects.filter(
+            ploeg_id=ploeg.ploeg_id)]
+        return leden_ids
+
+
+class PloegView(generic.DetailView):
+    model = Ploeg
+    template_name = 'management/ploeg_view.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ploeg = context['object']
+        ploegleden = [Lid.objects.get(pk=ploeglid.lid_id.club_id) for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id)]
+        context['ploegleden'] = ploegleden
+        return context
+
 def create_ouder(request):
-    print(request.POST)
     ouder_form = OuderForm(request.POST)
     redirect_path = request.POST.get("next")
     if ouder_form.is_valid():
         ouder_form.save()
     else:
-        messages.add_message(request, messages.ERROR, "Ongeldig formulier voor nieuwe ouder")
+        messages.add_message(request, messages.ERROR,
+                             "Ongeldig formulier voor nieuwe ouder")
+    return redirect(redirect_path)
+
+def create_ploeg(request):
+    ploeg_form = PloegForm(request.POST)
+    redirect_path = request.POST.get("next")
+    if ploeg_form.is_valid():
+        ploeg_form.save()
+    else:
+        messages.add_message(request, messages.ERROR,
+                             "Ongeldig formulier voor nieuwe ploeg")
     return redirect(redirect_path)
