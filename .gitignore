@@ -122,3 +122,6 @@ dmypy.json
 
 # Exclude config files
 /donza/config/**
+
+# Exclude MAC-specific files
+**.DS_Store

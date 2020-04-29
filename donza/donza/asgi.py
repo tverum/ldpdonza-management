@@ -9,9 +9,10 @@ https://docs.djangoproject.com/en/3.0/howto/deployment/asgi/
 
 import os
 
-from django.core.asgi import get_asgi_application
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'donza.settings.dev')
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'donza.settings')
+import django
+django.setup()
 
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
