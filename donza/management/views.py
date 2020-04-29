@@ -79,6 +79,7 @@ class LidListView(generic.ListView):
 class LidNewView(FormView):
     template_name = 'management/lid_edit.html'
     form_class = LidForm
+    model = Lid
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -86,6 +87,7 @@ class LidNewView(FormView):
         return context
 
     def form_valid(self, form):
+        form.save()
         return super().form_valid(form)
 
     def get_success_url(self):
