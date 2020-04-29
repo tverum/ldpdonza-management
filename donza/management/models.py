@@ -42,7 +42,7 @@ class Ploeg(models.Model):
 
     ploeg_id = models.AutoField(primary_key=True)
     seizoen = models.ForeignKey(
-        'management.Seizoen', on_delete=models.DO_NOTHING)
+        'management.Seizoen', on_delete=models.CASCADE)
     naam = models.CharField(max_length=20)
     korte_naam = models.CharField(max_length=5)
     leeftijdscategorie = models.IntegerField()
@@ -52,9 +52,9 @@ class Ploeg(models.Model):
 
 class PloegLid(models.Model):
 
-    ploeg_id = models.ForeignKey('management.Ploeg', on_delete=models.DO_NOTHING)
-    lid_id = models.ForeignKey('management.Lid', on_delete=models.DO_NOTHING)
-    functie = models.ForeignKey('management.Functie', on_delete=models.DO_NOTHING)
+    ploeg_id = models.ForeignKey('management.Ploeg', on_delete=models.CASCADE)
+    lid_id = models.ForeignKey('management.Lid', on_delete=models.CASCADE)
+    functie = models.ForeignKey('management.Functie', on_delete=models.CASCADE)
 
     def __str__(self):
         return "Ploeg: {} -- Lid: {} ({})".format(self.ploeg_id, self.lid_id, self.functie)

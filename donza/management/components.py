@@ -11,20 +11,15 @@ class TeamSelector(Component):
     ploegleden = set({})
     ploeg_id = 0
 
-    # This method is called after __init__ passing the initial state of the
-    # Component, this method is responsible taking the state of the component
-    # and construct or reconstruct the component. Sometimes loading things from
-    # the database like tests of this project.
+    # deze methode is verantwoordelijk om gegeven een state, de initialisatie te doen
     def mount(self, eligible_players, ploegleden, ploeg_id, **kwargs):
         if eligible_players:
-            self.eligible_players.update([Lid.objects.get(pk=lid_id) for lid_id in eligible_players])
+            self.eligible_players = set([Lid.objects.get(pk=lid_id) for lid_id in eligible_players])
         if ploegleden:
-            self.ploegleden.update([Lid.objects.get(pk=lid_id) for lid_id in ploegleden])
+            self.ploegleden = set([Lid.objects.get(pk=lid_id) for lid_id in ploegleden])
         self.ploeg_id = ploeg_id
 
-    # This method is used to capture the essence of the state of a component
-    # state, so it can be reconstructed at any given time on the future.
-    # By passing what ever is returned by this method to `mount`.
+    # deze methode is verantwoordelijk om de essentie van de state te capturen
     def serialize(self):
         ep = [player.club_id for player in self.eligible_players]
         pl = [player.club_id for player in self.ploegleden]
@@ -45,8 +40,12 @@ class TeamSelector(Component):
 
     # Receive a submit event
     def receive_indienen(self, **kwargs):
-        functie = Functie.objects.get(functie="Speler")
         ploeg = Ploeg.objects.get(ploeg_id=self.ploeg_id)
+        # clear the previous team
+        PloegLid.objects.filter(ploeg_id=ploeg).delete()
+
+        # insert team members for each player
+        functie = Functie.objects.get(functie="Speler")
         insert_ploegleden = [PloegLid(lid_id=lid, ploeg_id=ploeg, functie=functie) for lid in self.ploegleden]
         for pl in insert_ploegleden:
             pl.save()

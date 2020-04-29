@@ -12,7 +12,7 @@ from django.views import generic
 from django.views.generic.edit import FormView, UpdateView
 
 from .components import TeamSelector
-from .forms import LidForm, OuderForm
+from .forms import LidForm, OuderForm, PloegForm
 from .models import Functie, Lid, Ouder, Ploeg, PloegLid
 
 GSM_PATTERN = "\d{4}\\\d{4}"
@@ -80,6 +80,11 @@ class LidNewView(FormView):
     template_name = 'management/lid_edit.html'
     form_class = LidForm
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["ouderform"] = OuderForm
+        return context
+
     def form_valid(self, form):
         return super().form_valid(form)
 
@@ -108,6 +113,7 @@ class PloegListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["ploegForm"] = PloegForm
         return context
 
 
@@ -118,17 +124,22 @@ class PloegSelectView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         ploeg = context['object']
-        context['eligible_players'] = self.get_eligible_players(ploeg)
-        context['ploegleden'] = self.get_ploegleden(ploeg)
+        ploegleden = self.get_ploegleden(ploeg)
+        context['eligible_players'] = self.get_eligible_players(ploeg, ploegleden)
+        print(ploegleden)
+        context['ploegleden'] = ploegleden
         context['ploeg_id'] = ploeg.ploeg_id
         return context
 
     @staticmethod
-    def get_eligible_players(ploeg):
+    def get_eligible_players(ploeg, ploegleden):
         max_jaar = datetime.date.today().year-ploeg.leeftijdscategorie
-        queryset = Lid.objects.all().filter(sportief_lid=True).exclude(
-            geboortedatum=None).filter(geboortedatum__year__gte=max_jaar)
-        ep = [lid.club_id for lid in queryset]
+        queryset = Lid.objects.all() \
+            .filter(sportief_lid=True) \
+            .exclude(geboortedatum=None) \
+            .filter(geboortedatum__year__gte=max_jaar)
+        ep = [lid.club_id for lid in queryset if not lid.club_id in ploegleden]
+        print("Eligible_players = {}".format(ep))
         return ep
 
     @staticmethod
@@ -138,8 +149,18 @@ class PloegSelectView(generic.DetailView):
         return leden_ids
 
 
+class PloegView(generic.DetailView):
+    model = Ploeg
+    template_name = 'management/ploeg_view.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ploeg = context['object']
+        ploegleden = [Lid.objects.get(pk=ploeglid.lid_id.club_id) for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id)]
+        context['ploegleden'] = ploegleden
+        return context
+
 def create_ouder(request):
-    print(request.POST)
     ouder_form = OuderForm(request.POST)
     redirect_path = request.POST.get("next")
     if ouder_form.is_valid():
@@ -147,4 +168,14 @@ def create_ouder(request):
     else:
         messages.add_message(request, messages.ERROR,
                              "Ongeldig formulier voor nieuwe ouder")
+    return redirect(redirect_path)
+
+def create_ploeg(request):
+    ploeg_form = PloegForm(request.POST)
+    redirect_path = request.POST.get("next")
+    if ploeg_form.is_valid():
+        ploeg_form.save()
+    else:
+        messages.add_message(request, messages.ERROR,
+                             "Ongeldig formulier voor nieuwe ploeg")
     return redirect(redirect_path)

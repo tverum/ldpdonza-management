@@ -1,11 +1,14 @@
 {% extends "base.html" %}
+
+{% load bootstrap %}
+
 {% block title %}
-Ledenlijst
+Ploeglijst
 {% endblock title %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <table class="table table-hover">
+<div class="col-6">
+    <table class="table table-hover text-center">
         <thead>
             <tr>
                 <th>Ploeg</th>
@@ -13,11 +16,40 @@ Ledenlijst
         </thead>
         <tbody>
             {% for ploeg in ploeg_list %}
-                <tr class="clickable" data-href="{% url 'management:ploeg' ploeg.ploeg_id %}">
+                <tr>
                     <td>{{ploeg.naam}}</td>
+                    <td><a class="btn btn-secondary" href="{% url 'management:ploeg_view' ploeg.ploeg_id %}">Bekijk</a></td>
+                    <td><a class="btn btn-warning" href="{% url 'management:ploeg_select' ploeg.ploeg_id %}">Edit</a></td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+</div>
+<div class="col-6">
+    <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#ploegModal">
+        Nieuwe Ploeg
+    </button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="ploegModal" tabindex="-1" role="dialog" aria-labelledby="ploegModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="ploegModalLabel">Nieuwe Ploeg</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <form action="/management/ploegen/new" method="post">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {{ploegForm|bootstrap}}
+                    <input type="hidden" name="next" value="{{request.path}}">
+                    <button type="submit" class="btn btn-success">Opslaan</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}

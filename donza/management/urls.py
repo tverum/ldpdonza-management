@@ -10,5 +10,7 @@ urlpatterns = [
     path("leden/nieuw", views.LidNewView.as_view(), name='nieuw_lid'),
     path("ouder/new", views.create_ouder, name="new_ouder"),
     path("ploegen/", views.PloegListView.as_view(), name='ploegen'),
-    path("ploegen/<int:pk>", views.PloegSelectView.as_view(), name='ploeg'),
+    path("ploegen/new", views.create_ploeg, name="new_ploeg"),
+    path("ploegen/<int:pk>/select", views.PloegSelectView.as_view(), name='ploeg_select'),
+    path("ploegen/<int:pk>/view", views.PloegView.as_view(), name='ploeg_view'),
 ]
