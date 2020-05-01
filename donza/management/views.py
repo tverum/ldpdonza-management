@@ -128,7 +128,6 @@ class PloegSelectView(generic.DetailView):
         ploeg = context['object']
         ploegleden = self.get_ploegleden(ploeg)
         context['eligible_players'] = self.get_eligible_players(ploeg, ploegleden)
-        print(ploegleden)
         context['ploegleden'] = ploegleden
         context['ploeg_id'] = ploeg.ploeg_id
         return context
@@ -141,7 +140,6 @@ class PloegSelectView(generic.DetailView):
             .exclude(geboortedatum=None) \
             .filter(geboortedatum__year__gte=max_jaar)
         ep = [lid.club_id for lid in queryset if not lid.club_id in ploegleden]
-        print("Eligible_players = {}".format(ep))
         return ep
 
     @staticmethod
