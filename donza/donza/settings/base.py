@@ -75,7 +75,6 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'donza.wsgi.application'
 
 ASGI_APPLICATION = "donza.asgi.application"
 

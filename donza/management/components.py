@@ -2,6 +2,7 @@ from reactor import Component
 
 from .models import Functie, Lid, Ouder, Ploeg, PloegLid
 
+
 class TeamSelector(Component):
 
     # reference the template from above
@@ -10,6 +11,7 @@ class TeamSelector(Component):
     eligible_players = set({})
     ploegleden = set({})
     ploeg_id = 0
+    message = []
 
     # deze methode is verantwoordelijk om gegeven een state, de initialisatie te doen
     def mount(self, eligible_players, ploegleden, ploeg_id, **kwargs):
@@ -44,8 +46,13 @@ class TeamSelector(Component):
         # clear the previous team
         PloegLid.objects.filter(ploeg_id=ploeg).delete()
 
-        # insert team members for each player
-        functie = Functie.objects.get(functie="Speler")
+        try:
+            # insert team members for each player
+            functie = Functie.objects.get(functie="Speler")
+        except Functie.DoesNotExist:
+            self.message =  'Functie "Speler" is nog niet gedefinieerd.'
+            return
+
         insert_ploegleden = [PloegLid(lid_id=lid, ploeg_id=ploeg, functie=functie) for lid in self.ploegleden]
         for pl in insert_ploegleden:
             pl.save()

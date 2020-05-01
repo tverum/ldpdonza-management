@@ -2,6 +2,13 @@
 {% load management_extras %}
 <div is="team-selector" class="container" id="{{this.id}}" state="{{this.serialize|tojson}}">
     <div class="row">
+        {% if this.message %}
+        <div class="alert alert-warning">
+            {{this.message}}
+        </div>
+        {% endif %}
+    </div>
+    <div class="row">
         <div class="col-6">
             <h1>Beschikbaar</h1>
             <table class="table table-hover">

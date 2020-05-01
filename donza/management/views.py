@@ -127,7 +127,8 @@ class PloegSelectView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         ploeg = context['object']
         ploegleden = self.get_ploegleden(ploeg)
-        context['eligible_players'] = self.get_eligible_players(ploeg, ploegleden)
+        context['eligible_players'] = self.get_eligible_players(
+            ploeg, ploegleden)
         context['ploegleden'] = ploegleden
         context['ploeg_id'] = ploeg.ploeg_id
         return context
@@ -156,9 +157,11 @@ class PloegView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         ploeg = context['object']
-        ploegleden = [Lid.objects.get(pk=ploeglid.lid_id.club_id) for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id)]
+        ploegleden = [Lid.objects.get(pk=ploeglid.lid_id.club_id)
+                      for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id)]
         context['ploegleden'] = ploegleden
         return context
+
 
 def create_ouder(request):
     ouder_form = OuderForm(request.POST)
@@ -169,6 +172,7 @@ def create_ouder(request):
         messages.add_message(request, messages.ERROR,
                              "Ongeldig formulier voor nieuwe ouder")
     return redirect(redirect_path)
+
 
 def create_ploeg(request):
     ploeg_form = PloegForm(request.POST)
