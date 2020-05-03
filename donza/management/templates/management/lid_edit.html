@@ -40,17 +40,15 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-3">
-                    {{form.sportief_lid|bootstrap}}
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col">
+                            {{form.sportief_lid|bootstrap}}
+                            {{form.betalend_lid|bootstrap}}
+                            {{form.gescheiden_ouders|bootstrap}}
+                        </div>
+                    </div>
                 </div>
-                <div class="col-3">
-                    {{form.betalend_lid|bootstrap}}
-                </div>
-                <div class="col-3">
-                    {{form.gescheiden_ouders|bootstrap}}
-                </div>
-            </div>
-            <div class="row">
                 <div class="col-6">
                     {{form.familieleden|bootstrap}}
                 </div>
@@ -68,14 +66,8 @@
             <h4>Adres</h4>
         </div>
         <div class="alert alert-secondary form-row">
-            <div class="col-6">
-                {{form.straatnaam|bootstrap}}
-            </div>
-            <div class="col-3">
-                {{form.huisnummer|bootstrap}}
-            </div>
-            <div class="col-3">
-                {{form.bus|bootstrap}}
+            <div class="col-12">
+                {{form.straatnaam_en_huisnummer|bootstrap}}
             </div>
             <div class="col-3">
                 {{form.postcode|bootstrap}}

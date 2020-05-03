@@ -27,13 +27,15 @@
             <div class="content container pt-5">
                 <!-- messages shown before the remainder -->
                 <div class="row">
-                    {% if messages %}
-                    <ul class="messages">
+                    <div class="col">
+                        {% if messages %}
                         {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        <div class="alert alert-warning">
+                            <strong>{{message|safe}}</strong>
+                        </div>
                         {% endfor %}
-                    </ul>
                     {% endif %}
+                    </div>
                 </div>
                 <!-- this is the main content -->
                 <div class="row">

@@ -12,26 +12,18 @@ Ledenlijst
             </div>
         </div>
         <div class="col">
-            {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-warning">
-                    <strong>{{message|safe}}</strong>
-                </div>
-                {% endfor %}
-                {% else %}
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="input-group">
-                        <div class="custom-file">
-                            <input type="file" name="file" class="custom-file-input" id="inputGroupFile01">
-                            <label class="custom-file-label" for="inputGroupFile01">Kies CSV-bestand</label>
-                        </div>
-                        <div class="input-group-append">
-                            <button class="btn btn-secondary" type="submit">Upload</button>
-                        </div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" name="file" class="custom-file-input" id="inputGroupFile01">
+                        <label class="custom-file-label" for="inputGroupFile01">Kies CSV-bestand</label>
                     </div>
-                </form>
-            {% endif %}
+                    <div class="input-group-append">
+                        <button class="btn btn-secondary" type="submit">Upload</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
     <div class="row mb-3 justify-content-center">

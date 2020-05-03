@@ -43,33 +43,31 @@ class LidListView(generic.ListView):
 
         next(io_string)
         for index, row in enumerate(csv.reader(io_string, delimiter=';', quotechar="|")):
-            geboortedatum = datetime.datetime.strptime(
-                row[6], '%d/%m/%Y').strftime('%Y-%m-%d') if row[6] else None
-            gescheiden = True if row[13] else False
-            gsmnummer = row[7] if bool(re.match(GSM_PATTERN, row[7])) else None
-            straatnaam = " ".join(row[3].split()[:-1])
-            adres_match = re.match(ADRES_PATTERN, row[3].split()[-1])
-            huisnummer = adres_match[1]
-            bus = adres_match[2] if adres_match else ""
-            _, created = Lid.objects.update_or_create(
-                voornaam=row[0],
-                familienaam=row[1],
-                straatnaam=straatnaam,
-                huisnummer=huisnummer,
-                bus=bus,
-                postcode=row[4],
-                gemeente=row[5],
-                geboortedatum=geboortedatum,
-                gsmnummer=row[7],
-                email=row[10],
-                gescheiden_ouders=gescheiden,
-                extra_informatie=row[14],
-                rekeningnummer=row[15],
-                betalend_lid=True,
-                moeder_id=Ouder.objects.get(pk=1),
-                vader_id=Ouder.objects.get(pk=2),
-                lidnummer_vbl=index,
-            )
+            try:
+                geboortedatum = datetime.datetime.strptime(
+                    row[6], '%d/%m/%Y').strftime('%Y-%m-%d') if row[6] else None
+                gescheiden = True if row[13] else False
+                gsmnummer = row[7] if bool(re.match(GSM_PATTERN, row[7])) else None
+
+                _, created = Lid.objects.update_or_create(
+                    voornaam=row[0],
+                    familienaam=row[1],
+                    straatnaam_en_huisnummer=row[3],
+                    postcode=row[4],
+                    gemeente=row[5],
+                    geboortedatum=geboortedatum,
+                    gsmnummer=row[7],
+                    email=row[10],
+                    gescheiden_ouders=gescheiden,
+                    extra_informatie=row[14],
+                    rekeningnummer=row[15],
+                    betalend_lid=True,
+                    moeder_id=Ouder.objects.get(pk=1).ouder_id,
+                    vader_id=Ouder.objects.get(pk=2).ouder_id,
+                )
+            except:
+                if row[0] and row[1]:
+                    messages.error(request, "Probleem bij het processen van rij {}: {} {}".format(index + 1, row[0], row[1]))
         template = "management/lid_list.html"
         self.object_list = self.model.objects.all()
         context = self.get_context_data(**kwargs)

@@ -1,22 +1,36 @@
 from django import forms
+from itertools import chain
 
 from .models import Lid, Ouder, Ploeg
 
 class LidForm(forms.ModelForm):
 
+    # Define the queryset for the familieleden selector
     def __init__(self, *args, **kwargs):
         super(LidForm, self).__init__(*args, **kwargs)
         if 'instance' in kwargs:
             lid = kwargs['instance']
-            self.fields['familieleden'].queryset = Lid.objects.exclude(club_id=lid.club_id)
+            queryset = Lid.objects.extra(
+                select={'sort': 'SELECT CASE WHEN familienaam = %s THEN 0 ELSE 1 END'}, 
+                select_params=(lid.familienaam,)
+            ).exclude(club_id=lid.club_id).order_by('sort')
+            self.fields['familieleden'].queryset = queryset
 
     class Meta:
         model = Lid
         exclude = ["updated_at", "created_at"]
         help_texts = {
-            'geboortedatum': 'Formaat: YYYY-MM-DD',
             'functies': 'Houd de SHIFT-toets ingedrukt om meerdere functies te selecteren',
-            'familieleden': 'Houd de SHIFT-toets ingedrukt om meerdere functies te selecteren',
+            'familieleden': 'Houd de SHIFT-toets ingedrukt om meerdere familieleden te selecteren',
+        }
+        widgets = {
+            'voornaam': forms.TextInput(attrs={'placeholder': 'Voornaam'}),
+            'familienaam': forms.TextInput(attrs={'placeholder': 'Familienaam'}),
+            'geboortedatum': forms.DateInput(attrs={'placeholder': 'YYYY-MM-DD'}),
+            'straatnaam_en_huisnummer': forms.TextInput(attrs={'placeholder': 'e.g. Teststraat 123 Bus A'}),
+            'postcode': forms.NumberInput(attrs={'placeholder': 'e.g. 9800'}),
+            'gemeente': forms.TextInput(attrs={'placeholder': 'Deinze'}),
+            'extra_informatie': forms.Textarea(attrs={'placeholder': 'Hier komt eventuele extra informatie'}),
         }
 
 class OuderForm(forms.ModelForm):
