@@ -19,30 +19,49 @@
         <div class="mb-3">
             <h4>Algemene informatie</h4>
         </div>
+        <div class="alert alert-secondary">
+            <div class="row">
+                <div class="col-6">
+                    {{form.voornaam|bootstrap}}
+                </div>
+                <div class="col-6">
+                    {{form.familienaam|bootstrap}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    {{form.geslacht|bootstrap}}
+                </div>
+                <div class="col-6">
+                    {{form.geboortedatum|bootstrap}}
+                </div>
+                <div class="col-3">
+                    {{form.lidnummer_vbl|bootstrap}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    {{form.sportief_lid|bootstrap}}
+                </div>
+                <div class="col-3">
+                    {{form.betalend_lid|bootstrap}}
+                </div>
+                <div class="col-3">
+                    {{form.gescheiden_ouders|bootstrap}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    {{form.familieleden|bootstrap}}
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <h4>Functies</h4>
+        </div>
         <div class="alert alert-secondary form-row">
             <div class="col-6">
-                {{form.voornaam|bootstrap}}
-            </div>
-            <div class="col-6">
-                {{form.familienaam|bootstrap}}
-            </div>
-            <div class="col-3">
-                {{form.geslacht|bootstrap}}
-            </div>
-            <div class="col-6">
-                {{form.geboortedatum|bootstrap}}
-            </div>
-            <div class="col-3">
-                {{form.lidnummer_vbl|bootstrap}}
-            </div>
-            <div class="col-3">
-                {{form.sportief_lid|bootstrap}}
-            </div>
-            <div class="col-3">
-                {{form.betalend_lid|bootstrap}}
-            </div>
-            <div class="col-3">
-                {{form.gescheiden_ouders|bootstrap}}
+                {{form.functies|bootstrap}}
             </div>
         </div>
         <div class="mb-3">

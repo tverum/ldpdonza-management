@@ -52,12 +52,12 @@ class Ploeg(models.Model):
 
 class PloegLid(models.Model):
 
-    ploeg_id = models.ForeignKey('management.Ploeg', on_delete=models.CASCADE)
-    lid_id = models.ForeignKey('management.Lid', on_delete=models.CASCADE)
+    ploeg = models.ForeignKey('management.Ploeg', on_delete=models.CASCADE)
+    lid = models.ForeignKey('management.Lid', on_delete=models.CASCADE)
     functie = models.ForeignKey('management.Functie', on_delete=models.CASCADE)
 
     def __str__(self):
-        return "Ploeg: {} -- Lid: {} ({})".format(self.ploeg_id, self.lid_id, self.functie)
+        return "Ploeg: {} -- Lid: {} ({})".format(self.ploeg, self.lid, self.functie)
 
 
 class Lid(models.Model):
@@ -96,9 +96,11 @@ class Lid(models.Model):
     gescheiden_ouders = models.BooleanField(default=False)
     extra_informatie = models.CharField(default="", max_length=500, blank=True)
     rekeningnummer = IBANField(null=True, blank=True)
-    lidnummer_vbl = models.IntegerField(null=True, unique=True)
+    lidnummer_vbl = models.IntegerField(null=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    functies = models.ManyToManyField(Functie)
+    familieleden = models.ManyToManyField("self")
 
     def __str__(self):
         return "{} {}".format(self.voornaam, self.familienaam, self.lidnummer_vbl)
