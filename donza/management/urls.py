@@ -13,4 +13,6 @@ urlpatterns = [
     path("ploegen/new", views.create_ploeg, name="new_ploeg"),
     path("ploegen/<int:pk>/select", views.PloegSelectView.as_view(), name='ploeg_select'),
     path("ploegen/<int:pk>/view", views.PloegView.as_view(), name='ploeg_view'),
+    path("betalingen", views.LidBetalingenView.as_view(), name="lidbetalingen"),
+    path("betalingen/genereer", views.genereer, name="betalingen_genereer"),
 ]

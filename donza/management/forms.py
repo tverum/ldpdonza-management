@@ -3,6 +3,7 @@ from itertools import chain
 
 from .models import Lid, Ouder, Ploeg
 
+
 class LidForm(forms.ModelForm):
 
     # Define the queryset for the familieleden selector
@@ -29,14 +30,16 @@ class LidForm(forms.ModelForm):
             'geboortedatum': forms.DateInput(attrs={'placeholder': 'YYYY-MM-DD'}),
             'straatnaam_en_huisnummer': forms.TextInput(attrs={'placeholder': 'e.g. Teststraat 123 Bus A'}),
             'postcode': forms.NumberInput(attrs={'placeholder': 'e.g. 9800'}),
-            'gemeente': forms.TextInput(attrs={'placeholder': 'Deinze'}),
+            'gemeente': forms.TextInput(attrs={'placeholder': 'e.g. Deinze'}),
             'extra_informatie': forms.Textarea(attrs={'placeholder': 'Hier komt eventuele extra informatie'}),
         }
+
 
 class OuderForm(forms.ModelForm):
     class Meta:
         model = Ouder
         exclude = ["ouder_id"]
+
 
 class PloegForm(forms.ModelForm):
     class Meta:

@@ -125,3 +125,6 @@ dmypy.json
 
 # Exclude MAC-specific files
 **.DS_Store
+
+# Exclude PyCharm
+.idea/**

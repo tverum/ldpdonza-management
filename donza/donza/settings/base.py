@@ -33,8 +33,11 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'management.apps.ManagementConfig',
     'phonenumber_field',
+    'django_filters',
+    'django_tables2',
     'localflavor',
     'bootstrapform',
+    'bootstrap4',
     'django_seed',
     'channels',
     'reactor',
@@ -56,6 +59,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'global_login_required.GlobalLoginRequiredMiddleware',
 ]
+
 
 ROOT_URLCONF = 'donza.urls'
 

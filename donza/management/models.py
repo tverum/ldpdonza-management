@@ -4,11 +4,20 @@ from django import forms
 from phonenumber_field.modelfields import PhoneNumberField
 from localflavor.generic.models import IBANField
 
+MAN = "m"
+VROUW = "v"
+ANDER = "x"
+GESLACHT_CHOICES = [
+    (MAN, "Man"),
+    (VROUW, "Vrouw"),
+    (ANDER, "Verkies niet te zeggen"),
+]
+
 
 class Functie(models.Model):
 
     functie_id = models.AutoField(primary_key=True)
-    functie = models.CharField(max_length=20)
+    functie = models.CharField(max_length=50)
 
     def __str__(self):
         return self.functie
@@ -46,9 +55,13 @@ class Ploeg(models.Model):
     naam = models.CharField(max_length=20)
     korte_naam = models.CharField(max_length=5)
     leeftijdscategorie = models.IntegerField()
-
+    geslacht = models.CharField(
+        max_length=2,
+        choices=GESLACHT_CHOICES,
+        default=MAN
+    )
     def __str__(self):
-        return "{} ({}-{})".format(self.naam, self.seizoen.startdatum.year, self.seizoen.einddatum.year)
+        return "({}) {} ({}-{})".format(self.geslacht, self.naam, self.seizoen.startdatum.year, self.seizoen.einddatum.year)
 
 class PloegLid(models.Model):
 
@@ -61,15 +74,6 @@ class PloegLid(models.Model):
 
 
 class Lid(models.Model):
-
-    MAN = "m"
-    VROUW = "v"
-    ANDER = "x"
-    GESLACHT_CHOICES = [
-        (MAN, "Man"),
-        (VROUW, "Vrouw"),
-        (ANDER, "Verkies niet te zeggen"),
-    ]
 
     club_id = models.AutoField(primary_key=True)
     voornaam = models.CharField(max_length=20)
@@ -94,11 +98,11 @@ class Lid(models.Model):
     gescheiden_ouders = models.BooleanField(default=False)
     extra_informatie = models.CharField(default="", max_length=500, blank=True)
     rekeningnummer = IBANField(null=True, blank=True)
-    lidnummer_vbl = models.IntegerField(null=True)
+    lidnummer_vbl = models.IntegerField(null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    functies = models.ManyToManyField(Functie)
-    familieleden = models.ManyToManyField("self")
+    functies = models.ManyToManyField(Functie, blank=True)
+    familieleden = models.ManyToManyField("self", blank=True)
 
     def __str__(self):
         return "{} {}".format(self.voornaam, self.familienaam, self.lidnummer_vbl)

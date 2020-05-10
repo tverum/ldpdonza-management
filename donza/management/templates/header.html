@@ -1,23 +1,26 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg py-3 navbar-dark" style="background-color: #000000;">
-    <a class="navbar-brand" href="{% url 'management:index'%}">
-      <img width=200 src="{% static "management/images/logo_header.png" %}" alt="My image"/>
-    </a>
+<nav class="navbar navbar-expand-lg py-3 navbar-dark" style="background-color:#000000;">
+  <a class="navbar-brand" href="{% url 'management:index'%}">
+    <img width=200 src="{% static 'management/images/logo_header.png' %}" alt="Logo LDP Donza" />
+  </a>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'management:index' %}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'management:leden' %}">Leden</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'management:ploegen' %}">Ploegen</a>
-        </li>
-        <li class="nav-item">
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'management:index' %}">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'management:leden' %}">Leden</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'management:ploegen' %}">Ploegen</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'management:lidbetalingen' %}" onclick="return do_heavy_lifting();">Betalingen</a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link disabled" href="#">Functies</a>
-        </li>
-      </ul>
-    </div>
+      </li>
+    </ul>
+  </div>
 </nav>

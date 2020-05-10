@@ -1,18 +1,17 @@
 {% extends "base.html" %}
 
 {% load bootstrap %}
+{% load static %}
 
 {% block content %}
 <div class="col">
     <div class="mb-3">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-danger">{{ message }}</li>
-            {% endfor %}
-        {% endif %}
-    </div>
-    <div class="mb-3">
-        <h2>Bewerk Lid</h2>
+        <h2>
+            Bewerk Lid
+            {% if form.voornaam.value and form.familienaam.value %}
+                ({{form.voornaam.value}} {{form.familienaam.value}})
+            {% endif %}
+        </h2>
     </div>
     <form method="POST" class="post-form">
         {% csrf_token %}
@@ -122,11 +121,12 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             </div>
-            <form action="/management/ouder/new" method="post">
+            <form action="/management/ouder/new" method="post" id="ouder-form">
                 <div class="modal-body">
                     {% csrf_token %}
                     {{ouderform|bootstrap}}
                     <input type="hidden" name="next" value="{{request.path}}">
+                    <input type="hidden" name="lid_form" value="{{form.fields}}">
                     <button type="submit" class="btn btn-success">Opslaan</button>
                 </div>
             </form>
