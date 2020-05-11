@@ -7,10 +7,16 @@ from localflavor.generic.models import IBANField
 MAN = "m"
 VROUW = "v"
 ANDER = "x"
-GESLACHT_CHOICES = [
+GEMENGD = "g"
+LID_GESLACHT_CHOICES = [
     (MAN, "Man"),
     (VROUW, "Vrouw"),
     (ANDER, "Verkies niet te zeggen"),
+]
+PLOEG_GESLACHT_CHOICES = [
+    (MAN, "Man"),
+    (VROUW, "Vrouw"),
+    (GEMENGD, "Gemengd"),
 ]
 
 
@@ -59,7 +65,7 @@ class Ploeg(models.Model):
     uitzonderings_geboortejaar = models.IntegerField()
     geslacht = models.CharField(
         max_length=2,
-        choices=GESLACHT_CHOICES,
+        choices=PLOEG_GESLACHT_CHOICES,
         default=MAN
     )
 
@@ -83,7 +89,7 @@ class Lid(models.Model):
     familienaam = models.CharField(max_length=50)
     geslacht = models.CharField(
         max_length=1,
-        choices=GESLACHT_CHOICES,
+        choices=LID_GESLACHT_CHOICES,
         default=MAN
     )
     sportief_lid = models.BooleanField(default=False)

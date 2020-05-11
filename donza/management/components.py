@@ -2,7 +2,7 @@ import datetime
 
 from reactor import Component
 
-from .models import Functie, Lid, Ouder, Ploeg, PloegLid
+from .models import Functie, Lid, Ouder, Ploeg, PloegLid, MAN, VROUW
 
 
 class TeamSelector(Component):
@@ -40,30 +40,51 @@ class TeamSelector(Component):
             self.display_players = [lid for lid in self.eligible_players if lid.geboortedatum.year < max_jaar]
 
     def get_eligible_players(self, ploeg_id):
-        ploeg = Ploeg.objects.get(ploeg_id)
+        ploeg = Ploeg.objects.get(pk=ploeg_id)
         max_jaar = ploeg.uitzonderings_geboortejaar
         min_jaar = ploeg.min_geboortejaar
-        if min_jaar:
-            self.eligible_players = Lid.objects.all() \
-                .filter(
-                    sportief_lid=True,
-                    geslacht=ploeg.geslacht
-                ) \
-                .exclude(geboortedatum=None) \
-                .filter(
-                    geboortedatum__year__lte=max_jaar,
-                    geboortedatum__year__gte=min_jaar
-                )
+        if ploeg.geslacht in [MAN, VROUW]:
+            if min_jaar:
+                self.eligible_players = Lid.objects.all() \
+                    .filter(
+                        sportief_lid=True,
+                        geslacht=ploeg.geslacht
+                    ) \
+                    .exclude(geboortedatum=None) \
+                    .filter(
+                        geboortedatum__year__lte=max_jaar,
+                        geboortedatum__year__gte=min_jaar
+                    )
+            else:
+                self.eligible_players = Lid.objects.all() \
+                    .filter(
+                        sportief_lid=True,
+                        geslacht=ploeg.geslacht
+                    ) \
+                    .exclude(geboortedatum=None) \
+                    .filter(
+                        geboortedatum__year__lte=max_jaar
+                    )
         else:
-            self.eligible_players = Lid.objects.all() \
-                .filter(
-                    sportief_lid=True,
-                    geslacht=ploeg.geslacht
-                ) \
-                .exclude(geboortedatum=None) \
-                .filter(
-                    geboortedatum__year__lte=max_jaar
-                )
+            if min_jaar:
+                self.eligible_players = Lid.objects.all() \
+                    .filter(
+                        sportief_lid=True
+                    ) \
+                    .exclude(geboortedatum=None) \
+                    .filter(
+                        geboortedatum__year__lte=max_jaar,
+                        geboortedatum__year__gte=min_jaar
+                    )
+            else:
+                self.eligible_players = Lid.objects.all() \
+                    .filter(
+                        sportief_lid=True
+                    ) \
+                    .exclude(geboortedatum=None) \
+                    .filter(
+                        geboortedatum__year__lte=max_jaar
+                    )
 
     # deze methode is verantwoordelijk om de essentie van de state te capturen
     def serialize(self):
