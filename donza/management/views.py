@@ -116,18 +116,29 @@ class PloegSelectView(generic.DetailView):
 
     @staticmethod
     def get_eligible_players(ploeg, ploegleden):
-        max_jaar = datetime.date.today().year-ploeg.leeftijdscategorie
-        min_jaar = datetime.date.today().year-ploeg.leeftijdscategorie + 4
-        queryset = Lid.objects.all() \
-            .filter(
-                sportief_lid=True,
-                geslacht=ploeg.geslacht
-            ) \
-            .exclude(geboortedatum=None) \
-            .filter(
-                geboortedatum__year__gte=max_jaar,
-                geboortedatum__year__lte=min_jaar
-            )
+        max_jaar = ploeg.uitzonderings_geboortejaar
+        min_jaar = ploeg.min_geboortejaar
+        if min_jaar:
+            queryset = Lid.objects.all() \
+                .filter(
+                    sportief_lid=True,
+                    geslacht=ploeg.geslacht
+                ) \
+                .exclude(geboortedatum=None) \
+                .filter(
+                    geboortedatum__year__lte=max_jaar,
+                    geboortedatum__year__gte=min_jaar
+                )
+        else:
+            queryset = Lid.objects.all() \
+                .filter(
+                    sportief_lid=True,
+                    geslacht=ploeg.geslacht
+                ) \
+                .exclude(geboortedatum=None) \
+                .filter(
+                    geboortedatum__year__lte=max_jaar
+                )
         ep = [lid.club_id for lid in queryset if not lid.club_id in ploegleden]
         return ep
 

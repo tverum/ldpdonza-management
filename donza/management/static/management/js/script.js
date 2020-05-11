@@ -10,19 +10,20 @@ $(document).ready(function () {
         //replace the "Choose a file" label
         $(this).next('.custom-file-label').html(fileName);
     });
-});
 
-function do_heavy_lifting() {
-    $.ajax({
-        type: 'GET',
-        url: '/management/betalingen',
-        beforeSend: function() {
-            $('#loading').show();
-            $('#loadingModal').modal('show');
-        },
-        success: function(data) {
-            window.location.href = "/management/betalingen";
-        },
-        cache: false
-    });
-}
+    $('#getBetalingen').on('click', function () {
+            $.ajax({
+                type: 'GET',
+                url: '/management/betalingen',
+                beforeSend: function() {
+                    $('#loading').show();
+                    $('#loadingModal').modal('show');
+                },
+                success: function(data) {
+                    window.location.href = '/management/betalingen';
+                },
+                cache: true
+            });
+        }
+    )
+});

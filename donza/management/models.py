@@ -54,12 +54,15 @@ class Ploeg(models.Model):
         'management.Seizoen', on_delete=models.CASCADE)
     naam = models.CharField(max_length=20)
     korte_naam = models.CharField(max_length=5)
-    leeftijdscategorie = models.IntegerField()
+    min_geboortejaar = models.IntegerField(null=True, blank=True)
+    max_geboortejaar = models.IntegerField()
+    uitzonderings_geboortejaar = models.IntegerField()
     geslacht = models.CharField(
         max_length=2,
         choices=GESLACHT_CHOICES,
         default=MAN
     )
+
     def __str__(self):
         return "({}) {} ({}-{})".format(self.geslacht, self.naam, self.seizoen.startdatum.year, self.seizoen.einddatum.year)
 

@@ -45,3 +45,8 @@ class PloegForm(forms.ModelForm):
     class Meta:
         model = Ploeg
         exclude = ["ploeg_id"]
+        help_texts = {
+            'min_geboortejaar': 'Dit is (onder normale omstandigheden) het oudst dat een speler mag zijn voor deze leeftijdscategorie, laat leeg voor Seniorenploegen',
+            'max_geboortejaar': 'Dit is (onder normale omstandigheden) het jongst dat een speler mag zijn voor deze leeftijdscategorie',
+            'uitzonderings_geboortejaar': 'Dit is het jongst dat een speler kan zijn, uitzonderingsgevallen waarbij een speler een jaar hoger speelt meegerekend. Als er geen uitzonderingen mogelijk zijn, vul hetzelfde in als "min jaar"'
+        }
