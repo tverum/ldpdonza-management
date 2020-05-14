@@ -10,12 +10,12 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'management:index' %}">Home</a>
       </li>
-      {% if perms.lid.can_view %}
+      {% if perms.management.view_lid %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'management:leden' %}">Leden</a>
         </li>
       {% endif %}
-      {% if perms.ploeg.can_view %}
+      {% if perms.management.view_ploeg %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'management:ploegen' %}">Ploegen</a>
         </li>
@@ -30,15 +30,13 @@
             {% endfor %}
           </div>
         </li>
-
       {% endif %}
-
-      {% if perms.betaling.can_view %}
+      {% if perms.management.view_betaling %}
         <li class="nav-item">
           <a class="nav-link disabled" href="#">Betalingen</a>
         </li>
       {% endif %}
-      {% if perms.functie.can_view %}
+      {% if perms.management.view_functie %}
         <li class="nav-item">
           <a class="nav-link disabled" href="#">Functies</a>
         </li>
