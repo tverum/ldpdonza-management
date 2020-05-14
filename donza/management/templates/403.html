@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+	<div class="col">
+		<div class="row justify-content-center mb-4">
+			<img class="img-thumbnail border-0" src="{% static 'management/images/gandalf.jpg' %}">
+		</div>
+		<div class="row justify-content-center mb-3">
+			<h1>403: NIET TOEGELATEN</h1>
+		</div>
+		<div class="row">
+			<div class="alert alert-secondary" role="alert">
+				<h4 class="alert-heading">Geen toegang</h4>
+				{% if exception %}
+                    <p>{{exception}}</p>
+                {% endif %}
+			</div>
+		</div>
+	</div>
+{% endblock content %}

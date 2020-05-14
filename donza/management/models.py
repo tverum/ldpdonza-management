@@ -1,8 +1,6 @@
 from django.db import models
-from django import forms
-
-from phonenumber_field.modelfields import PhoneNumberField
 from localflavor.generic.models import IBANField
+from phonenumber_field.modelfields import PhoneNumberField
 
 MAN = "m"
 VROUW = "v"
@@ -21,7 +19,6 @@ PLOEG_GESLACHT_CHOICES = [
 
 
 class Functie(models.Model):
-
     functie_id = models.AutoField(primary_key=True)
     functie = models.CharField(max_length=50)
 
@@ -30,7 +27,6 @@ class Functie(models.Model):
 
 
 class Ouder(models.Model):
-
     ouder_id = models.AutoField(primary_key=True)
     gsmnummer = PhoneNumberField()
     voornaam = models.CharField(max_length=20)
@@ -42,7 +38,6 @@ class Ouder(models.Model):
 
 
 class Seizoen(models.Model):
-
     seizoen_id = models.AutoField(primary_key=True)
     naam = models.CharField(max_length=20)
     startdatum = models.DateField()
@@ -54,7 +49,6 @@ class Seizoen(models.Model):
 
 
 class Ploeg(models.Model):
-
     ploeg_id = models.AutoField(primary_key=True)
     seizoen = models.ForeignKey(
         'management.Seizoen', on_delete=models.CASCADE)
@@ -68,12 +62,16 @@ class Ploeg(models.Model):
         choices=PLOEG_GESLACHT_CHOICES,
         default=MAN
     )
+    lidgeldklasse = models.ForeignKey(
+        'management.LidgeldKlasse', default=None, null=True, blank=False, on_delete=models.SET_NULL
+    )
 
     def __str__(self):
-        return "({}) {} ({}-{})".format(self.geslacht, self.naam, self.seizoen.startdatum.year, self.seizoen.einddatum.year)
+        return "({}) {} ({}-{})".format(self.geslacht, self.naam, self.seizoen.startdatum.year,
+                                        self.seizoen.einddatum.year)
+
 
 class PloegLid(models.Model):
-
     ploeg = models.ForeignKey('management.Ploeg', on_delete=models.CASCADE)
     lid = models.ForeignKey('management.Lid', on_delete=models.CASCADE)
     functie = models.ForeignKey('management.Functie', on_delete=models.CASCADE)
@@ -83,7 +81,6 @@ class PloegLid(models.Model):
 
 
 class Lid(models.Model):
-
     club_id = models.AutoField(primary_key=True)
     voornaam = models.CharField(max_length=20)
     familienaam = models.CharField(max_length=50)
@@ -115,3 +112,19 @@ class Lid(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.voornaam, self.familienaam, self.lidnummer_vbl)
+
+
+class Betaling(models.Model):
+    origineel_bedrag = models.DecimalField(max_digits=4, decimal_places=2)
+    afgelost_bedrag = models.DecimalField(max_digits=4, decimal_places=2)
+    lid = models.ForeignKey('management.Lid', on_delete=models.CASCADE)
+    seizoen = models.ForeignKey('management.Seizoen', on_delete=models.CASCADE)
+    mails_verstuurd = models.CharField(max_length=500)
+    gestructureerde_mededeling = models.CharField(max_length=20)  # TODO: determine the exact size
+    type = models.CharField(max_length=20)
+    status = models.CharField(max_length=20)
+
+
+class LidgeldKlasse(models.Model):
+    naam = models.CharField(max_length=20)
+    lidgeld = models.IntegerField()

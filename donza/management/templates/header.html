@@ -1,4 +1,5 @@
 {% load static %}
+{% load guardian_tags %}
 <nav class="navbar navbar-expand-lg py-3 navbar-dark" style="background-color:#000000;">
   <a class="navbar-brand" href="{% url 'management:index'%}">
     <img width=200 src="{% static 'management/images/logo_header.png' %}" alt="Logo LDP Donza" />
@@ -9,18 +10,39 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'management:index' %}">Home</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'management:leden' %}">Leden</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'management:ploegen' %}">Ploegen</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'management:lidbetalingen' %}" id="getBetalingen">Betalingen</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Functies</a>
-      </li>
+      {% if perms.lid.can_view %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'management:leden' %}">Leden</a>
+        </li>
+      {% endif %}
+      {% if perms.ploeg.can_view %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'management:ploegen' %}">Ploegen</a>
+        </li>
+      {% elif authorized_ploegen %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Ploegen
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            {% for ploeg in authorized_ploegen %}
+              <a class="dropdown-item" href="{% url 'management:ploeg_view'  ploeg.ploeg_id%}">{{ploeg.naam}}</a>
+            {% endfor %}
+          </div>
+        </li>
+
+      {% endif %}
+
+      {% if perms.betaling.can_view %}
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">Betalingen</a>
+        </li>
+      {% endif %}
+      {% if perms.functie.can_view %}
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">Functies</a>
+        </li>
+      {% endif %}
     </ul>
   </div>
 </nav>

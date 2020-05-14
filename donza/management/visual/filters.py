@@ -1,8 +1,8 @@
 from django_filters import FilterSet
-from .models import Lid
+from ..models import Lid
 
 
-class LidBetalingFilter(FilterSet):
+class LidFilter(FilterSet):
     class Meta:
         model = Lid
         fields = ['voornaam', 'familienaam', 'geboortedatum']

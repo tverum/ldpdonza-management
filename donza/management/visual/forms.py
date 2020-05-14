@@ -1,7 +1,7 @@
 from django import forms
 from itertools import chain
 
-from .models import Lid, Ouder, Ploeg
+from ..models import Lid, Ouder, Ploeg
 
 
 class LidForm(forms.ModelForm):

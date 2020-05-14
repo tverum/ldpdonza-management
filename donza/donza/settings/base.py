@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_seed',
     'channels',
     'reactor',
+    'guardian',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -74,6 +75,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'management.context_processors.authorized_ploegen',
             ],
         },
     },
@@ -115,6 +117,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Authentication backend
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # default
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

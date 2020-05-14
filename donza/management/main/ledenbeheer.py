@@ -11,7 +11,7 @@ import re
 
 from django.contrib import messages
 
-from .models import Ouder, Lid, Functie, MAN, VROUW, ANDER
+from ..models import Ouder, Lid, Functie, MAN, VROUW, ANDER
 
 GSM_PATTERN = r"0(\d{3})/(\d+)"
 ADRES_PATTERN = r"(\d+)(.*)"

@@ -2,7 +2,7 @@ import datetime
 
 from reactor import Component
 
-from .models import Functie, Lid, Ouder, Ploeg, PloegLid, MAN, VROUW
+from donza.management.models import Functie, Lid, Ouder, Ploeg, PloegLid, MAN, VROUW
 
 
 class TeamSelector(Component):
