@@ -139,7 +139,7 @@ def genereer_betaling(lid):
     :param lid: het lid waarvoor de betaling gegenereerd moet worden
     :return: None
     """
-    seizoen = Seizoen.objects.get(naam="2019-2020")
+    seizoen = Seizoen.objects.get(naam="2020-2021")
     origineel_bedrag = bereken_bedrag(lid, seizoen)
     if origineel_bedrag == 0:
         return
