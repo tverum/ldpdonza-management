@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $(document.body).on("click", "tr[data-href]", function () {
+    $(document.body).on("click", "td[data-href]", function () {
         window.location.href = this.dataset.href;
     });
 

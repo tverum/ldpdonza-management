@@ -12,8 +12,9 @@ from .models import Lid, Ploeg, PloegLid
 from .visual.tables import LidTable
 from .visual.filters import LidFilter
 from .main.ledenbeheer import import_from_csv
+from .main.betalingen import genereer_betalingen
 # Deze lijn moet er in blijven staan om de TeamSelector te kunnen laden
-
+from .visual.components import TeamSelector
 
 class IndexView(generic.TemplateView):
     template_name = "management/index.html"
@@ -181,27 +182,18 @@ class LidTableView(PermissionRequiredMixin, SingleTableMixin, FilterView):
         template = "management/lid_list.html"
         if not csv_file.name.endswith(".csv"):
             messages.error(request, "This is not a csv file")
-
-            # retrieve the object list to display
-            self.object_list = self.model.objects.all()
-            context = self.get_context_data(**kwargs)
-            return render(request, template, context)
+            redirect(reverse("management:leden"), permanent=True)
 
         import_from_csv(csv_file, request)
-
-        # after importing the csv, refresh the object list
-        self.object_list = self.model.objects.all()
-        context = self.get_context_data(**kwargs)
-
-        return render(request, template, context)
+        return redirect(reverse("management:leden"), permanent=True)
 
 
 def genereer(request):
     if request.method == "POST":
         pks = request.POST.getlist("selection")
-        selected_objects = Lid.objects.filter(pk__in=pks)
-        # do something with selected_objects
-
+        geselecteerde_leden = Lid.objects.filter(pk__in=pks)
+        # genereer de betalingen voor de geselecteerde leden
+        genereer_betalingen(geselecteerde_leden)
 
         return redirect(reverse("management:leden"), permanent=True)
     else:

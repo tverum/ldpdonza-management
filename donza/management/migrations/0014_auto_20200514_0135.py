@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('origineel_bedrag', models.DecimalField(decimal_places=2, max_digits=4)),
                 ('afgelost_bedrag', models.DecimalField(decimal_places=2, max_digits=4)),
                 ('mails_verstuurd', models.CharField(max_length=500)),
-                ('gestructureerde_mededeling', models.CharField(max_length=20)),
+                ('mededeling', models.CharField(max_length=20)),
                 ('type', models.CharField(max_length=20)),
                 ('status', models.CharField(max_length=20)),
                 ('lid', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='management.Lid')),

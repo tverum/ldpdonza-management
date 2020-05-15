@@ -12,6 +12,7 @@ import re
 from django.contrib import messages
 
 from ..models import Ouder, Lid, Functie, MAN, VROUW, ANDER
+from .utils import generate_uid
 
 GSM_PATTERN = r"0(\d{3})/(\d+)"
 ADRES_PATTERN = r"(\d+)(.*)"
@@ -82,14 +83,27 @@ def update_lid(geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2
     """
 
     # Fetch het lid van de database, add functie en save
-    lid, _ = get_lid(geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2, row)
+    lid, created = get_lid(geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2, row)
 
     # Update de velden
     lid_update_functies(lid, row)
     lid_update_familieleden(lid)
 
+    # Alleen de uid updaten als het een nieuw record is
+    if created:
+        lid_update_uid(lid)
+
     # Sla op
     lid.save()
+
+
+def lid_update_uid(lid):
+    """
+    Update the uid of the lid
+    :param lid:
+    :return:
+    """
+    lid.uid = generate_uid()
 
 
 def lid_update_familieleden(lid):

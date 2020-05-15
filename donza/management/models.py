@@ -109,18 +109,27 @@ class Lid(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     functies = models.ManyToManyField(Functie, blank=True)
     familieleden = models.ManyToManyField("self", blank=True)
+    facturatie = models.BooleanField(default=False)
+    afbetaling = models.BooleanField(default=False)
+    uid = models.DecimalField(
+        max_digits=10,
+        decimal_places=0,
+        unique=True,
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return "{} {}".format(self.voornaam, self.familienaam, self.lidnummer_vbl)
 
 
 class Betaling(models.Model):
-    origineel_bedrag = models.DecimalField(max_digits=4, decimal_places=2)
-    afgelost_bedrag = models.DecimalField(max_digits=4, decimal_places=2)
+    origineel_bedrag = models.FloatField()
+    afgelost_bedrag = models.FloatField()
     lid = models.ForeignKey('management.Lid', on_delete=models.CASCADE)
     seizoen = models.ForeignKey('management.Seizoen', on_delete=models.CASCADE)
-    mails_verstuurd = models.CharField(max_length=500)
-    gestructureerde_mededeling = models.CharField(max_length=20)  # TODO: determine the exact size
+    mails_verstuurd = models.CharField(max_length=500, default="")
+    mededeling = models.CharField(max_length=20)  # TODO: determine the exact size
     type = models.CharField(max_length=20)
     status = models.CharField(max_length=20)
 
