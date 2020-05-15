@@ -164,7 +164,7 @@ def genereer_betalingen(leden):
     :param leden: de lijst met leden waarvoor betalingen gegenereerd moeten worden
     :return: None
     """
-    seizoen = Seizoen.objects.get(naam="2019-2020")
+    seizoen = Seizoen.objects.get(naam="2020-2021")
     # filter alle leden waarvoor er reeds een betaling bestaat
     leden_todo = list(filter(lambda c_lid: no_payment(c_lid, seizoen), leden))
 
