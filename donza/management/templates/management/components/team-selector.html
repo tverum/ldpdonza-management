@@ -109,7 +109,7 @@
                         {% for coach in this.ploegcoaches %}
                         <tr>
                             <td>
-                                <button class="btn btn-sm btn-block" @click="verwijder_coach {lid: {{lid.club_id|tostring}}}">{{coach.voornaam}} {{coach.familienaam}}</button>
+                                <button class="btn btn-sm btn-block" @click="verwijder_coach {coach: {{coach.club_id|tostring}}}">{{coach.voornaam}} {{coach.familienaam}}</button>
                             </td>
                         </tr>
                         {% endfor %}
