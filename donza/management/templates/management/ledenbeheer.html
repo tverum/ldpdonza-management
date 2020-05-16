@@ -20,7 +20,7 @@ Ledenbeheer
                 {% endif %}
             </div>
             <div class="col-6 float-right">
-                <button type="submit" form="genereer" class="btn btn-success btn-block mb-3" value="Genereer">Genereer Betalingen</button>
+                <button type="submit" form="verwerk" class="btn btn-success btn-block mb-3" value="Genereer" name="genereer">Genereer Betalingen</button>
                 <a type="button" class="btn btn-secondary btn-block mb-3" href="{% url 'management:nieuw_lid' %}">Nieuw Lid</a>
                 <form class="mb-3" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -34,13 +34,14 @@ Ledenbeheer
                         </div>
                     </div>
                 </form>
+                <button type="submit" form="verwerk" class="btn btn-danger btn-block mb-3" value="Verwijder" name="verwijder">Verwijder leden</button>
             </div>
         </div>
         <div class="row alert alert-secondary justify-content-center">
             <p>Voor meer informatie over een lid, klik op de rij.</p>
         </div>
         <div class="row justify-content-center">
-            <form action="/management/betalingen/genereer" method="post" id="genereer">
+            <form action="{% url 'management:verwerk_leden' %}" method="post" id="verwerk">
                 {% csrf_token %}
                 <div class="row">
                     {% render_table table 'django_tables2/semantic.html' %}

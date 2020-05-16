@@ -6,6 +6,7 @@ from django.views import generic
 from django.views.generic.edit import FormView, UpdateView
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin, MultiTableMixin
+from django.http import Http404
 
 from .main.betalingen import genereer_betalingen
 from .main.ledenbeheer import import_from_csv
@@ -250,3 +251,32 @@ def stuur_mail(_, pk):
 def verwijder_lid(_, pk):
     Lid.objects.get(pk=pk).delete()
     return redirect(reverse("management:leden"), permanent=False)
+
+
+def verwijder_leden(request):
+    if request.method == "POST":
+        pks = request.POST.getlist("selection")
+        geselecteerde_leden = Lid.objects.filter(pk__in=pks)
+
+        geselecteerde_leden.all().delete()
+
+        messages.success(request, "Geselecteerde leden verwijderd")
+        return redirect(reverse("management:leden"), permanent=True)
+    else:
+        # no idea what to do here
+        print("Test")
+        pass
+
+
+def verwerk_leden(request):
+    if request.method == "POST":
+        if 'verwijder' in request.POST:
+            return verwijder_leden(request)
+        elif 'genereer' in request.POST:
+            return genereer(request)
+        else:
+            raise Http404("Action not found")
+    else:
+        # no idea what to do here
+        print("Test")
+        pass
