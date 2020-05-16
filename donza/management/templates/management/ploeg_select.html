@@ -5,7 +5,9 @@ Ploegsamenstelling: {{object.naam}}
 {% endblock title %}
 {% block content %}
 <div class="col">
-    <h2>{{object.naam}}</h2>
-    {% component 'team-selector' eligible_players=eligible_players ploegleden=ploegleden ploeg_id=ploeg_id %}
+    <div class="row bg-dark text-white justify-content-center pt-2 pb-2 mb-3">
+        <h1>{{object.naam}}</h1>
+    </div>
+    {% component 'team-selector' eligible_players=eligible_players ploegleden=ploegleden coaches=coaches ploegcoaches=ploegcoaches ploeg_id=ploeg_id %}
 </div>
 {% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+{% load render_table from django_tables2 %}
+{% load bootstrap4 %}
+{% block title %}
+Betalingen
+{% endblock title %}
+{% block content %}
+    <div class="col">
+        <div class="row mb-3 justify-content-center">
+            <h1>Betalingen</h1>
+        </div>
+        <div class="row mb-3 justify-content-center">
+            <a href="#mail-verstuurd">Ga naar openstaande betalingen</a>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col">
+                {% for table in tables %}
+                <hr/>
+                <div class="row justify-content-center">
+                    <h2 class="mb-4">{{table.title}}</h2>
+                    {% render_table table 'django_tables2/semantic.html' %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

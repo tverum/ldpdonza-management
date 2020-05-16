@@ -132,6 +132,8 @@ def lid_update_functies(lid, row):
     :return:
     """
     # Retrieve de functie, of creëer indien die nog niet bestaat
+    if not row["Functie"]:
+        return
     functie, _ = Functie.objects.get_or_create(
         functie=row["Functie"]
     )

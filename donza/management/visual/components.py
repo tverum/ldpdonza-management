@@ -1,27 +1,30 @@
-import datetime
-
 from reactor import Component
 
-from ..models import Functie, Lid, Ouder, Ploeg, PloegLid, MAN, VROUW
+from ..models import Functie, Lid, Ploeg, PloegLid, MAN, VROUW
 
 
 class TeamSelector(Component):
-
     # reference the template from above
     template_name = 'management/components/team-selector.html'
 
     eligible_players = set([])
     ploegleden = set([])
     display_players = set([])
+    ploegcoaches = set([])
+    coaches = set([])
     ploeg_id = 0
     showall = False
     message = []
 
     # deze methode is verantwoordelijk om gegeven een state, de initialisatie te doen
-    def mount(self, eligible_players, ploegleden, ploeg_id, **kwargs):
+    def mount(self, eligible_players, ploegleden, coaches, ploegcoaches, ploeg_id, **kwargs):
+        # set ploegid
         self.ploeg_id = ploeg_id
+
+        # Spelers gedeelte
         if not ploegleden:
-            ploegleden = [ploeglid.lid.club_id for ploeglid in PloegLid.objects.filter(ploeg=ploeg_id)]
+            functie = Functie.objects.get(functie="Speler")
+            ploegleden = [ploeglid.lid.club_id for ploeglid in PloegLid.objects.filter(ploeg=ploeg_id, functie=functie)]
         self.ploegleden = set([Lid.objects.get(pk=lid) for lid in ploegleden])
 
         if eligible_players:
@@ -30,6 +33,18 @@ class TeamSelector(Component):
             self.get_eligible_players(ploeg_id)
 
         self.get_display_players()
+
+        # Coaches gedeelte
+        if not ploegcoaches:
+            functie = Functie.objects.get(functie="Coach")
+            ploegcoaches = [ploeglid.lid.club_id for ploeglid in
+                            PloegLid.objects.filter(ploeg=ploeg_id, functie=functie)]
+        self.ploegcoaches = set([Lid.objects.get(pk=lid) for lid in ploegcoaches])
+
+        if coaches:
+            self.coaches = set([Lid.objects.get(pk=lid_id) for lid_id in coaches])
+        else:
+            self.get_coaches()
 
     def get_display_players(self):
         if self.showall:
@@ -47,65 +62,82 @@ class TeamSelector(Component):
             if min_jaar:
                 self.eligible_players = Lid.objects.all() \
                     .filter(
-                        sportief_lid=True,
-                        geslacht=ploeg.geslacht
-                    ) \
+                    sportief_lid=True,
+                    geslacht=ploeg.geslacht
+                ) \
                     .exclude(geboortedatum=None) \
                     .filter(
-                        geboortedatum__year__lte=max_jaar,
-                        geboortedatum__year__gte=min_jaar
-                    )
+                    geboortedatum__year__lte=max_jaar,
+                    geboortedatum__year__gte=min_jaar
+                )
             else:
                 self.eligible_players = Lid.objects.all() \
                     .filter(
-                        sportief_lid=True,
-                        geslacht=ploeg.geslacht
-                    ) \
+                    sportief_lid=True,
+                    geslacht=ploeg.geslacht
+                ) \
                     .exclude(geboortedatum=None) \
                     .filter(
-                        geboortedatum__year__lte=max_jaar
-                    )
+                    geboortedatum__year__lte=max_jaar
+                )
         else:
             if min_jaar:
                 self.eligible_players = Lid.objects.all() \
                     .filter(
-                        sportief_lid=True
-                    ) \
+                    sportief_lid=True
+                ) \
                     .exclude(geboortedatum=None) \
                     .filter(
-                        geboortedatum__year__lte=max_jaar,
-                        geboortedatum__year__gte=min_jaar
-                    )
+                    geboortedatum__year__lte=max_jaar,
+                    geboortedatum__year__gte=min_jaar
+                )
             else:
                 self.eligible_players = Lid.objects.all() \
                     .filter(
-                        sportief_lid=True
-                    ) \
+                    sportief_lid=True
+                ) \
                     .exclude(geboortedatum=None) \
                     .filter(
-                        geboortedatum__year__lte=max_jaar
-                    )
+                    geboortedatum__year__lte=max_jaar
+                )
+
+    def get_coaches(self):
+        coach_functie = Functie.objects.get(functie="Coach")
+        self.coaches = Lid.objects.filter(functies__functie=coach_functie).all()
 
     # deze methode is verantwoordelijk om de essentie van de state te capturen
     def serialize(self):
         ep = [player.club_id for player in self.eligible_players]
         pl = [player.club_id for player in self.ploegleden]
+        coaches = [coach.club_id for coach in self.coaches]
+        ploegcoaches = [coach.club_id for coach in self.ploegcoaches]
         ploeg_id = self.ploeg_id
-        return dict(id=self.id, eligible_players=ep, ploegleden=pl, ploeg_id=ploeg_id)
+        return dict(id=self.id, eligible_players=ep, ploegleden=pl, coaches=coaches, ploegcoaches=ploegcoaches,
+                    ploeg_id=ploeg_id)
 
     # This are the event handlers they always start with `receive_`
 
-    # Receive an add event
-    def receive_voegtoe(self, lid, **kwargs):
+    # Receive an add event for the lid
+    def receive_voegtoe_lid(self, lid, **kwargs):
         self.eligible_players.remove(Lid.objects.get(pk=lid))
         self.ploegleden.add(Lid.objects.get(pk=lid))
         self.get_display_players()
 
+    # Receive an add event for a coach
+    def receive_voegtoe_coach(self, coach, **kwargs):
+        self.coaches.remove(Lid.objects.get(pk=coach))
+        self.ploegcoaches.add(Lid.objects.get(pk=coach))
+
     # Receive a delete event
-    def receive_verwijder(self, lid, **kwargs):
+    def receive_verwijder_lid(self, lid, **kwargs):
         self.eligible_players.add(Lid.objects.get(pk=lid))
         self.ploegleden.remove(Lid.objects.get(pk=lid))
         self.get_display_players()
+
+    # Receive a delete event
+    def receive_verwijder_lid(self, coach, **kwargs):
+        self.coaches.add(Lid.objects.get(pk=coach))
+        self.ploegcoaches.remove(Lid.objects.get(pk=coach))
 
     # Receive a submit event
     def receive_indienen(self, **kwargs):
@@ -115,16 +147,21 @@ class TeamSelector(Component):
 
         try:
             # insert team members for each player
-            functie = Functie.objects.get(functie="Speler")
+            functie_speler = Functie.objects.get(functie="Speler")
+            functie_coach = Functie.objects.get(functie="Coach")
         except Functie.DoesNotExist:
-            self.message = 'Functie "Speler" is nog niet gedefinieerd.'
+            self.message = 'Functie "Speler" of Functie "Coach" is nog niet gedefinieerd.'
             return
 
-        insert_ploegleden = [PloegLid(lid_id=lid.club_id, ploeg_id=ploeg.ploeg_id, functie=functie) for lid in self.ploegleden]
+        insert_ploegleden = [PloegLid(lid_id=lid.club_id, ploeg_id=ploeg.ploeg_id, functie=functie_speler) for lid in
+                             self.ploegleden]
+        insert_ploegcoaches = [PloegLid(lid_id=lid.club_id, ploeg_id=ploeg.ploeg_id, functie=functie_coach) for lid in
+                          self.ploegcoaches]
         for pl in insert_ploegleden:
             pl.save()
-        print("Opslaan geslaagd")
+        for pl in insert_ploegcoaches:
+            pl.save()
 
-    def receive_showall(self, **kwargs):
+    def receive_showall_lid(self, **kwargs):
         self.showall = not self.showall
         self.get_display_players()

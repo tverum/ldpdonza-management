@@ -133,6 +133,9 @@ class Betaling(models.Model):
     type = models.CharField(max_length=20)
     status = models.CharField(max_length=20)
 
+    def __str__(self):
+        return "{}: {}".format(self.lid, self.mededeling)
+
 
 class LidgeldKlasse(models.Model):
     naam = models.CharField(max_length=20)

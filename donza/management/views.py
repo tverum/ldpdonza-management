@@ -1,51 +1,25 @@
 from django.contrib import messages
-from django.shortcuts import redirect, render, reverse
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.mail import send_mail
+from django.shortcuts import redirect, reverse
 from django.views import generic
 from django.views.generic.edit import FormView, UpdateView
-from django.contrib.auth.mixins import PermissionRequiredMixin
-
 from django_filters.views import FilterView
-from django_tables2.views import SingleTableMixin
+from django_tables2.views import SingleTableMixin, MultiTableMixin
 
-from .visual.forms import LidForm, OuderForm, PloegForm
-from .models import Lid, Ploeg, PloegLid
-from .visual.tables import LidTable
-from .visual.filters import LidFilter
-from .main.ledenbeheer import import_from_csv
 from .main.betalingen import genereer_betalingen
+from .main.ledenbeheer import import_from_csv
+from .models import Lid, Ploeg, PloegLid, Betaling, Functie
 # Deze lijn moet er in blijven staan om de TeamSelector te kunnen laden
+# noinspection PyUnresolvedReferences
 from .visual.components import TeamSelector
+from .visual.filters import LidFilter
+from .visual.forms import LidForm, OuderForm, PloegForm
+from .visual.tables import LidTable, DraftTable, VerstuurdTable
+
 
 class IndexView(generic.TemplateView):
     template_name = "management/index.html"
-
-
-class LidListView(generic.ListView):
-    model = Lid
-    template_name = "management/lid_list.html"
-    paginate_by = 20
-
-    def post(self, request, *args, **kwargs):
-        # retrieve the file from the request
-        csv_file = request.FILES['file']
-
-        # retrieve information for rendering
-        template = "management/lid_list.html"
-        if not csv_file.name.endswith(".csv"):
-            messages.error(request, "This is not a csv file")
-
-            # retrieve the object list to display
-            self.object_list = self.model.objects.all()
-            context = self.get_context_data(**kwargs)
-            return render(request, template, context)
-
-        import_from_csv(csv_file, request)
-
-        # after importing the csv, refresh the object list
-        self.object_list = self.model.objects.all()
-        context = self.get_context_data(**kwargs)
-
-        return render(request, template, context)
 
 
 class LidNewView(FormView):
@@ -112,6 +86,10 @@ class PloegSelectView(generic.DetailView):
             ploeg, ploegleden)
         context['ploegleden'] = ploegleden
         context['ploeg_id'] = ploeg.ploeg_id
+        ploegcoaches = self.get_ploegcoaches(ploeg)
+        print(ploegcoaches)
+        context['ploegcoaches'] = ploegcoaches
+        context['coaches'] = self.get_coaches(ploegcoaches)
         return context
 
     @staticmethod
@@ -121,32 +99,48 @@ class PloegSelectView(generic.DetailView):
         if min_jaar:
             queryset = Lid.objects.all() \
                 .filter(
-                    sportief_lid=True,
-                    geslacht=ploeg.geslacht
-                ) \
+                sportief_lid=True,
+                geslacht=ploeg.geslacht
+            ) \
                 .exclude(geboortedatum=None) \
                 .filter(
-                    geboortedatum__year__lte=max_jaar,
-                    geboortedatum__year__gte=min_jaar
-                )
+                geboortedatum__year__lte=max_jaar,
+                geboortedatum__year__gte=min_jaar
+            )
         else:
             queryset = Lid.objects.all() \
                 .filter(
-                    sportief_lid=True,
-                    geslacht=ploeg.geslacht
-                ) \
+                sportief_lid=True,
+                geslacht=ploeg.geslacht
+            ) \
                 .exclude(geboortedatum=None) \
                 .filter(
-                    geboortedatum__year__lte=max_jaar
-                )
+                geboortedatum__year__lte=max_jaar
+            )
         ep = [lid.club_id for lid in queryset if not lid.club_id in ploegleden]
         return ep
 
     @staticmethod
     def get_ploegleden(ploeg):
+        functie = Functie.objects.get(functie="Speler")
         leden_ids = [ploeglid.lid.club_id for ploeglid in PloegLid.objects.filter(
-            ploeg_id=ploeg.ploeg_id)]
+            ploeg_id=ploeg.ploeg_id, functie=functie)]
         return leden_ids
+
+    @staticmethod
+    def get_ploegcoaches(ploeg):
+        functie = Functie.objects.get(functie="Coach")
+        coach_ids = [ploeglid.lid.club_id for ploeglid in PloegLid.objects.filter(
+            ploeg_id=ploeg.ploeg_id, functie=functie)]
+        return coach_ids
+
+    @staticmethod
+    def get_coaches(ploegcoaches):
+        functie = Functie.objects.get(functie="Coach")
+        queryset = Lid.objects.filter(functies__functie=functie)
+        coaches = [lid.club_id for lid in queryset if lid.club_id not in ploegcoaches]
+        print(coaches)
+        return coaches
 
 
 class PloegView(generic.DetailView):
@@ -168,24 +162,38 @@ class LidTableView(PermissionRequiredMixin, SingleTableMixin, FilterView):
     template_name = 'management/ledenbeheer.html'
     table_pagination = False
     filterset_class = LidFilter
-    permission_required = ('lid.can_view',)
+    permission_required = ('management.view_lid',)
     permission_denied_message = """
-    Je hebt niet de juiste permissies om deze pagina te bekijken. 
-    Indien je dit wel nodig hebt, contacteer de webmaster. (TODO: add link)
-    """
+        Je hebt niet de juiste permissies om deze pagina te bekijken. 
+        Indien je dit wel nodig hebt, contacteer de webmaster. (TODO: add link)
+        """
 
     def post(self, request, *args, **kwargs):
         # retrieve the file from the request
         csv_file = request.FILES['file']
 
-        # retrieve information for rendering
-        template = "management/lid_list.html"
         if not csv_file.name.endswith(".csv"):
             messages.error(request, "This is not a csv file")
             redirect(reverse("management:leden"), permanent=True)
 
         import_from_csv(csv_file, request)
+        messages.success(request, "Import van csv succesvol")
+
         return redirect(reverse("management:leden"), permanent=True)
+
+
+class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.TemplateView):
+    model = Betaling
+    permission_required = ('management.view_betaling',)
+    template_name = 'management/betalingen.html'
+    permission_denied_message = """
+        Je hebt niet de juiste permissies om deze pagina te bekijken. 
+        Indien je dit wel nodig hebt, contacteer de webmaster. (TODO: add link)
+        """
+    tables = [
+        DraftTable(Betaling.objects.filter(status="draft").all(), prefix="draft-"),
+        VerstuurdTable(Betaling.objects.filter(status="mail_sent").all(), prefix="sent-")
+    ]
 
 
 def genereer(request):
@@ -195,6 +203,7 @@ def genereer(request):
         # genereer de betalingen voor de geselecteerde leden
         genereer_betalingen(geselecteerde_leden)
 
+        messages.success(request, "Betalingen voor geselecteerde leden gegenereerd")
         return redirect(reverse("management:leden"), permanent=True)
     else:
         # no idea what to do here
@@ -226,3 +235,13 @@ def create_ploeg(request):
         messages.add_message(request, messages.ERROR,
                              "Ongeldig formulier voor nieuwe ploeg")
     return redirect(redirect_path)
+
+
+def stuur_mail(_, pk):
+    send_mail(
+        "Test onderwerp voor pk: {}".format(pk),
+        "Test message",
+        from_email="no-reply@ldpdonza.be",
+        recipient_list=["vanerum.tim@icloud.com", ]
+    )
+    return redirect(reverse("management:betalingen"), permanent=False)

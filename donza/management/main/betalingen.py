@@ -55,7 +55,6 @@ def get_discount(lid, seizoen):
     :param seizoen: het seizoen waarvoor de discount moet berekend worden
     :return: het bedrag dat afgetrokken moet worden
     """
-    # TODO: zeker zijn dat alle familieleden ook wel degelijk bij een ploeg zijn ingedeeld.
     familieleden = [lid for lid in lid.familieleden.all() if lid.sportief_lid and has_team(lid, seizoen)]
     if not familieleden:
         return 0
@@ -167,6 +166,5 @@ def genereer_betalingen(leden):
     seizoen = Seizoen.objects.get(naam="2020-2021")
     # filter alle leden waarvoor er reeds een betaling bestaat
     leden_todo = list(filter(lambda c_lid: no_payment(c_lid, seizoen), leden))
-
     for lid in leden_todo:
         genereer_betaling(lid)

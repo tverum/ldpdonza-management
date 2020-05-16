@@ -5,11 +5,18 @@ Ploegsamenstelling: {{object.naam}}
 {% endblock title %}
 {% block content %}
 <div class="col">
-    <h2>Spelers</h2>
-    <table>
+    <h2 class="mb-4">Spelers</h2>
+    <table class="table">
+        <thead>
+            <th>Naam</th>
+            <th>Ouder 1</th>
+            <th>Ouder 2</th>
+        </thead>
         {% for lid in ploegleden %}
             <tr>
                 <td>{{lid.voornaam}} {{lid.familienaam}}</td>
+                <td>{{lid.moeder.email}} | {{lid.moeder.gsmnummer}}</td>
+                <td>{{lid.vader.email}} | {{lid.vader.gsmnummer}}</td>
             </tr>
         {% endfor %}
     </table>

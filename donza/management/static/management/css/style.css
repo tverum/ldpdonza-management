@@ -33,3 +33,8 @@ body {
 .table-wrapper-scroll-y {
     display: block;
 }
+
+.table-wrap {
+  height: 600px;
+  overflow-y: auto;
+}

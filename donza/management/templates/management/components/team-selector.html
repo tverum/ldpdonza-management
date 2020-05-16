@@ -9,13 +9,17 @@
         {% endif %}
     </div>
     <div class="row">
+        <h2>Spelers</h2>
+    </div>
+    <hr/>
+    <div class="row">
         <div class="col-6">
             <div class="row">
-                <h1>Beschikbaar</h1>
+                <h3>Beschikbaar</h3>
             </div>
             <div class="row mb-4">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="showall" @click="showall" {% if this.showall %}checked{% endif %}>
+                  <input class="form-check-input" type="checkbox" id="showall" @click="showall_lid" {% if this.showall %}checked{% endif %}>
                   <label class="form-check-label" for="showall">
                     Toon jongere leeftijdscategorie
                   </label>
@@ -31,7 +35,7 @@
                     <tbody>
                         {% for lid in this.display_players %}
                         <tr>
-                            <td><button @click="voegtoe {lid: {{lid.club_id|tostring}}}" class="btn btn-sm btn-block">{{lid.voornaam}} {{lid.familienaam}}</button></td>
+                            <td><button @click="voegtoe_lid {lid: {{lid.club_id|tostring}}}" class="btn btn-sm btn-block">{{lid.voornaam}} {{lid.familienaam}}</button></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -41,7 +45,7 @@
         </div>
         <div class="col-6">
             <div class="row mb-5">
-                <h1>Ploegleden</h1>
+                <h3>Ploegleden</h3>
             </div>
             <div class="table-wrapper-scroll-y my-custom-scrollbar">
                 <table class="table table-sm table-hover">
@@ -53,7 +57,60 @@
                     <tbody>
                         {% for lid in this.ploegleden %}
                         <tr>
-                            <td><button class="btn btn-sm btn-block" @click="verwijder {lid: {{lid.club_id|tostring}}}">{{lid.voornaam}} {{lid.familienaam}}</button></td>
+                            <td><button class="btn btn-sm btn-block" @click="verwijder_lid {lid: {{lid.club_id|tostring}}}">{{lid.voornaam}} {{lid.familienaam}}</button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <h2>Coaches</h2>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-6">
+            <div class="row mb-2">
+                <h3>Beschikbaar</h3>
+            </div>
+            <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                <table class="table table-sm table-hover">
+                    <thead class="text-center">
+                        <tr>
+                            <th>Naam</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for coach in this.coaches %}
+                        <tr>
+                            <td>
+                                <button @click="voegtoe_coach {coach: {{coach.club_id|tostring}}}" class="btn btn-sm btn-block">{{coach.voornaam}} {{coach.familienaam}}</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row mb-2">
+                <h3>Coaches</h3>
+            </div>
+            <div class="table-wrapper-scroll-y my-custom-scrollbar mb-3">
+                <table class="table table-sm table-hover">
+                    <thead class="text-center">
+                        <tr>
+                            <th>Naam</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for coach in this.ploegcoaches %}
+                        <tr>
+                            <td>
+                                <button class="btn btn-sm btn-block" @click="verwijder_coach {lid: {{lid.club_id|tostring}}}">{{coach.voornaam}} {{coach.familienaam}}</button>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
