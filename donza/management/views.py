@@ -245,3 +245,8 @@ def stuur_mail(_, pk):
         recipient_list=["vanerum.tim@icloud.com", ]
     )
     return redirect(reverse("management:betalingen"), permanent=False)
+
+
+def verwijder_lid(_, pk):
+    Lid.objects.get(pk=pk).delete()
+    return redirect(reverse("management:leden"), permanent=False)

@@ -12,6 +12,10 @@
                 ({{form.voornaam.value}} {{form.familienaam.value}})
             {% endif %}
         </h2>
+        {% if lid %}
+            <a class="btn btn-danger float-right" href="{% url 'management:verwijder_lid' lid.club_id %}">Verwijder lid</a>
+        {% endif %}
+
     </div>
     <form method="POST" class="post-form">
         {% csrf_token %}
