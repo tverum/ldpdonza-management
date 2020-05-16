@@ -135,7 +135,7 @@ class TeamSelector(Component):
         self.get_display_players()
 
     # Receive a delete event
-    def receive_verwijder_lid(self, coach, **kwargs):
+    def receive_verwijder_coach(self, coach, **kwargs):
         self.coaches.add(Lid.objects.get(pk=coach))
         self.ploegcoaches.remove(Lid.objects.get(pk=coach))
 
