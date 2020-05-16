@@ -63,7 +63,7 @@ class LidEditView(UpdateView):
 class PloegListView(PermissionRequiredMixin, generic.ListView):
     model = Ploeg
     template_name = "management/ploeg_list.html"
-    permission_required = ('ploeg.can_view',)
+    permission_required = ('management.view_ploeg',)
     permission_denied_message = """
         Je hebt niet de juiste permissies om deze pagina te bekijken. 
         Indien je dit wel nodig hebt, contacteer de webmaster. (TODO: add link)
