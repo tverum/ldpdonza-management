@@ -23,7 +23,7 @@ def lidgeld_mail(pk):
     }
 
     subject, from_email, to = "Inschrijvingsgeld {} LDP Donza, seizoen '20-'21".format(
-        lid), 'tim.vanerum@gmail.com', 'vanerum.tim@icloud.com'
+        lid), 'no-reply@ldpdonza.be', 'vanerum.tim@icloud.com'
     text_content = plaintext.render(d)
     html_content = htmly.render(d)
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
