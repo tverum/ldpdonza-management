@@ -34,7 +34,6 @@ INSTALLED_APPS = [
     'django_filters',
     'django_tables2',
     'import_export',
-
     'localflavor',
     'bootstrapform',
     'bootstrap4',
@@ -42,6 +41,7 @@ INSTALLED_APPS = [
     'channels',
     'reactor',
     'guardian',
+    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

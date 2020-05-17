@@ -45,7 +45,3 @@ def generate_coaches_accounts():
     dictionairy = [dict(zip(keys, entry)) for entry in entries]
     with open(os.path.join(settings.BASE_DIR, "coaches.json"), 'w') as outfile:
         json.dump(dictionairy, outfile)
-
-
-if __name__ == '__main__':
-    generate_coaches_accounts()
