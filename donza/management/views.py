@@ -1,16 +1,21 @@
+import mimetypes
+from wsgiref.util import FileWrapper
+
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.core.mail import send_mail
+from django.core.files.temp import NamedTemporaryFile
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, reverse
 from django.views import generic
 from django.views.generic.edit import FormView, UpdateView
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin, MultiTableMixin
-from django.http import Http404
 
+from .mail.send_mail import lidgeld_mail
 from .main.betalingen import genereer_betalingen
 from .main.ledenbeheer import import_from_csv
 from .models import Lid, Ploeg, PloegLid, Betaling, Functie
+from .resources import CoachLidDownloadResource
 # Deze lijn moet er in blijven staan om de TeamSelector te kunnen laden
 # noinspection PyUnresolvedReferences
 from .visual.components import TeamSelector
@@ -239,12 +244,7 @@ def create_ploeg(request):
 
 
 def stuur_mail(_, pk):
-    send_mail(
-        "Test onderwerp voor pk: {}".format(pk),
-        "Test message",
-        from_email="no-reply@ldpdonza.be",
-        recipient_list=["vanerum.tim@icloud.com", ]
-    )
+    lidgeld_mail(pk)
     return redirect(reverse("management:betalingen"), permanent=False)
 
 
@@ -280,3 +280,19 @@ def verwerk_leden(request):
         # no idea what to do here
         print("Test")
         pass
+
+
+def export_ploeg(request, pk):
+    ploeg = Ploeg.objects.get(pk=pk)
+    functie_speler = Functie.objects.get(functie="Speler")
+    ploegleden = PloegLid.objects.filter(ploeg=ploeg, functie=functie_speler)
+    lid_ids = [ploeglid.lid.club_id for ploeglid in ploegleden]
+    queryset = Lid.objects.filter(club_id__in=lid_ids)
+
+    download_name = "coach_export_for_{}.csv".format(ploeg.korte_naam)
+
+    coachdownload_resource = CoachLidDownloadResource()
+    dataset = coachdownload_resource.export(queryset)
+    response = HttpResponse(dataset.csv, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="{}"'.format(download_name)
+    return response

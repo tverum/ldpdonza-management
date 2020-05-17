@@ -1,0 +1,22 @@
+Beste Ouders,
+Beste Speler/Speelster,
+
+Alvast welkom (terug) aan u en uw kind(eren) bij LDP Donza. LDP Donza staat voor heel wat plezier beleven aan basket gecombineerd met een zeer degelijke aanpak, waarbij we trainingen en wedstrijden in de best mogelijke omstandigheden organiseren, met gediplomeerde en gemotiveerde coaches werken, volop inzetten op de persoonlijke ontwikkeling van u/uw kind, ...
+
+Om dit alles te realiseren, steunen we voor een deel op inschrijvingsgelden, maar ook op de bijdragen van onze partners (zie www.ldpdonza.be voor meer info), op subsidies en natuurlijk op sportcafé 't Vijfde Kwart in De Pinte waar we u trouwens zo snel als mogelijk opnieuw willen ontvangen.
+
+Het inschrijvingsgeld bedraagt voor jullie {{betaling.origineel_bedrag}} EUR per speler per seizoen en is te betalen op rekeningnummer BE91 7370 3583 5176 van LDP Donza voor {{datum_verval}}. Gebruik aub uitsluitend onderstaande gestructureerde mededeling bij de betaling, dat vereenvoudigt de verdere verwerking.
+
+Gestructureerde mededeling voor {{lid.voornaam}} {{lid.familienaam}}: {{betaling.mededeling}}
+
+We blijven als club ook actief op zoek naar partners. Wie een partner aanbrengt (of uzelf?) die voor minimaal 700 EUR een partnership aangaat met LDP Donza, zorgt er voor dat zijn/haar kind gratis kan basketten. U kan mij hieromtrent steeds contacteren via pol@ldpdonza.be.
+
+Wie eventueel een gespreide betaling wil, kan dit ook via mij aanvragen, uw aanvraag wordt in alle discretie behandeld.
+
+We wensen jullie alvast een mooi seizoen toe. Laat zeker ook niet na om één van de vele wedstrijden van jeugd en senioren te komen bekijken. Meer info hierover op www.ldpdonza.be.
+
+Vriendelijke groeten,
+
+Pol Lombaert
+
+<TODO Handtekening>

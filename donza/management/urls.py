@@ -14,6 +14,7 @@ urlpatterns = [
     path("ploegen/new/", views.create_ploeg, name="new_ploeg"),
     path("ploegen/<int:pk>/select/", views.PloegSelectView.as_view(), name='ploeg_select'),
     path("ploegen/<int:pk>/view/", views.PloegView.as_view(), name='ploeg_view'),
+    path("ploegen/<int:pk>/export/", views.export_ploeg, name='ploeg_export'),
     path("betalingen/stuur_mail/<int:pk>/", views.stuur_mail, name="betalingen_mail"),
     path("betalingen/", views.BetalingTableView.as_view(), name="betalingen"),
     path('', views.IndexView.as_view(), name='index'),

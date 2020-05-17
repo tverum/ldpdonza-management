@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -27,7 +26,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -35,6 +33,8 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'django_filters',
     'django_tables2',
+    'import_export',
+
     'localflavor',
     'bootstrapform',
     'bootstrap4',
@@ -61,7 +61,6 @@ MIDDLEWARE = [
     'global_login_required.GlobalLoginRequiredMiddleware',
 ]
 
-
 ROOT_URLCONF = 'donza.urls'
 
 TEMPLATES = [
@@ -81,9 +80,7 @@ TEMPLATES = [
     },
 ]
 
-
 ASGI_APPLICATION = "donza.asgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -97,7 +94,6 @@ DATABASES = {
         'NAME': 'ldpdonza',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -119,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Authentication backend
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend', # default
+    'django.contrib.auth.backends.ModelBackend',  # default
     'guardian.backends.ObjectPermissionBackend',
 )
 
@@ -155,3 +151,6 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# for the import_export package
+IMPORT_EXPORT_USE_TRANSACTIONS = True

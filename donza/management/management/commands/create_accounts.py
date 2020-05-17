@@ -1,10 +1,10 @@
+import json
+import os
+
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from guardian.models import UserObjectPermission
-from django.conf import settings
-
-import os
-import json
 
 from ...models import Lid, Functie, PloegLid, Ploeg
 
@@ -34,9 +34,10 @@ def generate_coaches_accounts():
         except Exception:
             coach_user = User.objects.get_by_natural_key(username)
 
-        entries.append((coach.voornaam, coach.familienaam, username, coach.email, password,))
         ploegen = [Ploeg.objects.get(ploeg_id=ploeglid.ploeg.ploeg_id) for ploeglid in PloegLid.objects.filter(
             lid=coach, functie=functie_coach)]
+        if ploegen:
+            entries.append((coach.voornaam, coach.familienaam, username, coach.email, password,))
         for ploeg in ploegen:
             UserObjectPermission.objects.assign_perm('view_ploeg', coach_user, obj=ploeg)
 

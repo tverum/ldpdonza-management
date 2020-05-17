@@ -5,7 +5,12 @@ Ploegsamenstelling: {{object.naam}}
 {% endblock title %}
 {% block content %}
 <div class="col">
-    <h2 class="mb-4">Spelers</h2>
+    <div class="row">
+        <h2 class="mb-4">Spelers</h2>
+    </div>
+    <div class="row mb-4">
+        <a class="btn btn-secondary btn-sm float-right" href="{% url 'management:ploeg_export' object.ploeg_id %}">Exporteer naar CSV</a>
+    </div>
     <table class="table">
         <thead>
             <th>Naam</th>
