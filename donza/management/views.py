@@ -1,9 +1,5 @@
-import mimetypes
-from wsgiref.util import FileWrapper
-
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.core.files.temp import NamedTemporaryFile
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, reverse
 from django.views import generic
@@ -156,9 +152,14 @@ class PloegView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         ploeg = context['object']
+        functie_speler = Functie.objects.get(functie="Speler")
+        functie_coach = Functie.objects.get(functie="Coach")
         ploegleden = [Lid.objects.get(pk=ploeglid.lid.club_id)
-                      for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id)]
+                      for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id, functie=functie_speler)]
+        coaches = [Lid.objects.get(pk=ploeglid.lid.club_id)
+                   for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id, functie=functie_coach)]
         context['ploegleden'] = ploegleden
+        context['coaches'] = coaches
         return context
 
 
