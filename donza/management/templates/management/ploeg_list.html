@@ -41,7 +41,7 @@ Ploeglijst
                 <span aria-hidden="true">&times;</span>
             </button>
             </div>
-            <form action="/management/ploegen/new" method="post">
+            <form action="{% url 'management:new_ploeg' %}" method="post">
                 <div class="modal-body">
                     {% csrf_token %}
                     {{ploegForm|bootstrap}}

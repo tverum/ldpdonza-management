@@ -197,6 +197,7 @@ class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.Templa
         Je hebt niet de juiste permissies om deze pagina te bekijken. 
         Indien je dit wel nodig hebt, contacteer de webmaster. (TODO: add link)
         """
+
     tables = [
         DraftTable(Betaling.objects.filter(status="draft").all(), prefix="draft-"),
         VerstuurdTable(Betaling.objects.filter(status="mail_sent").all(), prefix="sent-")

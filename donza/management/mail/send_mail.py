@@ -22,10 +22,11 @@ def lidgeld_mail(pk):
         'datum_verval': datum_verval,
     }
 
-    subject, from_email, to = "Inschrijvingsgeld {} LDP Donza, seizoen '20-'21".format(
-        lid), 'no-reply@ldpdonza.be', 'vanerum.tim@icloud.com'
+    subject, from_email = "Inschrijvingsgeld {} LDP Donza, seizoen '20-'21".format(
+        lid), 'no-reply@ldpdonza.be'
+    to = ['vanerum.tim@icloud.com', 'pol@ldpdonza.be']
     text_content = plaintext.render(d)
     html_content = htmly.render(d)
-    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    msg = EmailMultiAlternatives(subject, text_content, from_email, to, reply_to=['pol@ldpdonza.be'])
     msg.attach_alternative(html_content, "text/html")
     msg.send()
