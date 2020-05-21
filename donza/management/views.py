@@ -53,7 +53,7 @@ class LidEditView(PermissionRequiredMixin, UpdateView):
     template_name_suffix = ""
     form_class = LidForm
     model = Lid
-    permission_required = ('management.edit_lid',)
+    permission_required = ('management.change_lid',)
     permission_denied_message = PERMISSION_DENIED
 
     def get_context_data(self, **kwargs):
