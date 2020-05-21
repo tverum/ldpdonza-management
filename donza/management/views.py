@@ -6,6 +6,7 @@ from django.views import generic
 from django.views.generic.edit import FormView, UpdateView
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin, MultiTableMixin
+from guardian.mixins import PermissionRequiredMixin as GuardianPermissionMixin
 
 from .mail.send_mail import lidgeld_mail
 from .main.betalingen import genereer_betalingen
@@ -18,6 +19,11 @@ from .visual.components import TeamSelector
 from .visual.filters import LidFilter
 from .visual.forms import LidForm, OuderForm, PloegForm
 from .visual.tables import LidTable, DraftTable, VerstuurdTable
+
+PERMISSION_DENIED = """
+            Je hebt niet de juiste permissies om deze pagina te bekijken. 
+            Indien je dit wel nodig hebt, contacteer de webmaster. (TODO: add link)
+            """
 
 
 class IndexView(generic.TemplateView):
@@ -42,11 +48,13 @@ class LidNewView(FormView):
         return reverse("management:leden")
 
 
-class LidEditView(UpdateView):
+class LidEditView(PermissionRequiredMixin, UpdateView):
     template_name = 'management/lid_edit.html'
     template_name_suffix = ""
     form_class = LidForm
     model = Lid
+    permission_required = ('management.edit_lid',)
+    permission_denied_message = PERMISSION_DENIED
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -65,10 +73,7 @@ class PloegListView(PermissionRequiredMixin, generic.ListView):
     model = Ploeg
     template_name = "management/ploeg_list.html"
     permission_required = ('management.view_ploeg',)
-    permission_denied_message = """
-        Je hebt niet de juiste permissies om deze pagina te bekijken. 
-        Indien je dit wel nodig hebt, contacteer de webmaster. (TODO: add link)
-        """
+    permission_denied_message = PERMISSION_DENIED
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -76,9 +81,11 @@ class PloegListView(PermissionRequiredMixin, generic.ListView):
         return context
 
 
-class PloegSelectView(generic.DetailView):
+class PloegSelectView(PermissionRequiredMixin, generic.DetailView):
     model = Ploeg
     template_name = 'management/ploeg_select.html'
+    permission_required = ('management.edit_ploeg',)
+    permission_denied_message = PERMISSION_DENIED
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -145,9 +152,11 @@ class PloegSelectView(generic.DetailView):
         return coaches
 
 
-class PloegView(generic.DetailView):
+class PloegView(GuardianPermissionMixin, generic.DetailView):
     model = Ploeg
     template_name = 'management/ploeg_view.html'
+    permission_required = ('management.view_ploeg',)
+    permission_denied_message = PERMISSION_DENIED
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -170,10 +179,7 @@ class LidTableView(PermissionRequiredMixin, SingleTableMixin, FilterView):
     table_pagination = False
     filterset_class = LidFilter
     permission_required = ('management.view_lid',)
-    permission_denied_message = """
-        Je hebt niet de juiste permissies om deze pagina te bekijken. 
-        Indien je dit wel nodig hebt, contacteer de webmaster. (TODO: add link)
-        """
+    permission_denied_message = PERMISSION_DENIED
 
     def post(self, request, *args, **kwargs):
         # retrieve the file from the request
@@ -193,15 +199,13 @@ class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.Templa
     model = Betaling
     permission_required = ('management.view_betaling',)
     template_name = 'management/betalingen.html'
-    permission_denied_message = """
-        Je hebt niet de juiste permissies om deze pagina te bekijken. 
-        Indien je dit wel nodig hebt, contacteer de webmaster. (TODO: add link)
-        """
+    permission_denied_message = PERMISSION_DENIED
 
-    tables = [
-        DraftTable(Betaling.objects.filter(status="draft").all(), prefix="draft-"),
-        VerstuurdTable(Betaling.objects.filter(status="mail_sent").all(), prefix="sent-")
-    ]
+    def get_tables(self):
+        return [
+            DraftTable(Betaling.objects.filter(status="draft").all(), prefix="draft-"),
+            VerstuurdTable(Betaling.objects.filter(status="mail_sent").all(), prefix="sent-")
+        ]
 
 
 def genereer(request):
@@ -214,9 +218,7 @@ def genereer(request):
         messages.success(request, "Betalingen voor geselecteerde leden gegenereerd")
         return redirect(reverse("management:leden"), permanent=True)
     else:
-        # no idea what to do here
-        print("Test")
-        pass
+        raise Http404("Methode bestaat niet. Deze pagina is niet beschikbaar.")
 
 
 def create_ouder(request):
@@ -285,6 +287,12 @@ def verwerk_leden(request):
 
 
 def export_ploeg(request, pk):
+    """
+    Export the ploeg to CSV to allow coaches download
+    :param request: the initial request
+    :param pk: the primary key
+    :return: an HTTPResponse containing the CSV-file
+    """
     ploeg = Ploeg.objects.get(pk=pk)
     functie_speler = Functie.objects.get(functie="Speler")
     ploegleden = PloegLid.objects.filter(ploeg=ploeg, functie=functie_speler)
