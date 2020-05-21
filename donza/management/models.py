@@ -128,7 +128,7 @@ class Betaling(models.Model):
     afgelost_bedrag = models.FloatField()
     lid = models.ForeignKey('management.Lid', on_delete=models.CASCADE)
     seizoen = models.ForeignKey('management.Seizoen', on_delete=models.CASCADE)
-    mails_verstuurd = models.CharField(max_length=500, default="")
+    mails_verstuurd = models.CharField(max_length=500, default="", null=True, blank=True)
     mededeling = models.CharField(max_length=20)  # TODO: determine the exact size
     type = models.CharField(max_length=20)
     status = models.CharField(max_length=20)
