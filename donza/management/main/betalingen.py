@@ -3,7 +3,7 @@ Documentatie voor betalingen.
 
 Omvat alle functies voor het genereren van betalingen, versturen van e-mails etc.
 """
-from ..models import Betaling, PloegLid, Seizoen
+from ..models import Betaling, PloegLid, Seizoen, Functie
 
 
 def no_payment(lid, seizoen):
@@ -71,7 +71,8 @@ def bereken_bedrag(lid, seizoen):
     :param seizoen: het seizoen waarvoor de betalingen gegenereerd worden
     :return: het bedrag dat het lid moet betalen
     """
-    ploegen = [ploeglid.ploeg for ploeglid in PloegLid.objects.filter(lid=lid)]
+    functie = Functie.objects.get(functie="Speler")
+    ploegen = [ploeglid.ploeg for ploeglid in PloegLid.objects.filter(lid=lid, functie=functie)]
     # als het lid niet in een ploeg zit, moet er geen lidgeld betaald worden
     if not ploegen:
         return 0
