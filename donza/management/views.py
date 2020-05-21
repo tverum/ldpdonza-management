@@ -84,7 +84,7 @@ class PloegListView(PermissionRequiredMixin, generic.ListView):
 class PloegSelectView(PermissionRequiredMixin, generic.DetailView):
     model = Ploeg
     template_name = 'management/ploeg_select.html'
-    permission_required = ('management.edit_ploeg',)
+    permission_required = ('management.change_ploeg',)
     permission_denied_message = PERMISSION_DENIED
 
     def get_context_data(self, **kwargs):
