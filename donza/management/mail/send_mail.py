@@ -3,6 +3,11 @@ from datetime import timedelta
 
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
+from django.utils.text import normalize_newlines
+from django.core.mail import EmailMessage
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 from email.mime.image import MIMEImage
 
@@ -40,9 +45,9 @@ def lidgeld_mail(pk):
         lid), 'no-reply@ldpdonza.be'
     text_content = plaintext.render(d)
     html_content = htmly.render(d)
+
     msg = EmailMultiAlternatives(subject, text_content, from_email, to, reply_to=['pol@ldpdonza.be'])
     msg.attach_alternative(html_content, "text/html")
-    msg.content_subtype = 'html'
     msg.mixed_subtype = 'related'
 
     with open(image_path, mode='rb') as f:
