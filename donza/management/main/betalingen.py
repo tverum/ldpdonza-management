@@ -16,15 +16,18 @@ def no_payment(lid, seizoen):
     return Betaling.objects.filter(lid=lid, seizoen=seizoen).count() == 0
 
 
-def oldest(lid, familieleden):
+def oldest(lid, familieleden, seizoen):
     """
     Check of het lid in kwestie het oudst spelende lid is van de familie
     :param lid: lid waarvoor de betaling gegenereerd wordt
     :param familieleden: familieleden in de db waarvoor 'spelend_lid' == True
+    :param seizoen: het seizoen in kwestie waarvoor de betaling gegenereerd wordt
     :return: boolean die aangeeft True is als het lid het oudst is van zijn/haar familie, anders False
     """
     for fl in familieleden:
-        if fl.geboortedatum > lid:
+        if not has_team(fl, seizoen):
+            continue
+        if fl.geboortedatum > lid.geboortedatum:
             return False
     return True
 
@@ -58,7 +61,7 @@ def get_discount(lid, seizoen):
     familieleden = [lid for lid in lid.familieleden.all() if lid.sportief_lid and has_team(lid, seizoen)]
     if not familieleden:
         return 0
-    elif oldest(lid, familieleden):
+    elif oldest(lid, familieleden, seizoen):
         return 0
     else:
         return 50
