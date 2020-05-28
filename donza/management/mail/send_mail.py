@@ -23,9 +23,9 @@ def lidgeld_mail(pk):
     datum_versturen = datetime.date.today().strftime('%d-%m-%Y')
     datum_verval = (datetime.date.today() + timedelta(days=40)).strftime('%d-%m-%Y')
     to = []
-    if lid.moeder.email:
+    if lid.moeder:
         to.append(lid.moeder.email)
-    if lid.vader.email:
+    if lid.vader:
         to.append(lid.vader.email)
     if lid.email:
         to.append(lid.email)
