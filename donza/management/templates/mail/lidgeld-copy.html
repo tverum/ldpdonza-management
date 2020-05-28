@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,
+            shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <link
+            href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext'
+            rel='stylesheet' type='text/css'>
+</head>
+<body class="container-fluid">
+<main role="main" class="flex-shrink-0">
+    <div class="content container pt-5">
+        <div class="row">
+            <div class="alert alert-secondary">
+                Mail verstuurd naar:
+                <ul>
+                    {% for adres in emailadressen %}
+                    <li>{{adres}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>
+                    Beste Ouders,<br>
+                    Beste Speler/Speelster,
+                </p>
+                <p>
+                    Alvast welkom (terug) aan u en uw kind(eren) bij LDP Donza. LDP Donza staat voor heel wat plezier
+                    beleven aan basket
+                    gecombineerd met een zeer degelijke aanpak, waarbij we trainingen en wedstrijden in de best
+                    mogelijke omstandigheden
+                    organiseren, met gediplomeerde en gemotiveerde coaches werken, volop inzetten op de persoonlijke
+                    ontwikkeling van
+                    u/uw kind, ...
+                </p>
+                <p>
+                    Om dit alles te realiseren, steunen we voor een deel op inschrijvingsgelden, maar ook op de
+                    bijdragen van onze
+                    partners (zie www.ldpdonza.be voor meer info), op subsidies en natuurlijk op sportcafé 't Vijfde
+                    Kwart in De Pinte
+                    waar we u trouwens zo snel als mogelijk opnieuw willen ontvangen.
+                </p>
+                <p>
+                    Het inschrijvingsgeld bedraagt voor jullie <b>{{betaling.origineel_bedrag}} EUR per speler per
+                    seizoen</b> en is te
+                    betalen op <b>rekeningnummer BE91 7370 3583 5176</b> van LDP Donza <b>voor {{datum_verval}}</b>.
+                    Gebruik aub
+                    uitsluitend onderstaande gestructureerde mededeling bij de betaling, dat vereenvoudigt de verdere
+                    verwerking.
+                </p>
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <strong>Gestructureerde mededeling voor <b>{{lid.voornaam}} {{lid.familienaam}}</b>:
+                            <b>{{betaling.mededeling}}</b></strong>
+                    </div>
+                </div>
+                <p>
+                    Het inschrijvingsgeld voor uw kind(eren) slim investeren als sponsoring? Het kan. En verzekert u van
+                    een jaar lang zichtbaarheid voor uw bedrijf in de sporthallen van Deinze en De Pinte én online op
+                    LDPDonza.be. Vraag er naar via pol@ldpdonza.be.
+                </p>
+                <p>
+                    Wie eventueel een gespreide betaling wil, kan dit ook via mij aanvragen, uw aanvraag wordt in alle
+                    discretie behandeld.
+                </p>
+                <p>
+                    We wensen jullie alvast een mooi seizoen toe. Laat zeker ook niet na om één van de vele wedstrijden
+                    van jeugd en
+                    senioren te komen bekijken. Meer info hierover op www.ldpdonza.be.
+                </p>
+                <p>
+                    <img src='cid:signature'/>
+                </p>
+                <footer>
+                    <p>
+                        <small>
+                            B.B.C. LDP Donza V.Z.W.<br>
+                            's Gravenstraat 130, 9810 Nazareth<br>
+                            BE0464.016.722<br>
+                            RPR Gent afdeling Gent<br>
+                            info@ldpdonza.be - www.ldpdonza.be
+                        </small>
+                    </p>
+                    <hr/>
+                    <hr/>
+                    <div>
+                        <small>
+                            <p>
+                                De bescherming van jouw gegevens is steeds heel belangrijk geweest voor LDP Donza en zal
+                                dat
+                                ook blijven in de toekomst. De vernieuwde Europese wetgeving rond gegevensbescherming
+                                (AVG
+                                of GDPR) betekent dat jij nog meer zeggenschap hebt over jouw gegevens!
+                            </p>
+
+                            <p>
+                                Wat houdt het precies in? Wel, daarover hebben we het hieronder graag met jou. Het
+                                allerbelangrijkste is: jij hebt de volledige controle over jouw gegevens!
+                            </p>
+
+                            <p><b>I. Moet jij iets veranderen?</b></p>
+
+                            <p>
+                                Nee, helemaal niet. Alles gebeurt “onder de motorkap”. Er zijn voor jou geen zichtbare
+                                veranderingen. Wel krijg je veel makkelijker vat op jouw eigen gegevens.
+                            </p>
+
+
+                            <p><b>II. Hoe precies krijg je meer vat op je gegevens?</b></p>
+
+                            <p>De drie belangrijkste punten zijn:</p>
+                            <ul>
+                                <li><i><u>Verbeterde transparantie</u></i></li>
+                                <p>
+                                    Wat doen we wel / niet met de gegevens die we over jou hebben? Hoe lang houden we
+                                    gegevens over jou bij? Aan wie geven we die gegevens door? Zijn onze partners ook
+                                    GDPR-conform en waarvoor hebben we die partners nodig? Welke gegevens over jou
+                                    zitten bij welke partner? Je kan dus ook eenvoudig vragen welke gegevens we over jou
+                                    bezitten. <br>
+                                    We houden rekening met jouw voorkeuren zoals bijvoorbeeld of je onze nieuwsbrief wil
+                                    ontvangen of niet. Die keuzes kan je te allen tijde opnieuw aanpassen.<br>
+                                    Gegevens waarvan we niet vermelden dat we ze opslaan of verwerken, slaan we ook niet
+                                    op of verwerken we niet. Houden we in de toekomst een bijkomend gegeven bij van jou
+                                    (iets wat we niet opsomden), dan lichten we je eerst in. Opgelet, sommige gegevens
+                                    houden we bij omdat we verplicht zijn. Een voorbeeld daarvan is informatie die we
+                                    moeten doorgeven aan Basket Vlaanderen. Deze gegevens kan je wel vragen te wissen
+                                    maar het effectieve wissen gebeurt in dit voorbeeld pas wanneer we ze niet meer
+                                    hoeven te rapporteren aan Basket Vlaanderen.
+                                </p>
+                                <li><i><u>Makkelijke uitschrijfoptie voor allerhande zaken</u></i></li>
+                                <p>
+                                    We respecteren jouw keuzes over welke gegevens we over jou mogen bijhouden of
+                                    verwerken. Dat kan zijn bijvoorbeeld het ontvangen van een nieuwsbrief en andere
+                                    communicatie.
+                                </p>
+                                <li><i><u>Extra beveiliging voor minderjarige sporters</u></i></li>
+                                <p>
+                                    Vanaf het moment dat we weten dat een sporter jonger is dan 16 jaar, vragen we de
+                                    ouders of wettelijke vertegenwoordiger van de jongere wat er wel of niet met de
+                                    persoonlijke gegevens van die sporter mag gebeuren.
+                                </p>
+                            </ul>
+
+                            <p><b>III. Doeleinden van de gegevensverzameling</b></p>
+                            <p>
+                                LDP Donza wil jou als aangesloten sporter een uitstekende dienstverlening verzorgen.
+                            </p>
+
+
+                            <p><b>IV. Welke informatie over jou wordt door ons opgeslagen en waarvoor wordt deze
+                                informatie gebruikt?</b></p>
+                            <p>
+                                <u>Je LDP Donza profiel</u>: persoonlijke identiteitsgegevens: naam, voornaam, adres,
+                                telefoonnummer, e-mailadres, gegevens ouders, (i.f.v. communicatie, vervullen wettelijke
+                                verplichtingen en begeleiding), rijksregisternummer, geboortedatum, leeftijd, geslacht,
+                                nationaliteit, foto.<br>
+                                <u>Medische gegevens</u>: beperkingen en medische geschiktheid.<br>
+                                <u>Wedstrijdgegevens</u>: aan welke wedstrijden je deelnam, op welk niveau en
+                                leeftijdscategorie, en de resultaten.<br>
+                                <u>Betalingsgegevens</u>: voor inschrijvingsgeld e.d., bedrag, en
+                                bankrekeningnummer.<br>
+                                <u>Aansluitingsgegevens</u>: je club, je relatie met die club (bijvoorbeeld: trainer),
+                                aansluitingsperiode met begin- en einddatum, welk type aansluiting, goedkeuring club,
+                                goedkeuring federatie, voor minderjarige sporters: goedkeuring ouders / voogd en in
+                                welke groepen je zit (bijvoorbeeld: Scheidsrechters).<br>
+                                <u>Nieuwsbrief</u>: is voor u een nieuwsbrief gewenst? U kunt op elk ogenblik weigeren
+                                verdere nieuwsbrieven van LDP Donza te ontvangen. In dat geval klikt u op de afmeldlink
+                                gelegen binnen elk bericht en / of neemt u contact met ons via communicatie@ldpdonza.be.
+                            </p>
+                            <p>
+                                Dit is enkel de opsomming. U krijgt binnenkort van ons deze opsomming, aangevuld met
+                                (per gegeven) hoe we dat gegeven verkrijgen, waarom we het nodig hebben, waar we dat
+                                bewaren en hoelang en wie er toegang toe heeft. De rechtsgronden waarop we dit doen
+                                zijn: het nakomen van onze wettelijke verplichtingen, gerechtvaardigd belang, uitvoering
+                                overeenkomst, toestemming betrokkene.
+                            </p>
+
+
+                            <p><b>V. Verstrekking aan derden</b></p>
+                            <p>
+                                Jouw persoonsgegevens zullen niet verkocht, noch verhuurd, verdeeld of anderszins
+                                commercieel ter beschikking gesteld worden aan derden, tenzij dit wettelijk verplicht en
+                                toegestaan is, of wij hier een gerechtvaardigd belang voor hebben.<br>
+
+                                Een voorbeeld hiervan is het overmaken van persoonsgegevens aan de subsidiërende
+                                overheid die dit oplegt. In een dergelijk geval dienen wij medewerking te verlenen en
+                                zijn dan ook verplicht deze gegevens af te geven.<br>
+
+                                Tevens kunnen wij persoonsgegevens delen met derden maar slechts nadat we u dat gemeld
+                                hebben én indien u ons hier uitdrukkelijk toestemming voor geeft. U heeft het recht deze
+                                toestemming te weigeren of om deze te allen tijde in te trekken.
+                            </p>
+
+
+                            <p><b>VI. Bewaartermijn.</b></p>
+
+                            <p>
+                                LDP Donza bewaart persoonsgegevens niet langer dan noodzakelijk voor het doel waarvoor
+                                deze zijn verstrekt dan wel op grond van de wet is vereist. Concreet worden de
+                                persoonsgegevens bewaard zolang het profiel bestaat, zolang 3VL rankings en dergelijke
+                                verzorgt waarbij het betreffende profiel betrokken is, of langer wanneer hetzij een
+                                wettelijke of decretale bepaling dit oplegt (wettelijke bewaartermijnen van documenten
+                                bijvoorbeeld), hetzij de wettelijke verjaringstermijn van een eventuele rechtsvordering
+                                ten aanzien van of door 3VL dit rechtvaardigt.
+                            </p>
+
+                            <p><b>VII. Beveiliging van de gegevens</b></p>
+
+                            <p>
+                                Wij hebben passende technische en organisatorische maatregelen genomen om uw
+                                persoonsgegevens te beveiligen en de vertrouwelijkheid ervan te waarborgen. Waaronder
+                                maatregelen die de gegevens beschermen tegen inbreuken, verlies en onrechtmatige
+                                verwerking. Zo hebben we bijvoorbeeld de volgende maatregelen genomen;<br>
+                            <ul>
+                                <li>
+                                    Alle personen die namens LDP Donza van uw gegevens kennis kunnen nemen, zijn
+                                    gehouden aan geheimhouding daarvan.
+                                </li>
+                                <li>
+                                    We hanteren een gebruikersnaam-en-wachtwoordbeleid op al onze systemen.
+                                </li>
+                                <li>
+                                    We pseudonimiseren / anonimiseren waar mogelijk / nodig en zorgen voor de encryptie
+                                    van persoonsgegevens als daar aanleiding toe is.
+                                </li>
+                                <li>
+                                    Wij maken back-ups van de persoonsgegevens om deze te kunnen herstellen bij fysieke
+                                    of technische incidenten.
+                                </li>
+                                <li>
+                                    We testen en evalueren regelmatig onze maatregelen.
+                                </li>
+                                <li>
+                                    Onze medewerkers zijn geïnformeerd over het belang van de bescherming van
+                                    persoonsgegevens
+                                </li>
+                            </ul>
+                            Mocht LDP Donza toch op een bepaald moment geconfronteerd worden met een risico op vlak van
+                            gegevensbescherming, dan word je door ons actief op de hoogte gesteld. Met actief bedoelen
+                            we dat we je een emailbericht sturen.
+                            </p>
+
+
+                            <p><b>VIII. Uw rechten omtrent uw gegevens</b></p>
+
+                            <p>
+                                <i>U hebt recht</i> op inzage en kopie van de persoonsgegevens die op u betrekking
+                                hebben.<br>
+
+                                <i>U hebt recht</i> op correctie en aanvulling wanneer uw gegevens onjuist of onvolledig
+                                zijn.<br>
+
+                                <i>U mag eisen</i> dat uw persoonsgegevens geheel of gedeeltelijk gewist worden wanneer
+                                ze niet langer noodzakelijk zijn ten aanzien van de doeleinden waarvoor ze werden
+                                verzameld of verwerkt, wanneer er geen gerechtvaardigd doel meer bestaat voor de
+                                verwerking, wanneer u terugkomt op uw toestemming betreffende de verwerking van bepaalde
+                                gegevens en, bij deze volledige opsomming, de organisatie zich niet kan baseren op een
+                                ander gerechtvaardigd doel voor de verwerking.<br>
+
+                                <i>U hebt het recht</i> om de verwerking van uw persoonsgegevens te laten beperken
+                                wanneer u de juistheid van die gegevens betwist of wanneer u zich verzet tegen de
+                                verwerking van de gegevens (zie verder) zodat de gegevens alleen nog verwerkt kunnen
+                                worden met uw toestemming, voor de vaststelling van de uitoefening of de verdediging van
+                                rechten voor de rechtbank of voor de bescherming van de rechten van een andere
+                                persoon.<br>
+
+                                <i>U hebt het recht</i> om zich te verzetten tegen de verwerking van uw persoonsgegevens
+                                om redenen die verband houden met uw bijzondere situatie, tenzij voor de
+                                persoonsgegevens die noodzakelijk zijn voor de inachtneming van de contractuele of
+                                wettelijke verplichtingen van de organisatie.<br>
+
+                                <i>U kunt</i> de persoonsgegevens die u ons heeft verstrekt en die wij geautomatiseerd
+                                verwerken, ontvangen in een gestructureerd, gangbaar en machineleesbaar formaat, zodat u
+                                deze kunt doorgeven aan een andere verwerkingsverantwoordelijke of zodat wij deze, op uw
+                                vraag en als dit technisch mogelijk is, kunnen overmaken aan een andere
+                                verwerkingsverantwoordelijke.<br>
+
+                                Voor de verwerking van persoonsgegevens die wij op basis van uw toestemming hebben
+                                verkregen, kunt u uw toestemming om het even wanneer intrekken. De verwerking van deze
+                                gegevens van vóór de intrekking van de toestemming blijft geoorloofd.<br>
+
+                                Bovenaan dit privacy statement staat hoe u contact met ons kan opnemen om uw rechten uit
+                                te oefenen. U kan ons ook contacteren via de contactpagina van onze website
+                                www.LDPDonza.be. (Om misbruik te voorkomen kunnen wij u daarbij vragen om u adequaat te
+                                identificeren).<br>
+                            </p>
+
+                            <p><b>IX. Wijziging privacy statement</b></p>
+                            <p>
+                                LDP donza kan zijn privacybeleid wijzigen. In dat geval zullen we een aankondiging doen
+                                op onze website en u een email sturen. Oudere versies van ons privacy statement zullen
+                                in ons archief worden opgeslagen. Stuur ons een e-mail als u deze wilt raadplegen.
+                            </p>
+                        </small>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+
+</html>
