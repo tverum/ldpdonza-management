@@ -1,3 +1,4 @@
+from bootstrap_modal_forms.generic import BSModalReadView
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import Http404, HttpResponse
@@ -207,6 +208,11 @@ class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.Templa
             DraftTable(Betaling.objects.filter(status="draft").all(), prefix="draft-"),
             VerstuurdTable(Betaling.objects.filter(status="mail_sent").all(), prefix="sent-")
         ]
+
+
+class LidModalView(BSModalReadView):
+    model = Lid
+    template_name = 'management/lid_modal.html'
 
 
 def genereer(request):

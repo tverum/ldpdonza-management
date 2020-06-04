@@ -26,6 +26,11 @@ Ploegsamenstelling: {{object.naam}}
                 <td>{{lid.gsmnummer}}</td>
                 <td>{{lid.moeder.email}} | {{lid.moeder.gsmnummer}}</td>
                 <td>{{lid.vader.email}} | {{lid.vader.gsmnummer}}</td>
+                <td>
+                    <button type="button" class="view-lid btn btn-sm btn-primary" data-id="{% url 'management:lid_modal' lid.pk %}">
+                        <span class="fa fa-eye"></span>
+                      </button>
+                </td>
             </tr>
         {% endfor %}
     </table>
@@ -46,4 +51,24 @@ Ploegsamenstelling: {{object.naam}}
     </table>
     <h2>Afgevaardigde</h2>
 </div>
+{% endblock %}
+
+{% block modals %}
+<div class="modal" tabindex="-1" role="dialog" id="modal">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block customscripts %}
+<script type="text/javascript">
+  $(function () {
+    // Read lid buttons
+    $(".view-lid").each(function () {
+        console.log("Testest");
+        $(this).modalForm({formURL: $(this).data('id')});
+    });
+  });
+</script>
 {% endblock %}

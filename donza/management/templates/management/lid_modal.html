@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<div class="modal-header text-center">
+  <h3 class="modal-title w-100">Details</h3>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+    <div class="container">
+        <dl class="row">
+            <dt class="col-4">Naam</dt>
+            <dd class="col-8">{{ lid.voornaam }} {{ lid.familienaam }}</dd>
+            <dt class="col-4">Gsm</dt>
+            <dd class="col-8">{{ lid.gsmnummer }}</dd>
+            <dt class="col-4">Adres</dt>
+            <dd class="col-8">{{ lid.straatnaam_en_huisnummer }} {{ lid.gemeente }} ({{ lid.postcode }})</dd>
+            <dt class="col-4">Email</dt>
+            <dd class="col-8">{{ lid.email }}</dd>
+        </dl>
+        {% if lid.moeder.gsmnummer or lid.moeder.email %}
+        <hr/>
+        <h2>Ouder 1</h2>
+        <hr/>
+        <dl class="row">
+            <dt class="col-4">Gsm</dt>
+            <dd class="col-8">{{ lid.moeder.gsmnummer }}</dd>
+            <dt class="col-4">Email</dt>
+            <dd class="col-8">{{ lid.moeder.email }}</dd>
+        </dl>
+        {% endif %}
+        {% if lid.vader.gsmnummer or lid.vader.email %}
+        <hr/>
+        <h2>Ouder 2</h2>
+        <hr/>
+        <dl class="row">
+            <dt class="col-4">Gsm</dt>
+            <dd class="col-8">{{ lid.vader.gsmnummer }}</dd>
+            <dt class="col-4">Email</dt>
+            <dd class="col-8">{{ lid.vader.email }}</dd>
+        </dl>
+        {% endif %}
+    </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>
