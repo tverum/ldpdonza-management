@@ -9,47 +9,52 @@ Ploegsamenstelling: {{object.naam}}
         <h2 class="mb-4">Spelers</h2>
     </div>
     <div class="row mb-4">
-        <a class="btn btn-secondary btn-sm float-right" href="{% url 'management:ploeg_export' object.ploeg_id %}">Exporteer naar CSV</a>
+        <a class="btn btn-secondary btn-sm" href="{% url 'management:ploeg_export_csv' object.ploeg_id %}">Exporteer naar CSV</a>
+        <a class="btn btn-secondary btn-sm" href="{% url 'management:ploeg_export_xlsx' object.ploeg_id %}">Exporteer naar Excel</a>
     </div>
-    <table class="table table-responsive">
-        <thead>
-            <th>Naam</th>
-            <th>Email</th>
-            <th>Gsm</th>
-            <th>Ouder 1</th>
-            <th>Ouder 2</th>
-        </thead>
-        {% for lid in ploegleden %}
-            <tr>
-                <td>{{lid.voornaam}} {{lid.familienaam}}</td>
-                <td>{{lid.email}}</td>
-                <td>{{lid.gsmnummer}}</td>
-                <td>{{lid.moeder.email}} | {{lid.moeder.gsmnummer}}</td>
-                <td>{{lid.vader.email}} | {{lid.vader.gsmnummer}}</td>
-                <td>
-                    <button type="button" class="view-lid btn btn-sm btn-primary" data-id="{% url 'management:lid_modal' lid.pk %}">
-                        <span class="fa fa-eye"></span>
-                      </button>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-    <h2>Coach(es)</h2>
-    <table class="table table-responsive mt-4">
-        <thead>
-            <th>Naam</th>
-            <th>Email</th>
-            <th>Gsm</th>
-        </thead>
-        {% for coach in coaches %}
-            <tr>
-                <td>{{coach.voornaam}} {{coach.familienaam}}</td>
-                <td>{{coach.email}}</td>
-                <td>{{coach.gsmnummer}}</td>
-            </tr>
-        {% endfor %}
-    </table>
-    <h2>Afgevaardigde</h2>
+    <div class="row">
+        <table class="table">
+            <thead>
+                <th>Naam</th>
+                <th>Email</th>
+                <th>Gsm</th>
+            </thead>
+            {% for lid in ploegleden %}
+                <tr>
+                    <td>{{lid.voornaam}} {{lid.familienaam}}</td>
+                    <td>{{lid.email}}</td>
+                    <td>{{lid.gsmnummer}}</td>
+                    <td>
+                        <button type="button" class="view-lid btn btn-sm btn-primary" data-id="{% url 'management:lid_modal' lid.pk %}">
+                            <span class="fa fa-eye"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="row">
+        <h2>Coach(es)</h2>
+    </div>
+    <div class="row">
+        <table class="table mt-4">
+            {% for coach in coaches %}
+                <tr>
+                    <td>{{coach.voornaam}} {{coach.familienaam}}</td>
+                    <td>{{coach.email}}</td>
+                    <td>{{coach.gsmnummer}}</td>
+                    <td>
+                        <button type="button" class="view-lid btn btn-sm btn-primary" data-id="{% url 'management:lid_modal' coach.pk %}">
+                            <span class="fa fa-eye"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="row">
+        <h2>Afgevaardigde</h2>
+    </div>
 </div>
 {% endblock %}
 
