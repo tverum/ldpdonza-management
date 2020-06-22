@@ -10,14 +10,13 @@ from django.views.generic.edit import FormView, UpdateView
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin, MultiTableMixin
 from guardian.mixins import PermissionRequiredMixin as GuardianPermissionMixin
-from openpyxl import Workbook
-from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
+
 
 from .mail.send_mail import lidgeld_mail
 from .main.betalingen import genereer_betalingen
 from .main.ledenbeheer import import_from_csv
 from .models import Lid, Ploeg, PloegLid, Betaling, Functie
-from .resources import CoachLidDownloadResource
+from .resources import CoachLidDownloadResource, create_workbook
 # Deze lijn moet er in blijven staan om de TeamSelector te kunnen laden
 # noinspection PyUnresolvedReferences
 from .visual.components import TeamSelector
@@ -319,12 +318,33 @@ def export_ploeg_csv(request, pk):
     return response
 
 
-def export_ploeg_xlsx(request, pk):
+def export_ploeg_xlsx(_, pk):
     """
     Export the ploeg to Excel to allow coaches download
-    :param request: the initial request
     :param pk: the primary key
     :return: an HTTPResponse containing the Excel-file
+    """
+    ploeg, queryset_coaches, queryset_spelers = retrieve_querysets(pk)
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename={ploeg}-download-{date}.xlsx'.format(
+        ploeg=ploeg.korte_naam,
+        date=datetime.now().strftime('%d-%m-%Y'),
+    )
+
+    workbook = create_workbook(queryset_coaches, queryset_spelers)
+
+    workbook.save(response)
+    return response
+
+
+def retrieve_querysets(pk):
+    """
+    Retrieve the querysets corresponding with the primary key
+    :param pk: the primary key of the team for which the download should be executed
+    :return: 
     """
     ploeg = Ploeg.objects.get(pk=pk)
     functie_speler = Functie.objects.get(functie="Speler")
@@ -335,101 +355,7 @@ def export_ploeg_xlsx(request, pk):
     coach_ids = [coach.lid.club_id for coach in coaches]
     queryset_spelers = Lid.objects.filter(club_id__in=lid_ids)
     queryset_coaches = Lid.objects.filter(club_id__in=coach_ids)
+    return ploeg, queryset_coaches, queryset_spelers
 
-    response = HttpResponse(
-        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    )
-    response['Content-Disposition'] = 'attachment; filename={ploeg}-download-{date}.xlsx'.format(
-        ploeg=ploeg.korte_naam,
-        date=datetime.now().strftime('%d-%m-%Y'),
-    )
 
-    workbook = Workbook()
 
-    # Get active worksheet/tab
-    worksheet = workbook.active
-    worksheet.title = 'Spelers'
-
-    columns = [
-        "Voornaam",
-        "Familienaam",
-        "Gsmnummer",
-        "Email",
-        "GSM Ouder 1",
-        "Email Ouder 1",
-        "GSM Ouder 2",
-        "Email Ouder 2"
-    ]
-
-    cell = worksheet.cell(row=2, column=2)
-    cell.value = "SPELERS"
-    cell.font = Font(name='Calibri', bold=True, size=20)
-
-    row_num = 4
-
-    # Assign the titles for each cell of the header
-    for col_num, column_title in enumerate(columns, 2):
-        cell = worksheet.cell(row=row_num, column=col_num)
-        cell.value = column_title
-
-    # Iterate through all movies
-    for lid in queryset_spelers:
-        row_num += 1
-
-        # Define the data for each cell in the row
-        row = [
-            lid.voornaam,
-            lid.familienaam,
-            str(lid.gsmnummer),
-            lid.email,
-        ]
-
-        if lid.moeder:
-            row.append(str(lid.moeder.gsmnummer))
-            row.append(lid.moeder.email)
-        else:
-            row.append("")
-            row.append("")
-
-        if lid.vader:
-            row.append(str(lid.vader.gsmnummer))
-            row.append(lid.vader.email)
-        else:
-            row.append("")
-            row.append("")
-
-        # Assign the data for each cell of the row
-        for col_num, cell_value in enumerate(row, 2):
-            cell = worksheet.cell(row=row_num, column=col_num)
-            cell.value = cell_value
-
-    worksheet = workbook.create_sheet(
-        title="Coaches",
-        index=1,
-    )
-
-    row_num = 2
-    cell = worksheet.cell(row=row_num, column=2)
-    cell.value = "COACHES"
-    cell.font = Font(name='Calibri', bold=True, size=20)
-
-    row_num += 1
-
-    for coach in queryset_coaches:
-        row_num += 1
-
-        # Define the data for each cell in the row
-        row = [
-            coach.voornaam,
-            coach.familienaam,
-            str(coach.gsmnummer),
-            coach.email,
-        ]
-
-        # Assign the data for each cell of the row
-        for col_num, cell_value in enumerate(row, 2):
-            cell = worksheet.cell(row=row_num, column=col_num)
-            cell.value = cell_value
-
-    workbook.save(response)
-    return response
