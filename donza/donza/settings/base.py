@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'django_filters',
     'django_tables2',
+    'bootstrap_modal_forms',
     'import_export',
     'localflavor',
     'bootstrapform',

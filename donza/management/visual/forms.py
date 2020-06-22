@@ -1,5 +1,5 @@
+from bootstrap_modal_forms.forms import BSModalForm
 from django import forms
-from itertools import chain
 
 from ..models import Lid, Ouder, Ploeg
 
@@ -12,7 +12,7 @@ class LidForm(forms.ModelForm):
         if 'instance' in kwargs:
             lid = kwargs['instance']
             queryset = Lid.objects.extra(
-                select={'sort': 'SELECT CASE WHEN familienaam = %s THEN 0 ELSE 1 END'}, 
+                select={'sort': 'SELECT CASE WHEN familienaam = %s THEN 0 ELSE 1 END'},
                 select_params=(lid.familienaam,)
             ).exclude(club_id=lid.club_id).order_by('sort')
             self.fields['familieleden'].queryset = queryset
@@ -33,6 +33,13 @@ class LidForm(forms.ModelForm):
             'gemeente': forms.TextInput(attrs={'placeholder': 'e.g. Deinze'}),
             'extra_informatie': forms.Textarea(attrs={'placeholder': 'Hier komt eventuele extra informatie'}),
         }
+
+
+class LidModalForm(BSModalForm):
+    class Meta:
+        model = Lid
+        fields = ['voornaam', 'familienaam', 'straatnaam_en_huisnummer', 'postcode', 'gemeente', 'geboortedatum', 'gsmnummer',
+                  'email']
 
 
 class OuderForm(forms.ModelForm):
