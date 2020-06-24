@@ -100,7 +100,6 @@ class PloegSelectView(PermissionRequiredMixin, generic.DetailView):
         context['ploegleden'] = ploegleden
         context['ploeg_id'] = ploeg.ploeg_id
         ploegcoaches = self.get_ploegcoaches(ploeg)
-        print(ploegcoaches)
         context['ploegcoaches'] = ploegcoaches
         context['coaches'] = self.get_coaches(ploegcoaches)
         return context
@@ -152,7 +151,6 @@ class PloegSelectView(PermissionRequiredMixin, generic.DetailView):
         functie = Functie.objects.get(functie="Coach")
         queryset = Lid.objects.filter(functies__functie=functie)
         coaches = [lid.club_id for lid in queryset if lid.club_id not in ploegcoaches]
-        print(coaches)
         return coaches
 
 
