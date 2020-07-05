@@ -163,7 +163,7 @@ class TeamSelector(Component):
             pl.save()
         for pl in insert_ploegcoaches:
             pl.save()
-            
+
         self.send_redirect(reverse("management:ploegen"))
 
     def receive_showall_lid(self, **kwargs):

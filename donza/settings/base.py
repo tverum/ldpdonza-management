@@ -18,6 +18,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
+ADMINS = (
+    ('tim', 'vanerum.tim@gmail.com'),
+)
+
+MANAGERS = ADMINS
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '8488!@xxkp5)@4xef3#u2=sn+ydgolipy%8!c63g42+a(@rh=g'
 
@@ -152,6 +158,15 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# Pagination loading
+ENDLESS_PAGINATION_LOADING = """
+    <div class="spinner small" style="margin:auto">
+        <div class="block_1 spinner_block small"></div>
+        <div class="block_2 spinner_block small"></div>
+        <div class="block_3 spinner_block small"></div>
+    </div>
+"""
 
 # for the import_export package
 IMPORT_EXPORT_USE_TRANSACTIONS = True
