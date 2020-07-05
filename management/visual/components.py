@@ -1,4 +1,6 @@
 from reactor import Component
+from django.shortcuts import reverse
+from django.contrib import messages
 
 from ..models import Functie, Lid, Ploeg, PloegLid, MAN, VROUW
 
@@ -161,6 +163,8 @@ class TeamSelector(Component):
             pl.save()
         for pl in insert_ploegcoaches:
             pl.save()
+
+        self.send_redirect(reverse("management:ploegen"))
 
     def receive_showall_lid(self, **kwargs):
         self.showall = not self.showall
