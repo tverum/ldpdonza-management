@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.0/howto/deployment/asgi/
 
 import os
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'donza.settings.dev')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'donza.settings')
 
 import django
 django.setup()
