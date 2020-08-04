@@ -3,6 +3,12 @@ Documentatie voor betalingen.
 
 Omvat alle functies voor het genereren van betalingen, versturen van e-mails etc.
 """
+import csv
+import io
+
+from django.contrib import messages
+from django.core.mail import mail_admins
+
 from ..models import Betaling, PloegLid, Seizoen, Functie
 
 
@@ -172,3 +178,68 @@ def genereer_betalingen(leden):
     leden_todo = list(filter(lambda c_lid: no_payment(c_lid, seizoen), leden))
     for lid in leden_todo:
         genereer_betaling(lid)
+
+
+def check_keys(keys):
+    """
+    Check dat alle benodigde keys aanwezig zijn in de csv file
+    :param keys:
+    :return:
+    """
+    required_keys = ["bedrag", "credit", "debet", "gestructureerde mededeling", "afschriftnummer"]
+    return all(x.lower() in keys for x in required_keys)
+
+
+def registreer_betalingen(csv_file, request):
+    """
+    Registreer betalingen van csv
+    :param csv_file: de geuploade csv-file
+    :param request: de request waarbij de csv-filie geupload is
+    :return: None
+    """
+    # set up the filestream
+    data_set = csv_file.read().decode('UTF-8')
+    io_string = io.StringIO(data_set)
+
+    keys = []
+    for index, aflossing in enumerate(csv.reader(io_string, delimiter=';', quotechar="|")):
+        if index == 0:
+            # haal de kolomnamen uit de csv-file
+            keys = [key.strip().lower() for key in aflossing]
+
+            # check dat de correcte kolomnamen aanwezig zijn in de file
+            if not check_keys(keys):
+                # indien niet, error
+                messages.error(request, "CSV-bestand bevat niet de correcte headers")
+                return
+        else:
+            # haal de values uit de row
+            values = [value.strip() for value in aflossing]
+            aflossing = dict(zip(keys, values))
+            try:
+                # filter op de gestructureerde mededeling
+                g_mededeling = aflossing["gestructureerde mededeling"]
+                if not g_mededeling:
+                    # als de gestructureerde mededeling leeg is, niet van belang
+                    continue
+                betaling = Betaling.objects.filter(mededeling=g_mededeling)
+
+                # alleen wanneer er maar 1 betaling is die filtert
+                if len(betaling) == 1:
+                    betaling[0].los_af(aflossing)
+                    messages.success(request, "Betaling {} succesvol geregistreerd")
+                elif len(betaling) == 0:
+                    messages.warning(request,
+                                     "Geen record gevonden voor afschrift {}".format(aflossing["afschriftnummer"]))
+                else:
+                    messages.warning(request, "Meerdere betalingsrecords gevonden voor mededeling {}".format(
+                        aflossing["gestructureerde mededeling"]))
+                    mail_admins("Meerdere records voor mededeling {}".format(g_mededeling), """
+                    Meerdere records voor mededeling {}.
+                    Tijdens het verwerken van aflossing: {}, werden meerdere betalingsrecords met mededeling {} gevonden.
+                    """.format(g_mededeling, aflossing, g_mededeling))
+            except Exception as e:
+                messages.error(request, """
+                <p>Probleem bij het processen van afschrift {}</p>
+                <p>{}</p>
+                """.format(aflossing["afschriftnummer"], e))

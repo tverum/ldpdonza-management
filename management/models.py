@@ -129,12 +129,28 @@ class Betaling(models.Model):
     lid = models.ForeignKey('management.Lid', on_delete=models.CASCADE)
     seizoen = models.ForeignKey('management.Seizoen', on_delete=models.CASCADE)
     mails_verstuurd = models.CharField(max_length=500, default="", null=True, blank=True)
-    mededeling = models.CharField(max_length=20)  # TODO: determine the exact size
+    mededeling = models.CharField(max_length=20)
     type = models.CharField(max_length=20)
     status = models.CharField(max_length=20)
+    aflossingen = models.CharField(max_length=500, default="", null=True, blank=True)
 
     def __str__(self):
         return "{}: {}".format(self.lid, self.mededeling)
+
+    def los_af(self, aflossing):
+        """
+        Los een betaling af
+        :param aflossing:
+        :return:
+        """
+        afl_nummers = self.aflossingen.split(",")
+        if not aflossing["afschriftnummer"] in afl_nummers:
+            self.afgelost_bedrag += float(aflossing["credit"])
+            afl_nummers.append(aflossing["afschriftnummer"])
+            self.aflossingen = ",".join(afl_nummers)
+            return True
+        else:
+            return False
 
 
 class LidgeldKlasse(models.Model):

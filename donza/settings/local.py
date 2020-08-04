@@ -3,6 +3,8 @@ from .base import *
 
 DEBUG = True
 
+ALLOWED_HOSTS = ["localhost"]
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'

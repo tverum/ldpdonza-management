@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 from . import views
 
@@ -20,4 +22,6 @@ urlpatterns = [
     path("betalingen/stuur_mail/<int:pk>/", views.stuur_mail, name="betalingen_mail"),
     path("betalingen/", views.BetalingTableView.as_view(), name="betalingen"),
     path('', views.IndexView.as_view(), name='index'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+handler500 = views.handler500

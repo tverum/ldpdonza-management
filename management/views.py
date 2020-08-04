@@ -4,16 +4,16 @@ from bootstrap_modal_forms.generic import BSModalReadView
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import Http404, HttpResponse
-from django.shortcuts import redirect, reverse
+from django.shortcuts import redirect, reverse, render
+from django.template import RequestContext
 from django.views import generic
 from django.views.generic.edit import FormView, UpdateView
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin, MultiTableMixin
 from guardian.mixins import PermissionRequiredMixin as GuardianPermissionMixin
 
-
 from .mail.send_mail import lidgeld_mail
-from .main.betalingen import genereer_betalingen
+from .main.betalingen import genereer_betalingen, registreer_betalingen
 from .main.ledenbeheer import import_from_csv
 from .models import Lid, Ploeg, PloegLid, Betaling, Functie
 from .resources import CoachLidDownloadResource, create_workbook
@@ -28,6 +28,10 @@ PERMISSION_DENIED = """
             Je hebt niet de juiste permissies om deze pagina te bekijken. 
             Indien je dit wel nodig hebt, contacteer de webmaster. (TODO: add link)
             """
+
+"""
+Class based views
+"""
 
 
 class IndexView(generic.TemplateView):
@@ -190,7 +194,7 @@ class LidTableView(PermissionRequiredMixin, SingleTableMixin, FilterView):
 
         if not csv_file.name.endswith(".csv"):
             messages.error(request, "This is not a csv file")
-            redirect(reverse("management:leden"), permanent=True)
+            return redirect(reverse("management:leden"), permanent=True)
 
         import_from_csv(csv_file, request)
         messages.success(request, "Import van csv succesvol")
@@ -210,10 +214,34 @@ class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.Templa
             VerstuurdTable(Betaling.objects.filter(status="mail_sent").all(), prefix="sent-")
         ]
 
+    def post(self, request, *args, **kwargs):
+        # retrieve the file from the request
+        csv_file = request.FILES['file']
+
+        if not csv_file.name.endswith(".csv"):
+            messages.error(request, "This is not a csv file")
+            return redirect(reverse("management:betalingen"))
+
+        registreer_betalingen(csv_file, request)
+        messages.success(request, "Inlezen van betalingen succesvol")
+
+        return redirect(reverse("management:betalingen"))
+
 
 class LidModalView(BSModalReadView):
     model = Lid
     template_name = 'management/lid_modal.html'
+
+
+"""
+Method based views
+"""
+
+
+def handler500(request, *args, **argv):
+    response = render(request, '500.html', {},
+                      status=500)
+    return response
 
 
 def genereer(request):
@@ -354,6 +382,3 @@ def retrieve_querysets(pk):
     queryset_spelers = Lid.objects.filter(club_id__in=lid_ids)
     queryset_coaches = Lid.objects.filter(club_id__in=coach_ids)
     return ploeg, queryset_coaches, queryset_spelers
-
-
-
