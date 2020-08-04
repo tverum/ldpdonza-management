@@ -227,10 +227,9 @@ def registreer_betalingen(csv_file, request):
                 # alleen wanneer er maar 1 betaling is die filtert
                 if len(betaling) == 1:
                     betaling[0].los_af(aflossing)
-                    messages.success(request, "Betaling {} succesvol geregistreerd")
                 elif len(betaling) == 0:
                     messages.warning(request,
-                                     "Geen record gevonden voor afschrift {}".format(aflossing["afschriftnummer"]))
+                                     "Geen record gevonden voor betaling {}".format(aflossing["omschrijving"]))
                 else:
                     messages.warning(request, "Meerdere betalingsrecords gevonden voor mededeling {}".format(
                         aflossing["gestructureerde mededeling"]))

@@ -144,10 +144,12 @@ class Betaling(models.Model):
         :return:
         """
         afl_nummers = self.aflossingen.split(",")
-        if not aflossing["afschriftnummer"] in afl_nummers:
-            self.afgelost_bedrag += float(aflossing["credit"])
-            afl_nummers.append(aflossing["afschriftnummer"])
+        if not aflossing["datum"] in afl_nummers:
+            bedrag = aflossing["credit"].replace(",", ".")
+            self.afgelost_bedrag += float(bedrag)
+            afl_nummers.append(aflossing["datum"])
             self.aflossingen = ",".join(afl_nummers)
+            self.save()
             return True
         else:
             return False
