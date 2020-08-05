@@ -106,6 +106,9 @@ class PloegSelectView(PermissionRequiredMixin, generic.DetailView):
         ploegcoaches = self.get_ploegcoaches(ploeg)
         context['ploegcoaches'] = ploegcoaches
         context['coaches'] = self.get_coaches(ploegcoaches)
+        ploegpvn = self.get_ploegpvn(ploeg)
+        context['ploegpvn'] = ploegpvn
+        context['pvn'] = self.get_pvn(ploegpvn)
         return context
 
     @staticmethod
@@ -156,6 +159,20 @@ class PloegSelectView(PermissionRequiredMixin, generic.DetailView):
         queryset = Lid.objects.filter(functies__functie=functie)
         coaches = [lid.club_id for lid in queryset if lid.club_id not in ploegcoaches]
         return coaches
+
+    @staticmethod
+    def get_ploegpvn(ploeg):
+        functie = Functie.objects.get(functie="Ploegverantwoordelijke")
+        pvn_ids = [ploeglid.lid.club_id for ploeglid in PloegLid.objects.filter(
+            ploeg_id=ploeg.ploeg_id, functie=functie)]
+        return pvn_ids
+
+    @staticmethod
+    def get_pvn(ploegpvn):
+        functie = Functie.objects.get(functie="Ploegverantwoordelijke")
+        queryset = Lid.objects.filter(functies__functie=functie)
+        pvn = [lid.club_id for lid in queryset if lid.club_id not in ploegpvn]
+        return pvn
 
 
 class PloegView(GuardianPermissionMixin, generic.DetailView):
