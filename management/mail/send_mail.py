@@ -57,6 +57,11 @@ def lidgeld_mail(pk):
 
 
 def send_herinnering(pk):
+    """
+    Stuur een betalingsherinnering voor een bepaalde betaling
+    :param pk: de betalingsinstantie waarvoor de herinnering moet gegenereerd worden
+    :return: None
+    """
     plaintext = get_template('mail/herinnering.txt')
     htmly = get_template('mail/herinnering.html')
 
@@ -101,6 +106,15 @@ def send_herinnering(pk):
     betaling.status = 'mail_sent'
     betaling.mails_verstuurd += ";" + str(datetime.date.today())
     betaling.save()
+
+
+def bevestig_betaling(pk):
+    """
+    Bevestig een bepaalde betaling en verstuur de mutualiteitsformulieren etc.
+    :param pk: de betaling die bevestigd moet worden
+    :return: None
+    """
+    pass
 
 
 def mail_w_attachment(from_email, to_email, filename):

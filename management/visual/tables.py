@@ -123,6 +123,39 @@ class VerstuurdTable(tables.Table):
         }
 
 
+class BetaaldTable(tables.Table):
+    title = "Betaald"
+    table_pagination = {
+        "per_page": 30
+    }
+    bevestiging_column = tables.LinkColumn("management:bevestig_mail",
+                                           text="Bevestiging",
+                                           args=[A("pk")],
+                                           attrs={
+                                               "a": {
+                                                   "class": "btn btn-sm btn-success",
+                                               }
+                                           })
+
+    class Meta:
+        model = Betaling
+        fields = (
+            "lid",
+            "origineel_bedrag",
+            "type",
+        )
+        attrs = {
+            "class": "table table-hover table-sm",
+            "id": "mail-verstuurd",
+            "td": {
+                "class": "text-center",
+            },
+            "th": {
+                "class": "text-center",
+            },
+        }
+
+
 def overdue(record):
     # Calculate the difference between the date of the last mail and the current time
     mail = record.mails_verstuurd.split(";")[-1]

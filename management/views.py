@@ -11,7 +11,7 @@ from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin, MultiTableMixin
 from guardian.mixins import PermissionRequiredMixin as GuardianPermissionMixin
 
-from .mail.send_mail import lidgeld_mail, send_herinnering
+from .mail.send_mail import lidgeld_mail, send_herinnering, bevestig_betaling
 from .main.betalingen import genereer_betalingen, registreer_betalingen
 from .main.ledenbeheer import import_from_csv
 from .models import Lid, Ploeg, PloegLid, Betaling, Functie
@@ -21,7 +21,7 @@ from .resources import CoachLidDownloadResource, create_workbook
 from .visual.components import TeamSelector
 from .visual.filters import LidFilter
 from .visual.forms import LidForm, OuderForm, PloegForm
-from .visual.tables import LidTable, DraftTable, VerstuurdTable
+from .visual.tables import LidTable, DraftTable, VerstuurdTable, BetaaldTable
 
 PERMISSION_DENIED = """
             Je hebt niet de juiste permissies om deze pagina te bekijken. 
@@ -230,8 +230,9 @@ class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.Templa
         betaald_queryset = Betaling.objects.filter(status="betaald").all()
         voltooid_queryset = Betaling.objects.filter(status="voltooid").all()
         return [
-            DraftTable(Betaling.objects.filter(status="draft").all(), prefix="draft-"),
-            VerstuurdTable(Betaling.objects.filter(status="mail_sent").all(), prefix="sent-")
+            DraftTable(draft_queryset, prefix="draft-"),
+            VerstuurdTable(verstuurd_queryset, prefix="sent-"),
+            BetaaldTable(betaald_queryset, prefix="betaald-"),
         ]
 
     def post(self, request, *args, **kwargs):
@@ -310,6 +311,11 @@ def stuur_mail(_, pk):
 
 def herinnering_mail(_, pk):
     send_herinnering(pk)
+    return redirect(reverse("management:betalingen"), permanent=False)
+
+
+def bevestig_mail(_, pk):
+    bevestig_betaling(pk)
     return redirect(reverse("management:betalingen"), permanent=False)
 
 

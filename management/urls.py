@@ -21,6 +21,7 @@ urlpatterns = [
     path("ploegen/<int:pk>/export-xlsx/", views.export_ploeg_xlsx, name='ploeg_export_xlsx'),
     path("betalingen/stuur_mail/<int:pk>/", views.stuur_mail, name="betalingen_mail"),
     path("betalingen/her_mail/<int:pk>/", views.herinnering_mail, name="herinnering_mail"),
+    path("betalingen/bevestiging/<int:pk>/", views.bevestig_mail, name="bevestig_mail"),
     path("betalingen/", views.BetalingTableView.as_view(), name="betalingen"),
     path('', views.IndexView.as_view(), name='index'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

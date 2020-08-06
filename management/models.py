@@ -154,6 +154,8 @@ class Betaling(models.Model):
         if not aflossing["datum"] in afl_nummers:
             bedrag = aflossing["credit"].replace(",", ".")
             self.afgelost_bedrag += float(bedrag)
+            if self.afgelost_bedrag == self.origineel_bedrag:
+                self.status = "betaald"
             afl_nummers.append(aflossing["datum"])
             self.aflossingen = ",".join(afl_nummers)
             self.save()
