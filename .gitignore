@@ -128,3 +128,6 @@ dmypy.json
 
 # Exclude PyCharm
 .idea/**
+
+# Exclude local settings
+donza/settings/local.py

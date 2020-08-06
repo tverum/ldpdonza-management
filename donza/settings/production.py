@@ -12,3 +12,4 @@ EMAIL_HOST = 'smtp-relay.gmail.com'
 EMAIL_PORT = 587
 
 SERVER_EMAIL = 'secretariaat-admin@ldpdonza.be'
+NOREPLY = "no-reply@ldpdonza.be"

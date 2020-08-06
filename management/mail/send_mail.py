@@ -1,15 +1,10 @@
 import datetime
 from datetime import timedelta
+from email.mime.image import MIMEImage
 
+from django.core.mail import EmailMessage
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
-from django.utils.text import normalize_newlines
-from django.core.mail import EmailMessage
-from email.mime.image import MIMEImage
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-
-from email.mime.image import MIMEImage
 
 from ..models import Betaling
 
@@ -59,3 +54,21 @@ def lidgeld_mail(pk):
     betaling.status = 'mail_sent'
     betaling.mails_verstuurd = str(datetime.date.today())
     betaling.save()
+
+
+def mail_w_attachment(from_email, to_email, filename):
+    """
+    Verstuur een mail met een attachment gespecifieerd in filename
+    :param from_email: het emailadres van waarop te sturen
+    :param to_email: de emailadressen waarnaar te sturen
+    :param filename: de file die moet verstuurd worden
+    :return: None
+    """
+    msg = EmailMessage("Accounts Secretariaat",
+                       "Hierbij de gegenereerde accounts voor de coaches en de ploegverantwoordelijken",
+                       from_email,
+                       to_email)
+
+    msg.content_subtype = "html"
+    msg.attach_file(filename)
+    msg.send()
