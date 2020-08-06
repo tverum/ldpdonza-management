@@ -5,14 +5,13 @@ from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, reverse, render
-from django.template import RequestContext
 from django.views import generic
 from django.views.generic.edit import FormView, UpdateView
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin, MultiTableMixin
 from guardian.mixins import PermissionRequiredMixin as GuardianPermissionMixin
 
-from .mail.send_mail import lidgeld_mail
+from .mail.send_mail import lidgeld_mail, send_herinnering
 from .main.betalingen import genereer_betalingen, registreer_betalingen
 from .main.ledenbeheer import import_from_csv
 from .models import Lid, Ploeg, PloegLid, Betaling, Functie
@@ -226,6 +225,10 @@ class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.Templa
     permission_denied_message = PERMISSION_DENIED
 
     def get_tables(self):
+        draft_queryset = Betaling.objects.filter(status="draft").all()
+        verstuurd_queryset = Betaling.objects.filter(status="mail_sent").all()
+        betaald_queryset = Betaling.objects.filter(status="betaald").all()
+        voltooid_queryset = Betaling.objects.filter(status="voltooid").all()
         return [
             DraftTable(Betaling.objects.filter(status="draft").all(), prefix="draft-"),
             VerstuurdTable(Betaling.objects.filter(status="mail_sent").all(), prefix="sent-")
@@ -302,6 +305,11 @@ def create_ploeg(request):
 
 def stuur_mail(_, pk):
     lidgeld_mail(pk)
+    return redirect(reverse("management:betalingen"), permanent=False)
+
+
+def herinnering_mail(_, pk):
+    send_herinnering(pk)
     return redirect(reverse("management:betalingen"), permanent=False)
 
 
@@ -385,7 +393,8 @@ def export_ploeg_xlsx(_, pk):
 
 def retrieve_querysets(pk):
     """
-    Retrieve the querysets corresponding with the primary key
+    Retrieve the querysets corresponding with the primary key.
+    Help function for the export to xlsx
     :param pk: the primary key of the team for which the download should be executed
     :return: 
     """

@@ -56,6 +56,53 @@ def lidgeld_mail(pk):
     betaling.save()
 
 
+def send_herinnering(pk):
+    plaintext = get_template('mail/herinnering.txt')
+    htmly = get_template('mail/herinnering.html')
+
+    betaling = Betaling.objects.get(pk=pk)
+    lid = betaling.lid
+    datum_verval = (datetime.date.today() + timedelta(days=21)).strftime('%d-%m-%Y')
+    datum_vorige_mail = betaling.mails_verstuurd.split(";")[-1]
+    to = []
+    if lid.moeder:
+        to.append(lid.moeder.email)
+    if lid.vader:
+        to.append(lid.vader.email)
+    if lid.email:
+        to.append(lid.email)
+
+    d = {
+        'betaling': betaling,
+        'lid': lid,
+        'datum_verval': datum_verval,
+        'datum_vorige_mail': datum_vorige_mail,
+        'emailadressen': to,
+    }
+
+    image_path = "management/static/management/images/signature.png"
+    image_name = "signature"
+
+    subject, from_email = "HERINNERING: Inschrijvingsgeld {} LDP Donza, seizoen '20-'21".format(
+        lid), 'no-reply@ldpdonza.be'
+    text_content = plaintext.render(d)
+    html_content = htmly.render(d)
+
+    msg = EmailMultiAlternatives(subject, text_content, from_email, to, reply_to=['pol@ldpdonza.be'])
+    msg.attach_alternative(html_content, "text/html")
+    msg.mixed_subtype = 'related'
+
+    with open(image_path, mode='rb') as f:
+        image = MIMEImage(f.read())
+        msg.attach(image)
+        image.add_header('Content-ID', '<%s>' % image_name)
+    msg.send()
+
+    betaling.status = 'mail_sent'
+    betaling.mails_verstuurd += ";" + str(datetime.date.today())
+    betaling.save()
+
+
 def mail_w_attachment(from_email, to_email, filename):
     """
     Verstuur een mail met een attachment gespecifieerd in filename

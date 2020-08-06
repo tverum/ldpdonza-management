@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,
+    shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <link
+            href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext'
+            rel='stylesheet' type='text/css'>
+</head>
+<body class="container-fluid">
+    <main role="main" class="flex-shrink-0">
+        <div class="content container pt-5">
+            <div class="row">
+                <div class="alert alert-secondary">
+                    Mail verstuurd naar:
+                    <ul>
+                        {% for adres in emailadressen %}
+                        <li>{{adres}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>
+                        Beste Ouders,<br>
+                        Beste Speler/Speelster,
+                    </p>
+                    <p>
+                        U heeft op
+                        {{datum_vorige_mail}} vanuit LDP Donza een betalingsverzoek ontvangen voor het
+                        inschrijvingsgeld van {{lid.voornaam}} {{lid.familienaam}}.
+                    </p>
+                    <p>
+                        Tot op heden hebben wij nog geen betaling mogen ontvangen van u.
+                    </p>
+                    <p>
+                        Mogen wij u vragen dit alsnog in orde te brengen door het nodige bedrag over te schrijven op onze
+                        rekening <strong>BE91 7370 3583 5176 voor {{datum_verval}}</strong>.<br>
+                        Hieronder nog even de gegevens
+                    </p>
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            Bedrag: <strong>{{betaling.origineel_bedrag}}</strong><br>
+                            Gestructureerde mededeling: <strong>{{betaling.mededeling}}</strong>
+                        </div>
+                    </div>
+                    <p>
+                        Indien u een gespreide of latere betaling wenst, kan u steeds contact opnemen met Pol Lombaert, onze
+                        financieel verantwoordelijke via <A HREF="mailto:pol@ldpdonza.be">pol@ldpdonza.be</A> of
+                        0496.65.81.89.
+                    </p>
+                    <p>
+                        We wensen jullie alvast een mooi seizoen toe. Laat zeker ook niet na om één van de vele wedstrijden
+                        van jeugd en
+                        senioren te komen bekijken. Meer info hierover op www.ldpdonza.be.
+                    </p>
+                    <p>
+                        <img src='cid:signature'/>
+                    </p>
+                    <footer>
+                        <p>
+                            <small>
+                                B.B.C. LDP Donza V.Z.W.<br>
+                                's Gravenstraat 130, 9810 Nazareth<br>
+                                BE0464.016.722<br>
+                                RPR Gent afdeling Gent<br>
+                                info@ldpdonza.be - www.ldpdonza.be
+                            </small>
+                        </p>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

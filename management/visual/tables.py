@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import django_tables2 as tables
 from django.urls import reverse
 from django_tables2.utils import A  # alias for Accessor
@@ -87,6 +89,14 @@ class VerstuurdTable(tables.Table):
     table_pagination = {
         "per_page": 30
     }
+    mail_column = tables.LinkColumn("management:herinnering_mail",
+                                    text="HERINNERING",
+                                    args=[A("pk")],
+                                    attrs={
+                                        "a": {
+                                            "class": "btn btn-sm btn-warning",
+                                        }
+                                    })
 
     class Meta:
         model = Betaling
@@ -98,6 +108,9 @@ class VerstuurdTable(tables.Table):
             "type",
             "mails_verstuurd",
         )
+        row_attrs = {
+            "class": lambda record: overdue(record)
+        }
         attrs = {
             "class": "table table-hover table-sm",
             "id": "mail-verstuurd",
@@ -108,3 +121,17 @@ class VerstuurdTable(tables.Table):
                 "class": "text-center",
             },
         }
+
+
+def overdue(record):
+    # Calculate the difference between the date of the last mail and the current time
+    mail = record.mails_verstuurd.split(";")[-1]
+    datum_mail = datetime.strptime(mail, "%Y-%m-%d")
+    now = datetime.now()
+    delta = now - datum_mail
+
+    # If difference larger than 3 weeks, payment is overdue
+    if delta.days > 21 and record.afgelost_bedrag == 0.0:
+        return "table-danger"
+    else:
+        return None

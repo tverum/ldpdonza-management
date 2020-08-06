@@ -1,0 +1,21 @@
+Beste Ouders,
+Beste Speler/Speelster,
+
+U heeft op <DATUM VERSTUREN EERSTE MAIL> vanuit LDP Donza een betalingsverzoek ontvangen voor het inschrijvingsgeld van <NAAM SPELER> bij <PLOEG SPELER>.
+
+Tot op heden hebben wij nog geen betaling mogen ontvangen van u.
+
+Mogen wij u vragen dit alsnog in orde te brengen door het nodige bedrag over te schrijven op onze rekening BE91 7370 3583 5176 voor {{datum_verval}}
+Hieronder nog even de gegevens:
+
+Bedrag: {{betaling.origineel_bedrag}}
+Gestructureerde mededeling: {{betaling.mededeling}}
+
+Indien u een gespreide of latere betaling wenst, kan u steeds contact opnemen met Pol Lombaert, onze financieel verantwoordelijke via pol@ldpdonza.be of 0496.65.81.89.
+
+We wensen jullie alvast een mooi seizoen toe. Laat zeker ook niet na om één van de vele wedstrijden van jeugd en senioren te komen bekijken. Meer info hierover op www.ldpdonza.be.
+
+Vriendelijke groeten,
+
+Pol Lombaert
+
