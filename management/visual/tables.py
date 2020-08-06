@@ -163,8 +163,8 @@ def overdue(record):
     now = datetime.now()
     delta = now - datum_mail
 
-    # If difference larger than 3 weeks, payment is overdue
-    if delta.days > 21 and record.afgelost_bedrag == 0.0:
+    # If difference larger than 40 days, payment is overdue
+    if delta.days > 40 and record.afgelost_bedrag == 0.0:
         return "table-danger"
     else:
         return None
