@@ -367,7 +367,7 @@ def export_ploeg_xlsx(_, pk):
     :param pk: the primary key
     :return: an HTTPResponse containing the Excel-file
     """
-    ploeg, queryset_coaches, queryset_spelers = retrieve_querysets(pk)
+    ploeg, queryset_coaches, queryset_spelers, queryset_pvn = retrieve_querysets(pk)
 
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -377,7 +377,7 @@ def export_ploeg_xlsx(_, pk):
         date=datetime.now().strftime('%d-%m-%Y'),
     )
 
-    workbook = create_workbook(queryset_coaches, queryset_spelers)
+    workbook = create_workbook(queryset_coaches, queryset_spelers, queryset_pvn)
 
     workbook.save(response)
     return response
@@ -392,10 +392,14 @@ def retrieve_querysets(pk):
     ploeg = Ploeg.objects.get(pk=pk)
     functie_speler = Functie.objects.get(functie="Speler")
     functie_coach = Functie.objects.get(functie="Coach")
+    functie_pv = Functie.objects.get(functie="Ploegverantwoordelijke")
     ploegleden = PloegLid.objects.filter(ploeg=ploeg, functie=functie_speler)
     coaches = PloegLid.objects.filter(ploeg=ploeg, functie=functie_coach)
+    pvn = PloegLid.objects.filter(ploeg=ploeg, functie=functie_pv)
     lid_ids = [ploeglid.lid.club_id for ploeglid in ploegleden]
     coach_ids = [coach.lid.club_id for coach in coaches]
+    pv_ids = [pv.lid.club_id for pv in pvn]
     queryset_spelers = Lid.objects.filter(club_id__in=lid_ids)
     queryset_coaches = Lid.objects.filter(club_id__in=coach_ids)
-    return ploeg, queryset_coaches, queryset_spelers
+    queryset_pvn = Lid.objects.filter(club_id__in=pv_ids)
+    return ploeg, queryset_coaches, queryset_spelers, queryset_pvn

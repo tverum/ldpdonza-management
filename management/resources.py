@@ -42,11 +42,12 @@ class CoachLidDownloadResource(resources.ModelResource):
         )
 
 
-def create_workbook(queryset_coaches, queryset_spelers):
+def create_workbook(queryset_coaches, queryset_spelers, queryset_pvn):
     workbook = Workbook()
+
     # Get active worksheet/tab
     worksheet = workbook.active
-    worksheet.title = 'Spelers'
+
     columns = [
         "Voornaam",
         "Familienaam",
@@ -57,10 +58,15 @@ def create_workbook(queryset_coaches, queryset_spelers):
         "GSM Ouder 2",
         "Email Ouder 2"
     ]
+
+    # --- SPELERS ---
+    worksheet.title = 'Spelers'
+
     cell = worksheet.cell(row=2, column=2)
     cell.value = "SPELERS"
     cell.font = Font(name='Calibri', bold=True, size=20)
     row_num = 4
+
     # Assign the titles for each cell of the header
     for col_num, column_title in enumerate(columns, 2):
         cell = worksheet.cell(row=row_num, column=col_num)
@@ -95,6 +101,8 @@ def create_workbook(queryset_coaches, queryset_spelers):
         for col_num, cell_value in enumerate(row, 2):
             cell = worksheet.cell(row=row_num, column=col_num)
             cell.value = cell_value
+
+    # --- COACHES ---
     worksheet = workbook.create_sheet(
         title="Coaches",
         index=1,
@@ -113,6 +121,32 @@ def create_workbook(queryset_coaches, queryset_spelers):
             coach.familienaam,
             str(coach.gsmnummer),
             coach.email,
+        ]
+
+        # Assign the data for each cell of the row
+        for col_num, cell_value in enumerate(row, 2):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = cell_value
+
+    # --- PLOEGVERANTWOORDELIJKEN ---
+    worksheet = workbook.create_sheet(
+        title="Ploegverantwoordelijken",
+        index=1,
+    )
+    row_num = 2
+    cell = worksheet.cell(row=row_num, column=2)
+    cell.value = "PLOEGVERANTWOORDELIJKEN"
+    cell.font = Font(name='Calibri', bold=True, size=20)
+    row_num += 1
+    for pv in queryset_pvn:
+        row_num += 1
+
+        # Define the data for each cell in the row
+        row = [
+            pv.voornaam,
+            pv.familienaam,
+            str(pv.gsmnummer),
+            pv.email,
         ]
 
         # Assign the data for each cell of the row

@@ -21,6 +21,7 @@ PLOEG_GESLACHT_CHOICES = [
 class Functie(models.Model):
     functie_id = models.AutoField(primary_key=True)
     functie = models.CharField(max_length=50)
+    objects = models.Manager()
 
     def __str__(self):
         return self.functie
@@ -32,6 +33,7 @@ class Ouder(models.Model):
     voornaam = models.CharField(max_length=20)
     familienaam = models.CharField(max_length=50)
     email = models.EmailField(max_length=254)
+    objects = models.Manager()
 
     def __str__(self):
         return self.voornaam + " " + self.familienaam
@@ -43,6 +45,7 @@ class Seizoen(models.Model):
     startdatum = models.DateField()
     einddatum = models.DateField()
     bezig = models.BooleanField()
+    objects = models.Manager()
 
     def __str__(self):
         return "({}-{})".format(self.startdatum.year, self.einddatum.year)
@@ -65,6 +68,7 @@ class Ploeg(models.Model):
     lidgeldklasse = models.ForeignKey(
         'management.LidgeldKlasse', default=None, null=True, blank=False, on_delete=models.SET_NULL
     )
+    objects = models.Manager()
 
     def __str__(self):
         return "({}) {} ({}-{})".format(self.geslacht, self.naam, self.seizoen.startdatum.year,
@@ -75,6 +79,7 @@ class PloegLid(models.Model):
     ploeg = models.ForeignKey('management.Ploeg', on_delete=models.CASCADE)
     lid = models.ForeignKey('management.Lid', on_delete=models.CASCADE)
     functie = models.ForeignKey('management.Functie', on_delete=models.CASCADE)
+    objects = models.Manager()
 
     def __str__(self):
         return "Ploeg: {} -- Lid: {} ({})".format(self.ploeg, self.lid, self.functie)
@@ -118,6 +123,7 @@ class Lid(models.Model):
         blank=True,
         null=True,
     )
+    objects = models.Manager()
 
     def __str__(self):
         return "{} {}".format(self.voornaam, self.familienaam, self.lidnummer_vbl)
@@ -133,6 +139,7 @@ class Betaling(models.Model):
     type = models.CharField(max_length=20)
     status = models.CharField(max_length=20)
     aflossingen = models.CharField(max_length=500, default="", null=True, blank=True)
+    objects = models.Manager()
 
     def __str__(self):
         return "{}: {}".format(self.lid, self.mededeling)
@@ -158,6 +165,7 @@ class Betaling(models.Model):
 class LidgeldKlasse(models.Model):
     naam = models.CharField(max_length=20)
     lidgeld = models.IntegerField()
+    objects = models.Manager()
 
     def __str__(self):
         return self.naam
