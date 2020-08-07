@@ -55,6 +55,22 @@ Ploegsamenstelling: {{object.naam}}
     <div class="row">
         <h2>Afgevaardigde</h2>
     </div>
+    <div class="row">
+        <table class="table mt-4">
+            {% for pv in pvn %}
+                <tr>
+                    <td>{{pv.voornaam}} {{pv.familienaam}}</td>
+                    <td>{{pv.email}}</td>
+                    <td>{{pv.gsmnummer}}</td>
+                    <td>
+                        <button type="button" class="view-lid btn btn-sm btn-primary" data-id="{% url 'management:lid_modal' pv.pk %}">
+                            <span class="fa fa-eye"></span>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 </div>
 {% endblock %}
 

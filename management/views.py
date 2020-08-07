@@ -186,12 +186,16 @@ class PloegView(GuardianPermissionMixin, generic.DetailView):
         ploeg = context['object']
         functie_speler = Functie.objects.get(functie="Speler")
         functie_coach = Functie.objects.get(functie="Coach")
+        functie_pvn = Functie.objects.get(functie="Ploegverantwoordelijke")
         ploegleden = [Lid.objects.get(pk=ploeglid.lid.club_id)
                       for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id, functie=functie_speler)]
         coaches = [Lid.objects.get(pk=ploeglid.lid.club_id)
                    for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id, functie=functie_coach)]
+        pvn = [Lid.objects.get(pk=ploeglid.lid.club_id)
+                   for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id, functie=functie_pvn)]
         context['ploegleden'] = ploegleden
         context['coaches'] = coaches
+        context['pvn'] = pvn
         return context
 
 
