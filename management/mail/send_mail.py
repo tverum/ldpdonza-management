@@ -1,12 +1,15 @@
 import datetime
+import os
 from datetime import timedelta
 from email.mime.image import MIMEImage
 
+from django.conf import settings
 from django.core.mail import EmailMessage
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 
-from ..models import Betaling
+from ..models import Betaling, Lid
+from ..utils import render_to_pdf_file
 
 
 def lidgeld_mail(pk):
@@ -114,10 +117,25 @@ def bevestig_betaling(pk):
     :param pk: de betaling die bevestigd moet worden
     :return: None
     """
-    pass
+    filename = "temp.pdf"
+    temp = os.path.join(settings.BASE_DIR, filename)
+    betaling = Betaling.objects.get(pk=pk)
+    lid = betaling.lid
+    seizoen = betaling.seizoen
+    datum_betaling = betaling.aflossingen.split(";")[-1]
+    datum_afgifte = datetime.date.today()
+    context = {
+        'betaling': betaling,
+        'lid': lid,
+        'seizoen': seizoen,
+        'datum_betaling': datum_betaling,
+        'datum_afgifte': datum_afgifte,
+    }
+    render_to_pdf_file('pdf/betalingsbevestiging.html', temp, context)
+    mail_w_attachment("vanerum.tim@gmail.com", ["vanerum.tim@gmail.com"], temp, "Test", "Test")
 
 
-def mail_w_attachment(from_email, to_email, filename):
+def mail_w_attachment(from_email, to_email, filename, subject, message):
     """
     Verstuur een mail met een attachment gespecifieerd in filename
     :param from_email: het emailadres van waarop te sturen
@@ -125,8 +143,8 @@ def mail_w_attachment(from_email, to_email, filename):
     :param filename: de file die moet verstuurd worden
     :return: None
     """
-    msg = EmailMessage("Accounts Secretariaat",
-                       "Hierbij de gegenereerde accounts voor de coaches en de ploegverantwoordelijken",
+    msg = EmailMessage(subject,
+                       message,
                        from_email,
                        to_email)
 

@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,
+    shrink-to-fit=no">
+    <style>
+        @page {
+            size: letter portrait;
+            @frame content_frame {
+                left: 50pt;
+                width: 512pt;
+                top: 50pt;
+                height: 692pt;
+            }
+            @font-face {
+                font-family: GothamPro-Medium;
+                src: url({% static 'management/fonts/Gotham-Pro-Medium-Regular.ttf' %});
+            }
+            body {
+                font-family: GothamPro-Medium;
+
+            }
+        }
+        .custom-image {
+            width: 300px;
+        }
+    </style>
+
+    <title>Betalingsbevestiging</title>
+</head>
+<body>
+    <div align="center">
+        <img class="custom-image" src="{% static 'management/images/logo.png' %}">
+        <h1>Betalingsbevestiging</h1>
+    </div>
+    <h2>Identificatiegegevens speler:</h2>
+    <p>
+        {{lid.voornaam}} {{lid.familienaam}}<br>
+        {{lid.straatnaam_en_huisnummer}}, {{lid.postcode}} {{lid.gemeente}}<br>
+        Geboortedatum: {{lid.geboortedatum}}<br>
+    </p>
+    <h2>Gegevens organisatie</h2>
+    <p>
+        LDP Donza<br>
+        Molenstraat 47, 9800 Deinze<br>
+        secretariaat@ldpdonza.be
+    </p>
+    <p>
+        <b>Activiteit:</b> Basketbal, Seizoen {{seizoen.startdatum.year}}-{{seizoen.einddatum.year}}<br>
+        <b>Periode van deelname:</b> {{seizoen.startdatum}} - {{seizoen.einddatum}}<br>
+        <b>Betaald bedrag:</b> € {{betaling.origineel_bedrag}}<br>
+        <b>Datum betaling:</b> {{datum_betaling}}<br>
+        <b>Datum afgifte:</b> {{datum_afgifte}}
+    </p>
+    <p>
+        Handtekening en stempel:<br>
+        <img class="custom-image" src="{% static 'management/images/signature.png' %}"><br>
+        Tom Mestdag (administratieve cel LDP Donza)
+    </p>
+</body>
