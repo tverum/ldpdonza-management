@@ -150,7 +150,7 @@ def genereer_betaling(lid):
     """
     seizoen = Seizoen.objects.get(naam="2020-2021")
     origineel_bedrag = bereken_bedrag(lid, seizoen)
-    if origineel_bedrag == 0:
+    if origineel_bedrag <= 0:
         return
     ge_mededeling = mededeling(lid, seizoen)
     betalings_type = get_type(lid)

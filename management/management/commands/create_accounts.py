@@ -96,9 +96,11 @@ def mail_to_admin(filename):
     from_email = settings.NOREPLY
     to_email = [admin[1] for admin in settings.ADMINS]
     filename = os.path.join(settings.BASE_DIR, filename)
+    subject = "Accounts Secretariaat"
+    message = "Hierbij de gegenereerde accounts voor de coaches en de ploegverantwoordelijken"
 
     print("Mailing file to {}".format(to_email))
-    mail_w_attachment(from_email=from_email, to_email=to_email, filename=filename)
+    mail_w_attachment(from_email=from_email, to_email=to_email, filename=filename, subject=subject, message=message)
     print("File mailed!")
 
     print("Removing accounts file")
