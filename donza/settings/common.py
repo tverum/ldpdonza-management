@@ -93,13 +93,14 @@ ASGI_APPLICATION = "donza.asgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+MYSQL_CONFIG = os.path.join(os.path.dirname(BASE_DIR), 'config', 'my.cnf')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-            'read_default_file': 'config/my.cnf',
+            'read_default_file': MYSQL_CONFIG,
         },
-        'NAME': 'ldpdonza',
+        'NAME': 'ID309280_secretariaat',
     }
 }
 
