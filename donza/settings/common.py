@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'channels',
     'reactor',
     'guardian',
+    'rest_framework',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',

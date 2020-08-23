@@ -199,10 +199,10 @@ def registreer_betalingen(csv_file, request):
     """
     # set up the filestream
     data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
+    io_string = io.StringIO(data_set, newline=None)
 
     keys = []
-    for index, aflossing in enumerate(csv.reader(io_string, delimiter=';', quotechar="|")):
+    for index, aflossing in enumerate(csv.reader(io_string, delimiter=';', dialect=csv.excel_tab)):
         if index == 0:
             # haal de kolomnamen uit de csv-file
             keys = [key.strip().lower() for key in aflossing]

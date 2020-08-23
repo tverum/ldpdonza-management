@@ -1,6 +1,3 @@
-# noinspection PyUnresolvedReferences
-from donza.settings.base import *
-
 ALLOWED_HOSTS = ["secretariaat.ldpdonza.be", "localhost"]
 DEBUG = False
 STATIC_ROOT = '/home/tim/static'

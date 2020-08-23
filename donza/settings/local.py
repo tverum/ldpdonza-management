@@ -1,6 +1,6 @@
-# noinspection PyUnresolvedReferences
-from .base import *
-
+"""
+Development settings
+"""
 DEBUG = True
 
 ALLOWED_HOSTS = ["localhost"]
