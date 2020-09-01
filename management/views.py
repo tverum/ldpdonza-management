@@ -16,7 +16,6 @@ from .main.betalingen import genereer_betalingen, registreer_betalingen
 from .main.ledenbeheer import import_from_csv, lid_update_uid
 from .models import Lid, Ploeg, PloegLid, Betaling, Functie
 from .resources import CoachLidDownloadResource, create_workbook
-from .serializers import PloegLidSerializer
 # Deze lijn moet er in blijven staan om de TeamSelector te kunnen laden
 # noinspection PyUnresolvedReferences
 from .visual.components import TeamSelector
