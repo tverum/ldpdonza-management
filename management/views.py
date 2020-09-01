@@ -10,7 +10,6 @@ from django.views.generic.edit import FormView, UpdateView
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin, MultiTableMixin
 from guardian.mixins import PermissionRequiredMixin as GuardianPermissionMixin
-from rest_framework import viewsets
 
 from .mail.send_mail import lidgeld_mail, send_herinnering, bevestig_betaling
 from .main.betalingen import genereer_betalingen, registreer_betalingen
@@ -261,11 +260,6 @@ class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.Templa
 class LidModalView(BSModalReadView):
     model = Lid
     template_name = 'management/lid_modal.html'
-
-
-class PloegLidViewSet(viewsets.ModelViewSet):
-    def get_queryset(self):
-        pass
 
 
 """
