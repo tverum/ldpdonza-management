@@ -150,7 +150,7 @@ def genereer_betaling(lid):
     """
     seizoen = Seizoen.objects.get(naam="2020-2021")
     origineel_bedrag = bereken_bedrag(lid, seizoen)
-    if origineel_bedrag == 0:
+    if origineel_bedrag <= 0:
         return
     ge_mededeling = mededeling(lid, seizoen)
     betalings_type = get_type(lid)
@@ -199,10 +199,10 @@ def registreer_betalingen(csv_file, request):
     """
     # set up the filestream
     data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
+    io_string = io.StringIO(data_set, newline=None)
 
     keys = []
-    for index, aflossing in enumerate(csv.reader(io_string, delimiter=';', quotechar="|")):
+    for index, aflossing in enumerate(csv.reader(io_string, delimiter=';', dialect=csv.excel_tab)):
         if index == 0:
             # haal de kolomnamen uit de csv-file
             keys = [key.strip().lower() for key in aflossing]

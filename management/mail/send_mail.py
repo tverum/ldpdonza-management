@@ -141,6 +141,8 @@ def mail_w_attachment(from_email, to_email, filename, subject, message):
     :param from_email: het emailadres van waarop te sturen
     :param to_email: de emailadressen waarnaar te sturen
     :param filename: de file die moet verstuurd worden
+    :param subject: het onderwerp dat aan de mail moet meegegeven worden
+    :param message: de body van het bericht
     :return: None
     """
     msg = EmailMessage(subject,

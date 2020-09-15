@@ -90,7 +90,7 @@ def update_lid(geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2
     lid_update_familieleden(lid)
 
     # Alleen de uid updaten als het een nieuw record is
-    if created:
+    if not lid.uid:
         lid_update_uid(lid)
 
     # Sla op

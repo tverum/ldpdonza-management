@@ -92,13 +92,14 @@ ASGI_APPLICATION = "donza.asgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+MYSQL_CONFIG = os.path.join(os.path.dirname(BASE_DIR), 'config', 'my.cnf')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-            'read_default_file': 'config/my.cnf',
+            'read_default_file': MYSQL_CONFIG,
         },
-        'NAME': 'ldpdonza',
+        'NAME': 'ID309280_secretariaat',
     }
 }
 
@@ -143,6 +144,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 
 # Whitelist public pages
 # Login page should be public, otherwise infinite redirection occurs

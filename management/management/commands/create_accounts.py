@@ -22,7 +22,7 @@ class Command(BaseCommand):
         pv_acc = generate_accounts("Ploegverantwoordelijke")
 
         print("Writing to file...")
-        filename = "coaches.json"
+        filename = "accounts.json"
         write_to_file(filename, coaches_acc + pv_acc)
 
         print("Mailing to admin...")
@@ -60,14 +60,18 @@ def generate_accounts(functie):
             )
         except IntegrityError as e:
             print("Account was al gecreëerd voor de persoon: {} {}".format(lid.voornaam, lid.familienaam))
-            print(e)
+            user = User.objects.get_by_natural_key(username)
+            if user.check_password(password):
+                entries.append((lid.voornaam, lid.familienaam, username, lid.email, password, False))
+            else:
+                entries.append((lid.voornaam, lid.familienaam, username, lid.email, password, True))
             # Account was al gecreëerd voor deze persoon
             continue
 
         ploegen = [Ploeg.objects.get(ploeg_id=ploeglid.ploeg.ploeg_id) for ploeglid in PloegLid.objects.filter(
             lid=lid, functie=functie)]
 
-        entries.append((lid.voornaam, lid.familienaam, username, lid.email, password,))
+        entries.append((lid.voornaam, lid.familienaam, username, lid.email, password, False))
         for ploeg in ploegen:
             UserObjectPermission.objects.assign_perm('view_ploeg', user, obj=ploeg)
 
@@ -81,7 +85,7 @@ def write_to_file(filename, entries):
     :param entries: de gegenereerde accounts
     :return: None
     """
-    keys = ("Voornaam", "Familienaam", "Username", "Email", "Passwoord",)
+    keys = ("Voornaam", "Familienaam", "Username", "Email", "Passwoord", "Aangepast")
     dictionairy = [dict(zip(keys, entry)) for entry in entries]
     with open(os.path.join(settings.BASE_DIR, filename), 'w') as outfile:
         json.dump(dictionairy, outfile)
@@ -96,9 +100,11 @@ def mail_to_admin(filename):
     from_email = settings.NOREPLY
     to_email = [admin[1] for admin in settings.ADMINS]
     filename = os.path.join(settings.BASE_DIR, filename)
+    subject = "Accounts Secretariaat"
+    message = "Hierbij de gegenereerde accounts voor de coaches en de ploegverantwoordelijken"
 
     print("Mailing file to {}".format(to_email))
-    mail_w_attachment(from_email=from_email, to_email=to_email, filename=filename)
+    mail_w_attachment(from_email=from_email, to_email=to_email, filename=filename, subject=subject, message=message)
     print("File mailed!")
 
     print("Removing accounts file")

@@ -14,7 +14,7 @@ from guardian.mixins import PermissionRequiredMixin as GuardianPermissionMixin
 
 from .mail.send_mail import lidgeld_mail, send_herinnering, bevestig_betaling
 from .main.betalingen import genereer_betalingen, registreer_betalingen
-from .main.ledenbeheer import import_from_csv
+from .main.ledenbeheer import import_from_csv, lid_update_uid
 from .models import Lid, Ploeg, PloegLid, Betaling, Functie
 from .resources import CoachLidDownloadResource, create_workbook
 # Deze lijn moet er in blijven staan om de TeamSelector te kunnen laden
@@ -49,7 +49,10 @@ class LidNewView(FormView):
         return context
 
     def form_valid(self, form):
-        form.save()
+        nieuw_lid = form.save(commit=False)
+        if not nieuw_lid.uid:
+            lid_update_uid(nieuw_lid)
+            nieuw_lid.save()
         return super().form_valid(form)
 
     def get_success_url(self):
