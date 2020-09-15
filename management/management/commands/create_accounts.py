@@ -60,14 +60,18 @@ def generate_accounts(functie):
             )
         except IntegrityError as e:
             print("Account was al gecreëerd voor de persoon: {} {}".format(lid.voornaam, lid.familienaam))
-            print(e)
+            user = User.objects.get_by_natural_key(username)
+            if user.check_password(password):
+                entries.append((lid.voornaam, lid.familienaam, username, lid.email, password, False))
+            else:
+                entries.append((lid.voornaam, lid.familienaam, username, lid.email, password, True))
             # Account was al gecreëerd voor deze persoon
             continue
 
         ploegen = [Ploeg.objects.get(ploeg_id=ploeglid.ploeg.ploeg_id) for ploeglid in PloegLid.objects.filter(
             lid=lid, functie=functie)]
 
-        entries.append((lid.voornaam, lid.familienaam, username, lid.email, password,))
+        entries.append((lid.voornaam, lid.familienaam, username, lid.email, password, False))
         for ploeg in ploegen:
             UserObjectPermission.objects.assign_perm('view_ploeg', user, obj=ploeg)
 
@@ -81,7 +85,7 @@ def write_to_file(filename, entries):
     :param entries: de gegenereerde accounts
     :return: None
     """
-    keys = ("Voornaam", "Familienaam", "Username", "Email", "Passwoord",)
+    keys = ("Voornaam", "Familienaam", "Username", "Email", "Passwoord", "Aangepast")
     dictionairy = [dict(zip(keys, entry)) for entry in entries]
     with open(os.path.join(settings.BASE_DIR, filename), 'w') as outfile:
         json.dump(dictionairy, outfile)
