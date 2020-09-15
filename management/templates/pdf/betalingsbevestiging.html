@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,
+    shrink-to-fit=no">
+    <style>
+        @page {
+            size: letter portrait;
+            @frame content_frame {
+                left: 50pt;
+                width: 512pt;
+                top: 50pt;
+                height: 692pt;
+            }
+            @font-face {
+                font-family: GothamPro-Medium;
+                src: url({% static 'management/fonts/Gotham-Pro-Medium-Regular.ttf' %});
+            }
+            body {
+                font-family: GothamPro-Medium;
+
+            }
+        }
+        .custom-image {
+            height: 100px;
+        }
+    </style>
+
+    <title>Betalingsbevestiging</title>
+</head>
+<body>
+    <div align="center">
+        <img class="custom-image" src="{% static 'management/images/logo.png' %}">
+        <h1>Betalingsbevestiging (Attest Inschrijvingsgeld  Sportvereniging)</h1>
+    </div>
+    <h2>Identificatiegegevens speler:</h2>
+    <p>
+        {{lid.voornaam}} {{lid.familienaam}}<br>
+        {{lid.straatnaam_en_huisnummer}}, {{lid.postcode}} {{lid.gemeente}}<br>
+        Geboortedatum: {{lid.geboortedatum.day}}-{{lid.geboortedatum.month}}-{{lid.geboortedatum.year}}<br>
+    </p>
+    <h2>Gegevens organisatie</h2>
+    <p>
+        B.B.C. LDP Donza VZW<br>
+        's Gravenstraat 130<br>
+        9810 Nazareth<br>
+        RPR Gent 0464.016.722<br>
+        secretariaat@ldpdonza.be
+    </p>
+    <p>
+        <b>Activiteit:</b> Basketbal, Seizoen {{seizoen.startdatum.year}}-{{seizoen.einddatum.year}}<br>
+        <b>Periode van deelname:</b> {{seizoen.startdatum.day}}-{{seizoen.startdatum.month}}-{{seizoen.startdatum.year}} - {{seizoen.einddatum.day}}-{{seizoen.einddatum.month}}-{{seizoen.einddatum.year}}<br>
+        <b>Betaald bedrag:</b> € {{betaling.origineel_bedrag}}<br>
+        <b>Datum betaling:</b> {{datum_betaling}}<br>
+        <b>Datum afgifte:</b> {{datum_afgifte.day}}-{{datum_afgifte.month}}{{datum_afgifte.year}}
+    </p>
+    <p>
+        Handtekening<br>
+        <img class="custom-image" src="{% static 'management/images/signature_pol.png' %}"><br>
+        (Pol Lombaert - Financiën LDP Donza)
+    </p>
+</body>

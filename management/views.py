@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, reverse, render
 from django.views import generic
+from django.views.generic import View
 from django.views.generic.edit import FormView, UpdateView
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin, MultiTableMixin
@@ -195,7 +196,7 @@ class PloegView(GuardianPermissionMixin, generic.DetailView):
         coaches = [Lid.objects.get(pk=ploeglid.lid.club_id)
                    for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id, functie=functie_coach)]
         pvn = [Lid.objects.get(pk=ploeglid.lid.club_id)
-                   for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id, functie=functie_pvn)]
+               for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id, functie=functie_pvn)]
         context['ploegleden'] = ploegleden
         context['coaches'] = coaches
         context['pvn'] = pvn
@@ -259,6 +260,12 @@ class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.Templa
 class LidModalView(BSModalReadView):
     model = Lid
     template_name = 'management/lid_modal.html'
+
+
+class GeneratePdf(View):
+    def get(self, request, *args, **kwargs):
+        bevestig_betaling(5)
+        return HttpResponse(200)
 
 
 """

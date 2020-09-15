@@ -6,6 +6,7 @@ from . import views
 
 app_name = 'management'
 urlpatterns = [
+    path("test/", views.GeneratePdf.as_view(), name='test'),
     path("leden/", views.LidTableView.as_view(), name='leden'),
     path("leden/<int:pk>/", views.LidEditView.as_view(), name="lid"),
     path("leden/<int:pk>/verwijder", views.verwijder_lid, name="verwijder_lid"),

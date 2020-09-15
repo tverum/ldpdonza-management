@@ -19,7 +19,7 @@ class LidForm(forms.ModelForm):
 
     class Meta:
         model = Lid
-        exclude = ["updated_at", "created_at"]
+        exclude = ["updated_at", "created_at", "uid"]
         help_texts = {
             'functies': 'Houd de SHIFT-toets ingedrukt om meerdere functies te selecteren',
             'familieleden': 'Houd de SHIFT-toets ingedrukt om meerdere familieleden te selecteren',

@@ -1,12 +1,16 @@
 import datetime
+import os
 from datetime import timedelta
 from email.mime.image import MIMEImage
 
+from django.conf import settings
 from django.core.mail import EmailMessage
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
+from django.template.loader import render_to_string
 
 from ..models import Betaling
+from ..utils import render_to_pdf_file
 
 
 def lidgeld_mail(pk):
@@ -114,7 +118,46 @@ def bevestig_betaling(pk):
     :param pk: de betaling die bevestigd moet worden
     :return: None
     """
-    pass
+    filename = "temp.pdf"
+    temp = os.path.join(settings.BASE_DIR, filename)
+    betaling = Betaling.objects.get(pk=pk)
+    lid = betaling.lid
+    seizoen = betaling.seizoen
+    datum_betaling = betaling.aflossingen.split(";")[-1]
+
+    subject = "Betalingsbevestiging voor {} {}".format(lid.voornaam, lid.familienaam)
+    context = {
+        'lid': lid,
+        'seizoen': seizoen,
+    }
+    message = render_to_string('mail/betalingsbevestiging.html', context)
+
+    to = []
+    if lid.moeder:
+        to.append(lid.moeder.email)
+    if lid.vader:
+        to.append(lid.vader.email)
+    if lid.email:
+        to.append(lid.email)
+
+    from_email = "no-reply@ldpdonza.be"
+
+    # reverse betaling datum
+    datum_betaling = "-".join(list(reversed(datum_betaling.split("-"))))
+    datum_afgifte = datetime.date.today()
+    context = {
+        'betaling': betaling,
+        'lid': lid,
+        'seizoen': seizoen,
+        'datum_betaling': datum_betaling,
+        'datum_afgifte': datum_afgifte,
+    }
+    render_to_pdf_file('pdf/betalingsbevestiging.html', temp, context)
+    mail_w_attachment(from_email, to, temp, subject=subject, message=message)
+    os.remove(temp)
+
+    betaling.status = 'voltooid'
+    betaling.save()
 
 
 def mail_w_attachment(from_email, to_email, filename, subject, message):
