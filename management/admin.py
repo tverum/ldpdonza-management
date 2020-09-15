@@ -39,8 +39,6 @@ class LidAdmin(admin.ModelAdmin):
 class PloegAdmin(GuardedModelAdmin):
     pass
 
-
-admin.site.register(Lid, LidAdmin)
 admin.site.register(Functie)
 admin.site.register(Ouder)
 admin.site.register(Ploeg, PloegAdmin)
