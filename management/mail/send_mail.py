@@ -117,16 +117,18 @@ def bevestig_betaling(pk):
     pass
 
 
-def mail_w_attachment(from_email, to_email, filename):
+def mail_w_attachment(from_email, to_email, filename, subject, message):
     """
     Verstuur een mail met een attachment gespecifieerd in filename
     :param from_email: het emailadres van waarop te sturen
     :param to_email: de emailadressen waarnaar te sturen
     :param filename: de file die moet verstuurd worden
+    :param subject: het onderwerp dat aan de mail moet meegegeven worden
+    :param message: de body van het bericht
     :return: None
     """
-    msg = EmailMessage("Accounts Secretariaat",
-                       "Hierbij de gegenereerde accounts voor de coaches en de ploegverantwoordelijken",
+    msg = EmailMessage(subject,
+                       message,
                        from_email,
                        to_email)
 

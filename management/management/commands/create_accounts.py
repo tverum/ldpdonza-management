@@ -22,7 +22,7 @@ class Command(BaseCommand):
         pv_acc = generate_accounts("Ploegverantwoordelijke")
 
         print("Writing to file...")
-        filename = "coaches.json"
+        filename = "accounts.json"
         write_to_file(filename, coaches_acc + pv_acc)
 
         print("Mailing to admin...")
