@@ -123,7 +123,7 @@ def bevestig_betaling(pk):
     betaling = Betaling.objects.get(pk=pk)
     lid = betaling.lid
     seizoen = betaling.seizoen
-    datum_betaling = betaling.aflossingen.split(";")[-1]
+    datum_betaling = betaling.aflossingen.split(",")[-1]
 
     subject = "Betalingsbevestiging en attest mutualiteit voor {} {}".format(lid.voornaam, lid.familienaam)
     context = {
