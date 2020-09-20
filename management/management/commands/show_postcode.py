@@ -20,5 +20,9 @@ class Command(BaseCommand):
             if not ploegen:
                 continue
 
-            ploegen = "[" + ",".join(ploegen) + "]"
-            print("{} {} -> {}".format(lid.voornaam, lid.familienaam, ploegen))
+            if len(ploegen == 1):
+                print("{} {} -> {}".format(lid.voornaam, lid.familienaam, ploegen.ploeg))
+            else:
+                ploegen = [ploeg.ploeg for ploeg in ploegen]
+                ploegen = "[" + ",".join(ploegen) + "]"
+                print("{} {} -> {}".format(lid.voornaam, lid.familienaam, ploegen))
