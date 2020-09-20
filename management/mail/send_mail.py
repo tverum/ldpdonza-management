@@ -125,7 +125,7 @@ def bevestig_betaling(pk):
     seizoen = betaling.seizoen
     datum_betaling = betaling.aflossingen.split(";")[-1]
 
-    subject = "Betalingsbevestiging voor {} {}".format(lid.voornaam, lid.familienaam)
+    subject = "Betalingsbevestiging en attest mutualiteit voor {} {}".format(lid.voornaam, lid.familienaam)
     context = {
         'lid': lid,
         'seizoen': seizoen,
@@ -141,6 +141,7 @@ def bevestig_betaling(pk):
         to.append(lid.email)
 
     from_email = "no-reply@ldpdonza.be"
+    reply_to = ["secretariaat@ldpdonza.be"]
 
     # reverse betaling datum
     datum_betaling = "-".join(list(reversed(datum_betaling.split("-"))))
@@ -153,14 +154,14 @@ def bevestig_betaling(pk):
         'datum_afgifte': datum_afgifte,
     }
     render_to_pdf_file('pdf/betalingsbevestiging.html', temp, context)
-    mail_w_attachment(from_email, to, temp, subject=subject, message=message)
+    mail_w_attachment(from_email, to, temp, subject=subject, message=message, reply_to=reply_to)
     os.remove(temp)
 
     betaling.status = 'voltooid'
     betaling.save()
 
 
-def mail_w_attachment(from_email, to_email, filename, subject, message):
+def mail_w_attachment(from_email, to_email, filename, subject, message, reply_to):
     """
     Verstuur een mail met een attachment gespecifieerd in filename
     :param from_email: het emailadres van waarop te sturen
@@ -173,7 +174,8 @@ def mail_w_attachment(from_email, to_email, filename, subject, message):
     msg = EmailMessage(subject,
                        message,
                        from_email,
-                       to_email)
+                       to_email,
+                       reply_to=reply_to)
 
     msg.content_subtype = "html"
     msg.attach_file(filename)

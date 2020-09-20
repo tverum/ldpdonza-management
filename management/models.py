@@ -1,6 +1,7 @@
 from django.db import models
 from localflavor.generic.models import IBANField
 from phonenumber_field.modelfields import PhoneNumberField
+from datetime import datetime
 
 MAN = "m"
 VROUW = "v"
@@ -151,12 +152,14 @@ class Betaling(models.Model):
         :return:
         """
         afl_nummers = self.aflossingen.split(",")
-        if not aflossing["datum"] in afl_nummers:
+        datum = datetime.strftime(datetime.strptime(aflossing["datum"], "%d/%m/%Y"), "%d/%m/%Y")
+
+        if not datum in afl_nummers:
             bedrag = aflossing["credit"].replace(",", ".")
             self.afgelost_bedrag += float(bedrag)
-            if self.afgelost_bedrag == self.origineel_bedrag:
+            if self.afgelost_bedrag >= self.origineel_bedrag:
                 self.status = "betaald"
-            afl_nummers.append(aflossing["datum"])
+            afl_nummers.append(datum)
             self.aflossingen = ",".join(afl_nummers)
             self.save()
             return True
