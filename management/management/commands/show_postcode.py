@@ -20,7 +20,7 @@ class Command(BaseCommand):
             if not ploegen:
                 continue
 
-            if len(ploegen == 1):
+            if len(ploegen) == 1:
                 print("{} {} -> {}".format(lid.voornaam, lid.familienaam, ploegen.ploeg))
             else:
                 ploegen = [ploeg.ploeg for ploeg in ploegen]
