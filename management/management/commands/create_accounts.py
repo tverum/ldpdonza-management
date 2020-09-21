@@ -7,8 +7,8 @@ from django.core.management.base import BaseCommand
 from django.db.utils import IntegrityError
 from guardian.models import UserObjectPermission
 
+from .utils import mail_to_admin
 from ...models import Lid, Functie, PloegLid, Ploeg
-from ...mail.send_mail import mail_w_attachment
 
 
 class Command(BaseCommand):
@@ -91,23 +91,3 @@ def write_to_file(filename, entries):
         json.dump(dictionairy, outfile)
 
 
-def mail_to_admin(filename):
-    """
-    Mail het bestand met accounts naar de admin, verwijder het bestand
-    :param filename: de file die moet gemaild worden
-    :return:
-    """
-    from_email = settings.NOREPLY
-    to_email = [admin[1] for admin in settings.ADMINS]
-    reply_to = None
-    filename = os.path.join(settings.BASE_DIR, filename)
-    subject = "Accounts Secretariaat"
-    message = "Hierbij de gegenereerde accounts voor de coaches en de ploegverantwoordelijken"
-
-    print("Mailing file to {}".format(to_email))
-    mail_w_attachment(from_email=from_email, to_email=to_email, filename=filename, subject=subject, message=message, reply_to=reply_to)
-    print("File mailed!")
-
-    print("Removing accounts file")
-    os.remove(filename)
-    print("File Removed!")

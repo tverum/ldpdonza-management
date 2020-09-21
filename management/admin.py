@@ -32,12 +32,14 @@ class BetalingAdmin(admin.ModelAdmin, ExportCsvMixin):
 
 
 @admin.register(Lid)
-class LidAdmin(admin.ModelAdmin):
+class LidAdmin(admin.ModelAdmin, ExportCsvMixin):
     search_fields = ('voornaam', 'familienaam')
+    actions = ["export_as_csv"]
 
 
 class PloegAdmin(GuardedModelAdmin):
     pass
+
 
 admin.site.register(Functie)
 admin.site.register(Ouder)
