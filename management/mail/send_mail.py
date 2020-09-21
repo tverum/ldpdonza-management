@@ -145,7 +145,7 @@ def bevestig_betaling(pk, request):
     reply_to = ["secretariaat@ldpdonza.be"]
 
     # reverse betaling datum
-    datum_betaling = "/".join(list(datum_betaling.split("/")))
+    datum_betaling = "-".join(list(datum_betaling.split("/")))
     datum_afgifte = datetime.date.today()
     context = {
         'betaling': betaling,
