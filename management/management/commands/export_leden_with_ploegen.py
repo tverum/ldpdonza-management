@@ -20,7 +20,8 @@ class Command(BaseCommand):
             ploeglid.lid.straatnaam_en_huisnummer,
             ploeglid.lid.gemeente,
             ploeglid.lid.postcode,
-            ploeglid.ploeg.naam
+            ploeglid.ploeg.naam,
+            ploeglid.functie.functie
         ) for ploeglid in ploegleden]
 
         print("Writing to file...")
@@ -44,7 +45,8 @@ def write_to_file(filename, entries):
         "Straatnaam en Huisnummer",
         "Gemeente",
         "Postcode",
-        "Ploeg"
+        "Ploeg",
+        "Functie"
     )
     dictionairy = [dict(zip(keys, entry)) for entry in entries]
     with open(os.path.join(settings.BASE_DIR, filename), 'w') as outfile:
