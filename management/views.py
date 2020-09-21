@@ -328,8 +328,8 @@ def herinnering_mail(_, pk):
     return redirect(reverse("management:betalingen"), permanent=False)
 
 
-def bevestig_mail(_, pk):
-    bevestig_betaling(pk)
+def bevestig_mail(request, pk):
+    bevestig_betaling(pk, request)
     return redirect(reverse("management:betalingen"), permanent=False)
 
 

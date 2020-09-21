@@ -1,5 +1,6 @@
 import datetime
 import os
+import tempfile
 from datetime import timedelta
 from email.mime.image import MIMEImage
 
@@ -112,7 +113,7 @@ def send_herinnering(pk):
     betaling.save()
 
 
-def bevestig_betaling(pk):
+def bevestig_betaling(pk, request):
     """
     Bevestig een bepaalde betaling en verstuur de mutualiteitsformulieren etc.
     :param pk: de betaling die bevestigd moet worden
@@ -153,9 +154,11 @@ def bevestig_betaling(pk):
         'datum_betaling': datum_betaling,
         'datum_afgifte': datum_afgifte,
     }
-    render_to_pdf_file('pdf/betalingsbevestiging.html', temp, context)
-    mail_w_attachment(from_email, to, temp, subject=subject, message=message, reply_to=reply_to)
-    os.remove(temp)
+    result = render_to_pdf_file('pdf/betalingsbevestiging.html', temp, request, context)
+    with tempfile.NamedTemporaryFile(delete=True, prefix="ldpdonza", suffix=".pdf") as output:
+        output.write(result)
+        output.flush()
+        mail_w_attachment(from_email, to, output.name, subject=subject, message=message, reply_to=reply_to)
 
     betaling.status = 'voltooid'
     betaling.save()

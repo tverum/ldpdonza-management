@@ -1,11 +1,11 @@
 import os
 
 from django.conf import settings
-from django.template.loader import get_template
-from xhtml2pdf import pisa
+from django.template.loader import get_template, render_to_string
+from weasyprint import HTML, default_url_fetcher
 
 
-def render_to_pdf_file(template_src, target_filename, context_dict={}):
+def render_to_pdf_file(template_src, target_filename, request, context_dict={}):
     """
     Render a HTML-template to a pdf
     :param template_src: the source template to render to pdf
@@ -13,16 +13,13 @@ def render_to_pdf_file(template_src, target_filename, context_dict={}):
     :param context_dict: the context dictionairy.
     :return:
     """
-    template = get_template(template_src)
-    html = template.render(context_dict)
-    with open(target_filename, 'wb+') as outputfile:
-        pisa_status = pisa.CreatePDF(html,
-                                     dest=outputfile,
-                                     link_callback=link_callback)
-    return pisa_status.err
+    html_string = render_to_string(template_src, context_dict)
+    html = HTML(string=html_string, base_url=request.build_absolute_uri())
+    result = html.write_pdf()
+    return result
 
 
-def link_callback(uri, rel):
+def link_callback(url):
     """
     Convert HTML URIs to absolute system paths so xhtml2pdf can access those
     resources
@@ -32,16 +29,16 @@ def link_callback(uri, rel):
     mUrl = settings.MEDIA_URL
     mRoot = settings.MEDIA_ROOT
 
-    if uri.startswith(mUrl):
-        path = os.path.join(mRoot, uri.replace(mUrl, ""))
-    elif uri.startswith(sUrl):
-        path = os.path.join(sRoot, uri.replace(sUrl, ""))
+    if url.startswith(mUrl):
+        path = os.path.join(mRoot, url.replace(mUrl, ""))
+    elif url.startswith(sUrl):
+        path = os.path.join(sRoot, url.replace(sUrl, ""))
     else:
-        return uri
+        return dict(url)
 
     # make sure that file exists
     if not os.path.isfile(path):
         raise Exception(
             'media URI must start with %s or %s' % (sUrl, mUrl)
         )
-    return path
+    return dict(path)
