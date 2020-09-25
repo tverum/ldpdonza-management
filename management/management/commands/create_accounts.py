@@ -32,8 +32,8 @@ class Command(BaseCommand):
         print("Args: {}".format(args))
         print("Kwargs: {}".format(kwargs))
 
-        send_mails_pa = kwargs['send-mails-pa']
-        send_mails_coaches = kwargs['send-mails-coaches']
+        send_mails_pa = kwargs['send_mails_pa']
+        send_mails_coaches = kwargs['send_mails_coaches']
         mailadressen = kwargs['mailadressen']
 
         self.stdout.write(self.style.SUCCES("Generating accounts for coaches..."))
