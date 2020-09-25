@@ -36,17 +36,17 @@ class Command(BaseCommand):
         send_mails_coaches = kwargs['send_mails_coaches']
         mailadressen = kwargs['mailadressen']
 
-        self.stdout.write(self.style.SUCCES("Generating accounts for coaches..."))
+        self.stdout.write(self.style.SUCCESS("Generating accounts for coaches..."))
         coaches_acc = generate_accounts("Coach")
 
-        self.stdout.write(self.style.SUCCES("Generating accounts for ploegverantwoordelijken..."))
+        self.stdout.write(self.style.SUCCESS("Generating accounts for ploegverantwoordelijken..."))
         pv_acc = generate_accounts("Ploegverantwoordelijke")
 
-        self.stdout.write(self.style.SUCCES("Writing to file..."))
+        self.stdout.write(self.style.SUCCESS("Writing to file..."))
         filename = "accounts.json"
         write_to_file(filename, coaches_acc + pv_acc)
 
-        self.stdout.write(self.style.SUCCES("Mailing to admin..."))
+        self.stdout.write(self.style.SUCCESS("Mailing to admin..."))
         mail_to_admin(filename)
 
         if send_mails_pa:
