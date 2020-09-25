@@ -32,6 +32,7 @@ def send_mail_template(template, context, to, from_email, subject, reply_to=None
                        from_email,
                        ["vanerum.tim@gmail.com"],
                        reply_to=reply_to)
+    msg.content_subtype = "html"
     msg.send()
 
 
