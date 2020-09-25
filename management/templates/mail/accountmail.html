@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,
+    shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <link
+            href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext'
+            rel='stylesheet' type='text/css'>
+</head>
+<body class="container-fluid">
+<main role="main" class="flex-shrink-0">
+    <div class="content container pt-5">
+        <div class="row">
+            <div class="col">
+                <p>
+                    Beste {{voornaam}} {{familienaam}}
+                </p>
+                <p>
+                    Er werd in uw naam een account aangemaakt op het controlepaneel van LDP Donza. Dit werd gedaan omdat
+                    u de rol van Ploegafgevaardigde/Coach opneemt bij onze club. Via dit paneel zult u toegang hebben
+                    tot de lidgegevens van uw ploeg in kwestie. Indien u al een account had op het paneel en uw
+                    wachtwoord reeds gewijzigd hebt, mag u deze mail negeren.
+                </p>
+                <p>
+                    <u>Gegevens:</u><br>
+                <ul>
+                    <li>username: {{username}}</li>
+                    <li>wachtwoord: {{wachtwoord}}</li>
+                </ul>
+                </p>
+                <p>
+                    Bij vragen, antwoord gewoon op deze mail.
+                </p>
+                <p>
+                    Met vriendelijke groeten,<br>
+                    Tim Van Erum<br>
+                    IT - LDP Donza
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+</body>

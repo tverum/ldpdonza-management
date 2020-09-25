@@ -14,6 +14,25 @@ from ..models import Betaling
 from ..utils import render_to_pdf_file
 
 
+def send_mail_template(template, context, to, from_email, subject, reply_to=None):
+    """
+    Send the mail using a template
+    :param template: the template to render
+    :param context: the context to render in the template
+    :param to: the recipients of the mail
+    :param from_email: from where the mail is sent
+    :param subject: the subject of the mail
+    :param reply_to: to who should the mail be answered
+    :return:
+    """
+    html = get_template(template)
+    html_content = html.render(context)
+
+    msg = EmailMultiAlternatives(subject, html_content, from_email, to, reply_to=reply_to)
+    msg.mixed_subtype = 'related'
+    msg.send()
+
+
 def lidgeld_mail(pk):
     plaintext = get_template('mail/lidgeld.txt')
     htmly = get_template('mail/lidgeld.html')

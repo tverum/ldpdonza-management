@@ -1,17 +1,17 @@
-import os
 import json
+import os
 
-from django.core.management.base import BaseCommand
 from django.conf import settings
+from django.core.management.base import BaseCommand
 
-from management.models import PloegLid
 from management.management.commands.utils import mail_to_admin
+from management.models import PloegLid
+
 
 class Command(BaseCommand):
     help = ""
 
     def handle(self, **options):
-
         ploegleden = PloegLid.objects.all()
 
         leden = [(

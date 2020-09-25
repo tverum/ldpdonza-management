@@ -9,24 +9,78 @@ from guardian.models import UserObjectPermission
 
 from .utils import mail_to_admin
 from ...models import Lid, Functie, PloegLid, Ploeg
+from ...mail.send_mail import send_mail_template
 
 
 class Command(BaseCommand):
-    help = ""
+    help = """
+    Maak accounts aan voor de coaches & ploegafgevaardigden.
+    """
 
-    def handle(self, **options):
-        print("Generating accounts for coaches...")
+    def add_arguments(self, parser):
+        """
+        Add arguments to the command
+        :param parser: the parser that is used in parsing the command
+        """
+        # Named (optional) arguments
+        parser.add_argument('-p', '--send-mails-pa', action='store_true', help="Stuur mails naar de PAs")
+        parser.add_argument('-c', '--send-mails-coaches', action='store_true', help="Stuur mails naar de Coaches")
+        parser.add_argument('-m', '--mailadressen', nargs='+', help="Stuur mails voor de opgegeven mailadressen")
+
+    def handle(self, *args, **kwargs):
+
+        send_mails_pa = kwargs['send-mails-pa']
+        send_mails_coaches = kwargs['send-mails-coaches']
+        mailadressen = kwargs['mailadressen']
+
+        self.stdout.write(self.style.SUCCES("Generating accounts for coaches..."))
         coaches_acc = generate_accounts("Coach")
 
-        print("Generating accounts for ploegverantwoordelijken...")
+        self.stdout.write(self.style.SUCCES("Generating accounts for ploegverantwoordelijken..."))
         pv_acc = generate_accounts("Ploegverantwoordelijke")
 
-        print("Writing to file...")
+        self.stdout.write(self.style.SUCCES("Writing to file..."))
         filename = "accounts.json"
         write_to_file(filename, coaches_acc + pv_acc)
 
-        print("Mailing to admin...")
+        self.stdout.write(self.style.SUCCES("Mailing to admin..."))
         mail_to_admin(filename)
+
+        if send_mails_pa:
+            send_mails(pv_acc)
+        if send_mails_coaches:
+            send_mails(coaches_acc)
+        if mailadressen:
+            # TODO
+            pass
+
+
+def send_mails(entries):
+    """
+    Send account email to the list of people
+    :param entries:
+    :return:
+    """
+    mail_template = "mail/accountmail.html"
+    from_email = "no-reply@ldpdonza.be"
+    reply_to = ["vanerum.tim@gmail.com", ]
+    subject = "Account Ledenportaal LDP Donza"
+
+    for entry in entries:
+        context = {
+            "voornaam": entry[0],
+            "familienaam": entry[1],
+            "username": entry[2],
+            "wachtwoord": entry[4],
+        }
+        to = [entry[3]]
+
+        send_mail_template(template=mail_template,
+                           context=context,
+                           to=to,
+                           from_email=from_email,
+                           subject=subject,
+                           reply_to=reply_to)
 
 
 def generate_accounts(functie):
@@ -89,5 +143,3 @@ def write_to_file(filename, entries):
     dictionairy = [dict(zip(keys, entry)) for entry in entries]
     with open(os.path.join(settings.BASE_DIR, filename), 'w') as outfile:
         json.dump(dictionairy, outfile)
-
-
