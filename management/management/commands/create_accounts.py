@@ -54,8 +54,8 @@ class Command(BaseCommand):
         if send_mails_coaches:
             send_mails(coaches_acc)
         if mailadressen:
-            # TODO
-            pass
+            entries = [entry for entry in (coaches_acc + pv_acc) if entry[3] in mailadressen]
+            send_mails(entries)
 
 
 def send_mails(entries):
