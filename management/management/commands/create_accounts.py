@@ -29,6 +29,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
 
+        print("Args: {}".format(args))
+        print("Kwargs: {}".format(kwargs))
+
         send_mails_pa = kwargs['send-mails-pa']
         send_mails_coaches = kwargs['send-mails-coaches']
         mailadressen = kwargs['mailadressen']
