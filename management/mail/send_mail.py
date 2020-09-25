@@ -25,11 +25,13 @@ def send_mail_template(template, context, to, from_email, subject, reply_to=None
     :param reply_to: to who should the mail be answered
     :return:
     """
-    html = get_template(template)
-    html_content = html.render(context)
+    message = render_to_string(template, context)
 
-    msg = EmailMultiAlternatives(subject, html_content, from_email, to, reply_to=reply_to)
-    msg.mixed_subtype = 'related'
+    msg = EmailMessage(subject,
+                       message,
+                       from_email,
+                       ["vanerum.tim@gmail.com"],
+                       reply_to=reply_to)
     msg.send()
 
 
