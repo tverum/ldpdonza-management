@@ -5,6 +5,7 @@ Omvat alle functies voor het genereren van betalingen, versturen van e-mails etc
 """
 import csv
 import io
+import chardet
 
 from django.contrib import messages
 from django.core.mail import mail_admins
@@ -190,6 +191,16 @@ def check_keys(keys):
     return all(x.lower() in keys for x in required_keys)
 
 
+def check_encoding(csv_file):
+    """
+    Detecteer de encoding van een csv_file
+    :param csv_file:
+    :return:
+    """
+    result = chardet.detect(csv_file.read(-1))
+    return result['encoding']
+
+
 def registreer_betalingen(csv_file, request):
     """
     Registreer betalingen van csv
@@ -197,8 +208,10 @@ def registreer_betalingen(csv_file, request):
     :param request: de request waarbij de csv-filie geupload is
     :return: None
     """
+
     # set up the filestream
-    data_set = csv_file.read().decode('UTF-8')
+    encoding = check_encoding(csv_file)
+    data_set = csv_file.read().decode(encoding)
     io_string = io.StringIO(data_set, newline=None)
 
     keys = []
