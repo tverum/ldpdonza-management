@@ -251,6 +251,7 @@ class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.Templa
             messages.error(request, "This is not a csv file")
             return redirect(reverse("management:betalingen"))
 
+        messages.success(request, "Begin inlezen betalingen")
         registreer_betalingen(csv_file, request)
         messages.success(request, "Inlezen van betalingen succesvol")
 

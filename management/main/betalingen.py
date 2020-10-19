@@ -216,7 +216,7 @@ def registreer_betalingen(csv_file, request):
 
     keys = []
 
-    messages.debug(request, "Begin verwerking")
+    messages.warning(request, "Begin verwerking")
     for index, aflossing in enumerate(csv.reader(io_string, delimiter=';', dialect=csv.excel_tab)):
         if index == 0:
             # haal de kolomnamen uit de csv-file
@@ -240,7 +240,7 @@ def registreer_betalingen(csv_file, request):
 
                 betaling = Betaling.objects.filter(mededeling=g_mededeling)
 
-                messages.debug(request, "Aantal records gevonden voor betaling met mededeling {}: {}".format(g_mededeling, len(betaling)))
+                messages.warning(request, "Aantal records gevonden voor betaling met mededeling {}: {}".format(g_mededeling, len(betaling)))
 
                 # alleen wanneer er maar 1 betaling is die filtert
                 if len(betaling) == 1:
