@@ -27,6 +27,7 @@ class ExportCsvMixin:
 
 @admin.register(Betaling)
 class BetalingAdmin(admin.ModelAdmin, ExportCsvMixin):
+    search_fields = ('mededeling')
     list_display = ("origineel_bedrag", "afgelost_bedrag", "lid", "seizoen", "mails_verstuurd")
     actions = ["export_as_csv"]
 
