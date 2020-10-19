@@ -218,6 +218,7 @@ def registreer_betalingen(csv_file, request):
 
     messages.warning(request, "Begin verwerking")
     for index, aflossing in enumerate(csv.reader(io_string, delimiter=';', dialect=csv.excel_tab)):
+        messages.warning(request, str(index))
         if index == 0:
             # haal de kolomnamen uit de csv-file
             keys = [key.strip().lower() for key in aflossing]
