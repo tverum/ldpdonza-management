@@ -235,7 +235,10 @@ def registreer_betalingen(csv_file, request):
                 if not g_mededeling:
                     # als de gestructureerde mededeling leeg is, niet van belang
                     continue
+
                 betaling = Betaling.objects.filter(mededeling=g_mededeling)
+
+                print("Aantal records gevonden voor betaling met mededeling {}: {}".format(g_mededeling, len(betaling)))
 
                 # alleen wanneer er maar 1 betaling is die filtert
                 if len(betaling) == 1:
