@@ -211,12 +211,12 @@ def registreer_betalingen(csv_file, request):
 
     # set up the filestream
     encoding = check_encoding(csv_file)
+    messages.warning(request, encoding)
     data_set = csv_file.read().decode(encoding)
     io_string = io.StringIO(data_set)
 
     keys = []
 
-    messages.warning(request, "Begin verwerking")
     for index, aflossing in enumerate(csv.reader(io_string, delimiter=';', dialect=csv.excel_tab)):
         messages.warning(request, str(index))
         if index == 0:
