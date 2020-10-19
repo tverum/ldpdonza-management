@@ -212,7 +212,7 @@ def registreer_betalingen(csv_file, request):
     # set up the filestream
     encoding = check_encoding(csv_file)
     data_set = csv_file.read().decode(encoding)
-    io_string = io.StringIO(data_set, newline=None)
+    io_string = io.StringIO(data_set)
 
     keys = []
 
