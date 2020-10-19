@@ -215,6 +215,8 @@ def registreer_betalingen(csv_file, request):
     io_string = io.StringIO(data_set, newline=None)
 
     keys = []
+
+    print("Begin verwerking")
     for index, aflossing in enumerate(csv.reader(io_string, delimiter=';', dialect=csv.excel_tab)):
         if index == 0:
             # haal de kolomnamen uit de csv-file
