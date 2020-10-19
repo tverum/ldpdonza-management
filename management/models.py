@@ -139,7 +139,7 @@ class Betaling(models.Model):
     mededeling = models.CharField(max_length=20)
     type = models.CharField(max_length=20)
     status = models.CharField(max_length=20)
-    aflossingen = models.CharField(max_length=500, default="", null=True, blank=True)
+    aflossingen = models.CharField(max_length=500, default="")
     objects = models.Manager()
 
     def __str__(self):

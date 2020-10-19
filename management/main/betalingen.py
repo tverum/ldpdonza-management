@@ -198,6 +198,8 @@ def check_encoding(csv_file):
     :return:
     """
     result = chardet.detect(csv_file.read(-1))
+    # Reset the file pointer
+    csv_file.seek(0)
     return result['encoding']
 
 
@@ -208,17 +210,15 @@ def registreer_betalingen(csv_file, request):
     :param request: de request waarbij de csv-filie geupload is
     :return: None
     """
-
+    csv_file = request.FILES['file']
     # set up the filestream
     encoding = check_encoding(csv_file)
-    messages.warning(request, encoding)
+
     data_set = csv_file.read().decode(encoding)
     io_string = io.StringIO(data_set)
-
     keys = []
 
     for index, aflossing in enumerate(csv.reader(io_string, delimiter=';', dialect=csv.excel_tab)):
-        messages.warning(request, str(index))
         if index == 0:
             # haal de kolomnamen uit de csv-file
             keys = [key.strip().lower() for key in aflossing]
@@ -241,8 +241,6 @@ def registreer_betalingen(csv_file, request):
 
                 betaling = Betaling.objects.filter(mededeling=g_mededeling)
 
-                messages.warning(request, "Aantal records gevonden voor betaling met mededeling {}: {}".format(g_mededeling, len(betaling)))
-
                 # alleen wanneer er maar 1 betaling is die filtert
                 if len(betaling) == 1:
                     betaling[0].los_af(aflossing)
@@ -261,3 +259,4 @@ def registreer_betalingen(csv_file, request):
                 <p>Probleem bij het processen van afschrift {}</p>
                 <p>{}</p>
                 """.format(aflossing["afschriftnummer"], e))
+                raise e
