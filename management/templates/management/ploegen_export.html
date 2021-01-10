@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+Exporteren
+{% endblock title %}
+
+{% block content %}
+<form action="{% url 'management:exporteer_ploegen' %}" method="post">
+    {% csrf_token %}
+    <p>Selecteer hieronder de velden die je graag zou exporteren:</p>
+    <dl>
+        {% for field in fields %}
+        <dd>
+            <input type="checkbox" id="checkbox-{{field}}" name="{{ field }}" value="{{ field }}">
+            <label class="form-check-label" for="checkbox-{{field}}">{{ field.verbose_name }}</label>
+        </dd>
+        {% endfor %}
+    </dl>
+    <button type="submit" class="btn btn-success">Exporteer</button>
+</form>
+{% endblock %}

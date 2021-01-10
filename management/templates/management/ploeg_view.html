@@ -5,9 +5,6 @@ Ploegsamenstelling: {{object.naam}}
 {% endblock title %}
 {% block content %}
 <div class="col">
-    <div class="row">
-        <h2 class="mb-4">Spelers</h2>
-    </div>
     <div class="row mb-4">
         <a class="btn btn-secondary btn-sm" href="{% url 'management:ploeg_export_csv' object.ploeg_id %}">Exporteer naar CSV</a>
         <a class="btn btn-secondary btn-sm" href="{% url 'management:ploeg_export_xlsx' object.ploeg_id %}">Exporteer naar Excel</a>
@@ -19,6 +16,13 @@ Ploegsamenstelling: {{object.naam}}
                 <th>Email</th>
                 <th>Gsm</th>
             </thead>
+        </table>
+    </div>
+    <div class="row">
+        <h2 class="mb-4">Spelers</h2>
+    </div>
+    <div class="row">
+        <table class="table">
             {% for lid in ploegleden %}
                 <tr>
                     <td>{{lid.voornaam}} {{lid.familienaam}}</td>

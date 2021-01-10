@@ -4,6 +4,7 @@ from bootstrap_modal_forms.generic import BSModalReadView
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import Http404, HttpResponse
+from django.template import Context, loader
 from django.shortcuts import redirect, reverse, render
 from django.views import generic
 from django.views.generic import View
@@ -16,13 +17,13 @@ from .mail.send_mail import lidgeld_mail, send_herinnering, bevestig_betaling
 from .main.betalingen import genereer_betalingen, registreer_betalingen
 from .main.ledenbeheer import import_from_csv, lid_update_uid
 from .models import Lid, Ploeg, PloegLid, Betaling, Functie
-from .resources import CoachLidDownloadResource, create_workbook
+from .resources import CoachLidDownloadResource, create_team_workbook, create_general_workbook
 # Deze lijn moet er in blijven staan om de TeamSelector te kunnen laden
 # noinspection PyUnresolvedReferences
 from .visual.components import TeamSelector
 from .visual.filters import LidFilter
 from .visual.forms import LidForm, OuderForm, PloegForm
-from .visual.tables import LidTable, DraftTable, VerstuurdTable, BetaaldTable
+from .visual.tables import LidTable, DraftTable, VerstuurdTable, BetaaldTable, PloegTable
 
 PERMISSION_DENIED = """
             Je hebt niet de juiste permissies om deze pagina te bekijken. 
@@ -80,8 +81,9 @@ class LidEditView(PermissionRequiredMixin, UpdateView):
         return reverse("management:leden")
 
 
-class PloegListView(PermissionRequiredMixin, generic.ListView):
+class PloegListView(PermissionRequiredMixin, SingleTableMixin, generic.ListView):
     model = Ploeg
+    table_class = PloegTable
     template_name = "management/ploeg_list.html"
     permission_required = ('management.view_ploeg',)
     permission_denied_message = PERMISSION_DENIED
@@ -89,6 +91,7 @@ class PloegListView(PermissionRequiredMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["ploegForm"] = PloegForm
+        context["fields"] = Lid._meta.fields
         return context
 
 
@@ -369,7 +372,7 @@ def verwerk_leden(request):
 def export_ploeg_csv(request, pk):
     """
     Export the ploeg to CSV to allow coaches download
-    :param request: the initial request
+    :param request: the initial request (unused)
     :param pk: the primary key
     :return: an HTTPResponse containing the CSV-file
     """
@@ -388,9 +391,10 @@ def export_ploeg_csv(request, pk):
     return response
 
 
-def export_ploeg_xlsx(_, pk):
+def export_ploeg_xlsx(request, pk):
     """
     Export the ploeg to Excel to allow coaches download
+    :param request: Unused request parameter
     :param pk: the primary key
     :return: an HTTPResponse containing the Excel-file
     """
@@ -404,7 +408,7 @@ def export_ploeg_xlsx(_, pk):
         date=datetime.now().strftime('%d-%m-%Y'),
     )
 
-    workbook = create_workbook(queryset_coaches, queryset_spelers, queryset_pvn)
+    workbook = create_team_workbook(queryset_coaches, queryset_spelers, queryset_pvn)
 
     workbook.save(response)
     return response
@@ -431,3 +435,51 @@ def retrieve_querysets(pk):
     queryset_coaches = Lid.objects.filter(club_id__in=coach_ids)
     queryset_pvn = Lid.objects.filter(club_id__in=pv_ids)
     return ploeg, queryset_coaches, queryset_spelers, queryset_pvn
+
+
+def export_ploeg_preview(request):
+    """
+    After selecting the ploegen to export, save these in the session and proceed to selecting the variables to export
+    :param request: request containing the requested teams
+    :return:
+    """
+    # Retrieve the selection of teams to be exported from the request
+    pks = request.POST.getlist("selection")
+    request.session['ploegen'] = pks
+
+    print(request.session['ploegen'])
+
+    # Load the template and show the preview where one can select the fields
+    template = loader.get_template("management/ploegen_export.html")
+    fields = Lid._meta.get_fields(include_parents=False)
+    fields = [field for field in fields if not field.is_relation]
+    return HttpResponse(template.render(request=request, context={
+        'fields': fields
+    }))
+
+
+def exporteer_ploegen(request):
+    """
+    Exporteer the ploegen selected in the previous step
+    :param request: the request object
+    :return:
+    """
+    # Retrieve the selected ploegen in the previous screen
+    # Retrieve the selected fields from the form
+    ploegen = request.session.get('ploegen', [])
+    selected_ploegen = list(Ploeg.objects.filter(pk__in=ploegen))
+
+    selected_fields = [f for f in request.POST.values() if f.startswith('management')]
+
+    # Create a response with the returned export file
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename=ploegendownload-{date}.xlsx'.format(
+        date=datetime.now().strftime('%d-%m-%Y'),
+    )
+
+    # Create a workbook which shows the selected fields for the selected ploegen
+    workbook = create_general_workbook(selected_ploegen, selected_fields)
+    workbook.save(response)
+    return response

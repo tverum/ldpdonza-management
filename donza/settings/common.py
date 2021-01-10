@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'channels',
     'reactor',
     'guardian',
+    'fontawesome-free',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -169,6 +170,10 @@ ENDLESS_PAGINATION_LOADING = """
         <div class="block_3 spinner_block small"></div>
     </div>
 """
+
+FIXTURE_DIRS = (
+    os.path.join(os.path.dirname(BASE_DIR), 'config', 'fixtures'),
+)
 
 # for the import_export package
 IMPORT_EXPORT_USE_TRANSACTIONS = True

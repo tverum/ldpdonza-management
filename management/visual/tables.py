@@ -4,11 +4,10 @@ import django_tables2 as tables
 from django.urls import reverse
 from django_tables2.utils import A  # alias for Accessor
 
-from ..models import Lid, Betaling
+from ..models import Lid, Betaling, Ploeg
 
 
 class LidTable(tables.Table):
-    selection = tables.CheckBoxColumn(accessor='pk')
     selection = tables.CheckBoxColumn(
         accessor="pk",
         attrs={
@@ -49,6 +48,50 @@ class LidTable(tables.Table):
         attrs = {
             "class": "table table-hover",
         }
+
+
+class PloegTable(tables.Table):
+    selection = tables.CheckBoxColumn(
+        accessor='pk',
+        attrs={
+            "th__input": {
+                "onclick": "toggle(this)"
+            }
+        },
+        orderable=False
+    )
+    bekijk = tables.TemplateColumn(
+        template_code="""
+        <i class="fas fa-eye"></i>
+        """,
+        attrs={
+            "td": {
+                "class": "clickable",
+                "data-href": lambda record: reverse('management:ploeg_view', args=[record.ploeg_id]),
+            },
+        }
+    )
+    edit = tables.TemplateColumn(
+        template_code="""
+        <i class="fas fa-pencil-alt"></i>
+        """,
+        attrs={
+            "td": {
+                "class": "clickable",
+                "data-href": lambda record: reverse('management:ploeg_select', args=[record.ploeg_id]),
+            }
+        }
+    )
+
+    class Meta:
+        model = Ploeg
+        template_name = "django_tables2/bootstrap4.html"
+        fields = (
+            "naam",
+            "bekijk",
+            "edit",
+            "selection"
+        )
 
 
 class DraftTable(tables.Table):
