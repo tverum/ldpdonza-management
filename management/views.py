@@ -1,13 +1,13 @@
 from datetime import datetime as datetime
+from pprint import pprint
 
 from bootstrap_modal_forms.generic import BSModalReadView
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import Http404, HttpResponse
-from django.template import Context, loader
 from django.shortcuts import redirect, reverse, render
+from django.template import loader
 from django.views import generic
-from django.views.generic import View
 from django.views.generic.edit import FormView, UpdateView
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin, MultiTableMixin
@@ -16,10 +16,11 @@ from guardian.mixins import PermissionRequiredMixin as GuardianPermissionMixin
 from .mail.send_mail import lidgeld_mail, send_herinnering, bevestig_betaling
 from .main.betalingen import genereer_betalingen, registreer_betalingen
 from .main.ledenbeheer import import_from_csv, lid_update_uid
-from .models import Lid, Ploeg, PloegLid, Betaling, Functie
+from .models import Lid, Ploeg, PloegLid, Betaling, Functie, Seizoen
 from .resources import CoachLidDownloadResource, create_team_workbook, create_general_workbook
 # Deze lijn moet er in blijven staan om de TeamSelector te kunnen laden
 # noinspection PyUnresolvedReferences
+from .utils import get_current_seizoen
 from .visual.components import TeamSelector
 from .visual.filters import LidFilter
 from .visual.forms import LidForm, OuderForm, PloegForm
@@ -37,6 +38,35 @@ Class based views
 
 class IndexView(generic.TemplateView):
     template_name = "management/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        aantal_leden = len(Lid.objects.all())
+        aantal_spelers = len(
+            PloegLid.objects.filter(functie__functie="Speler", ploeg__seizoen=get_current_seizoen(self.request)))
+        aantal_coaches = len(
+            PloegLid.objects.filter(functie__functie="Coach", ploeg__seizoen=get_current_seizoen(self.request)))
+        aantal_pvn = len(PloegLid.objects.filter(functie__functie="Ploegverantwoordelijke",
+                                                 ploeg__seizoen=get_current_seizoen(self.request)))
+        aantal_ploegen = len(Ploeg.objects.filter(seizoen=get_current_seizoen(self.request)))
+        aantal_betalingen = len(Betaling.objects.filter(seizoen=get_current_seizoen(self.request)))
+        aantal_onbetaalde = len(
+            Betaling.objects.filter(seizoen=get_current_seizoen(self.request)).exclude(status='voltooid'))
+        aantal_draft_betalingen = len(
+            Betaling.objects.filter(seizoen=get_current_seizoen(self.request), status='draft')
+        )
+        context_app = {
+            'aantal_leden': aantal_leden,
+            'aantal_spelers': aantal_spelers,
+            'aantal_coaches': aantal_coaches,
+            'aantal_pvn': aantal_pvn,
+            'aantal_ploegen': aantal_ploegen,
+            'aantal_betalingen': aantal_betalingen,
+            'aantal_onbetaalde': aantal_onbetaalde,
+            'aantal_draft_betalingen': aantal_draft_betalingen
+        }
+        context = {**context, **context_app}
+        return context
 
 
 class LidNewView(FormView):
@@ -88,10 +118,12 @@ class PloegListView(PermissionRequiredMixin, SingleTableMixin, generic.ListView)
     permission_required = ('management.view_ploeg',)
     permission_denied_message = PERMISSION_DENIED
 
+    def get_table_data(self):
+        return super().get_table_data().filter(seizoen=get_current_seizoen(self.request))
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["ploegForm"] = PloegForm
-        context["fields"] = Lid._meta.fields
         return context
 
 
@@ -215,7 +247,8 @@ class LidTableView(PermissionRequiredMixin, SingleTableMixin, FilterView):
     permission_required = ('management.view_lid',)
     permission_denied_message = PERMISSION_DENIED
 
-    def post(self, request, *args, **kwargs):
+    @staticmethod
+    def post(request, *args, **kwargs):
         # retrieve the file from the request
         csv_file = request.FILES['file']
 
@@ -236,17 +269,19 @@ class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.Templa
     permission_denied_message = PERMISSION_DENIED
 
     def get_tables(self):
-        draft_queryset = Betaling.objects.filter(status="draft").all()
-        verstuurd_queryset = Betaling.objects.filter(status="mail_sent").all()
-        betaald_queryset = Betaling.objects.filter(status="betaald").all()
-        voltooid_queryset = Betaling.objects.filter(status="voltooid").all()
+        request = self.request
+        seizoen = get_current_seizoen(request)
+        draft_queryset = Betaling.objects.filter(status="draft", seizoen=seizoen).all()
+        verstuurd_queryset = Betaling.objects.filter(status="mail_sent", seizoen=seizoen).all()
+        betaald_queryset = Betaling.objects.filter(status="voltooid", seizoen=seizoen).all()
         return [
             DraftTable(draft_queryset, prefix="draft-"),
             VerstuurdTable(verstuurd_queryset, prefix="sent-"),
             BetaaldTable(betaald_queryset, prefix="betaald-"),
         ]
 
-    def post(self, request, *args, **kwargs):
+    @staticmethod
+    def post(request, *args, **kwargs):
         # retrieve the file from the request
         csv_file = request.FILES['file']
         if not csv_file.name.endswith(".csv"):
@@ -262,12 +297,6 @@ class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.Templa
 class LidModalView(BSModalReadView):
     model = Lid
     template_name = 'management/lid_modal.html'
-
-
-class GeneratePdf(View):
-    def get(self, request, *args, **kwargs):
-        bevestig_betaling(5)
-        return HttpResponse(200)
 
 
 """
@@ -445,16 +474,22 @@ def export_ploeg_preview(request):
     """
     # Retrieve the selection of teams to be exported from the request
     pks = request.POST.getlist("selection")
+
+    if not pks:
+        messages.warning(request, 'Geen ploeg geselecteerd, er is niets om te exporteren')
+        return redirect(reverse('management:ploegen'))
+
     request.session['ploegen'] = pks
 
-    print(request.session['ploegen'])
+    ploegen = list(Ploeg.objects.filter(pk__in=pks))
 
     # Load the template and show the preview where one can select the fields
     template = loader.get_template("management/ploegen_export.html")
     fields = Lid._meta.get_fields(include_parents=False)
     fields = [field for field in fields if not field.is_relation]
     return HttpResponse(template.render(request=request, context={
-        'fields': fields
+        'fields': fields,
+        'ploegen': ploegen
     }))
 
 
@@ -468,8 +503,11 @@ def exporteer_ploegen(request):
     # Retrieve the selected fields from the form
     ploegen = request.session.get('ploegen', [])
     selected_ploegen = list(Ploeg.objects.filter(pk__in=ploegen))
-
     selected_fields = [f for f in request.POST.values() if f.startswith('management')]
+
+    if not selected_fields:
+        messages.warning(request, 'Geen velden geselecteerd, er is niets om te exporteren')
+        return redirect(reverse('management:ploegen'))
 
     # Create a response with the returned export file
     response = HttpResponse(
@@ -483,3 +521,14 @@ def exporteer_ploegen(request):
     workbook = create_general_workbook(selected_ploegen, selected_fields)
     workbook.save(response)
     return response
+
+
+def change_seizoen(request, pk):
+    """
+    Change seizoen to display
+    :param request: the request with the session
+    :param pk: the primary key of the seizoen
+    :return:
+    """
+    request.session['seizoen'] = pk
+    return redirect(request.GET.get('next'))

@@ -1,131 +1,220 @@
 {% extends "base.html" %}
 
 {% load bootstrap %}
+{% load bulma_tags %}
 {% load static %}
 
 {% block content %}
-<div class="col">
-    <div class="mb-3">
-        <h2>
-            Bewerk Lid
-            {% if form.voornaam.value and form.familienaam.value %}
-                ({{form.voornaam.value}} {{form.familienaam.value}})
-            {% endif %}
-        </h2>
-        {% if lid %}
-            <a class="btn btn-danger float-right" href="{% url 'management:verwijder_lid' lid.club_id %}">Verwijder lid</a>
+<div class="mb-5">
+    <h1 class="title is-2">
+        Bewerk Lid
+        {% if form.voornaam.value and form.familienaam.value %}
+        ({{form.voornaam.value}} {{form.familienaam.value}})
         {% endif %}
+    </h1>
+</div>
+<form method="POST" class="post-form">
+    {% csrf_token %}
+    <!-- Algemene informatie -->
+    <div class="tile box is-ancestor">
+        <div class="tile is-vertical is-12">
+            <div class="tile is-parent">
+                <div class="tile is-child">
+                    <div class="mb-3">
+                        <h4 class="title is-3">
+                            <i class="fas fa-address-card"></i>
+                            Algemene informatie
+                            {% if lid %}
+                            <a class="btn btn-danger float-right"
+                               href="{% url 'management:verwijder_lid' lid.club_id %}">Verwijder lid</a>
+                            {% endif %}
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <div class="tile is-horizontal">
+                <div class="tile is-parent is-vertical is-4">
+                    <div class="tile is-child">
+                        <div class="field">
+                            {{form.voornaam|bulma}}
+                        </div>
 
-    </div>
-    <form method="POST" class="post-form">
-        {% csrf_token %}
-        <div class="mb-3">
-            <h4>Algemene informatie</h4>
-        </div>
-        <div class="alert alert-secondary">
-            <div class="row">
-                <div class="col-6">
-                    {{form.voornaam|bootstrap}}
-                </div>
-                <div class="col-6">
-                    {{form.familienaam|bootstrap}}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-3">
-                    {{form.geslacht|bootstrap}}
-                </div>
-                <div class="col-6">
-                    {{form.geboortedatum|bootstrap}}
-                </div>
-                <div class="col-3">
-                    {{form.lidnummer_vbl|bootstrap}}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <div class="row">
-                        <div class="col">
-                            {{form.sportief_lid|bootstrap}}
-                            {{form.betalend_lid|bootstrap}}
-                            {{form.gescheiden_ouders|bootstrap}}
-                            {{form.facturatie|bootstrap}}
-                            {{form.afbetaling|bootstrap}}
+                        <div class="field">
+                            {{form.familienaam|bulma}}
+                        </div>
+                        <div class="field">
+                            {{form.geslacht|bulma}}
                         </div>
                     </div>
                 </div>
-                <div class="col-6">
-                    {{form.familieleden|bootstrap}}
+                <div class="tile is-parent is-4 is-vertical">
+                    <div class="tile is-child">
+                        <div class="field">
+                            {{form.geboortedatum|bulma}}
+                        </div>
+                        <div class="field">
+                            {{form.lidnummer_vbl|bulma}}
+                        </div>
+                        <div class="field">
+                            {{form.familieleden|bulma}}
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-parent is-4 is-vertical">
+                    <div class="tile is-child">
+                        <div class="field">
+                            {{form.sportief_lid|bulma}}
+                        </div>
+                        <div class="field">
+                            {{form.betalend_lid|bulma}}
+                        </div>
+                        <div class="field">
+                            {{form.gescheiden_ouders|bulma}}
+                        </div>
+                        <div class="field">
+                            {{form.facturatie|bulma}}
+                        </div>
+                        <div class="field">
+                            {{form.afbetaling|bulma}}
+                        </div>
+                    </div>
+                    <div class="tile is-child">
+                        <div class="field">
+                            {{form.vader|bulma}}
+                        </div>
+                        <div class="field">
+                            {{form.moeder|bulma}}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="mb-3">
-            <h4>Functies</h4>
-        </div>
-        <div class="alert alert-secondary form-row">
-            <div class="col-6">
-                {{form.functies|bootstrap}}
+    </div>
+    <!-- Functies, Adres en Contactgegevens -->
+    <div class="tile box is-ancestor">
+        <div class="tile is-4">
+            <div class="tile is-vertical is-12">
+                <div class="tile is-parent">
+                    <div class="tile is-child">
+                        <div class="mb-3">
+                            <h4 class="title is-3">
+                                <i class="fas fa-user-friends"></i>
+                                Functies
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-horizontal">
+                    <div class="tile is-parent is-vertical is-12">
+                        <div class="tile is-child">
+                            <div class="field">
+                                {{form.functies|bulma}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="mb-3">
-            <h4>Adres</h4>
-        </div>
-        <div class="alert alert-secondary form-row">
-            <div class="col-12">
-                {{form.straatnaam_en_huisnummer|bootstrap}}
-            </div>
-            <div class="col-3">
-                {{form.postcode|bootstrap}}
-            </div>
-            <div class="col-9">
-                {{form.gemeente|bootstrap}}
-            </div>
-        </div>
-        <div class="mb-3">
-            <h4>Contactgegevens</h4>
-        </div>
-        <div class="alert alert-secondary form-row">
-            <div class="col-4">
-                {{form.gsmnummer|bootstrap}}
-            </div>
-            <div class="col-4">
-                {{form.email|bootstrap}}
-            </div>
-            <div class="col-4">
-                {{form.rekeningnummer|bootstrap}}
-            </div>
-        </div>
-        <div class="alert alert-secondary form-row justify-content-center">
-            <div class="col-6">
-                {{form.moeder|bootstrap}}
-            </div>
-            <div class="col-6">
-                {{form.vader|bootstrap}}
-            </div>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ouderModal">
-                Voeg Toe
-            </button>
-        </div>
-        <div class="mb-3">
-            <h4>Extra informatie</h4>
-        </div>
-        <div class="alert alert-secondary form-row">
-            <div class="col-12">
-                {{form.extra_informatie|bootstrap}}
+        <div class="tile is-4">
+            <div class="tile is-vertical is-12">
+                <div class="tile is-parent">
+                    <div class="tile is-child">
+                        <div class="mb-3">
+                            <h4 class="title is-3">
+                                <i class="fas fa-map-pin"></i>
+                                Adres
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-horizontal">
+                    <div class="tile is-parent is-vertical is-12">
+                        <div class="tile is-child">
+                            <div class="field">
+                                {{form.straatnaam_en_huisnummer|bulma}}
+                            </div>
+                            <div class="field">
+                                {{form.postcode|bulma}}
+                            </div>
+                            <div class="field">
+                                {{form.gemeente|bulma}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <button type="submit" class="save btn btn-secondary">Opslaan</button>
-    </form>
-</div>
+        <div class="tile is-4">
+            <div class="tile is-vertical is-12">
+                <div class="tile is-parent">
+                    <div class="tile is-child">
+                        <div class="mb-3">
+                            <h4 class="title is-3">
+                                <i class="fas fa-map-pin"></i>
+                                Contactgegevens
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="tile is-horizontal">
+                    <div class="tile is-parent is-vertical is-12">
+                        <div class="tile is-child">
+                            <div class="field">
+                                {{form.gsmnummer|bulma}}
+                            </div>
+                            <div class="field">
+                                {{form.email|bulma}}
+                            </div>
+                            <div class="field">
+                                {{form.rekeningnummer|bulma}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Extra informatie -->
+    <div class="tile box is-ancestor">
+        <div class="tile is-vertical is-12">
+            <div class="tile is-parent">
+                <div class="tile is-child">
+                    <div class="mb-3">
+                        <h4 class="title is-3">
+                            <i class="fas fa-signature"></i>
+                            Extra informatie
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <div class="tile is-parent is-12">
+                <div class="tile is-child">
+                    {{ form.extra_informatie|bulma }}
+                </div>
+            </div>
+            <div class="tile is-parent is-12">
+                <div class="tile is-child">
+                    <div class="control">
+                        <button type="submit" class="save button is-success is-light">
+                            Opslaan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
 <!-- Modal -->
-<div class="modal fade" id="ouderModal" tabindex="-1" role="dialog" aria-labelledby="ouderModalLabel" aria-hidden="true">
+<div class="modal fade" id="ouderModal" tabindex="-1" role="dialog" aria-labelledby="ouderModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="ouderModalLabel">Nieuwe Ouder</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+                <h5 class="modal-title" id="ouderModalLabel">Nieuwe Ouder</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <form action="/management/ouder/new" method="post" id="ouder-form">
                 <div class="modal-body">

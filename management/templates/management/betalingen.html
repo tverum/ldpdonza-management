@@ -6,35 +6,48 @@
 Betalingen
 {% endblock title %}
 {% block content %}
-    <div class="col">
-        <div class="row mb-3 justify-content-center">
-            <h1>Betalingen</h1>
-        </div>
-        <div class="row mb-3 justify-content-center">
-            <a class="btn btn-secondary" href="#mail-verstuurd">Ga naar openstaande betalingen</a>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="input-group">
-                    <div class="custom-file">
-                        <input type="file" name="file" class="custom-file-input" id="inputGroupFile02"/>
-                        <label class="custom-file-label" for="inputGroupFile02">Betalingen inlezen</label>
-                    </div>
-                    <div class="input-group-append">
-                        <button class="btn btn-secondary" name="button" type="submit">Upload</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col">
-                {% for table in tables %}
-                <hr/>
-                <div class="row justify-content-center">
-                    <h2 class="mb-4">{{table.title}}</h2>
-                    {% render_table table 'django_tables2/semantic.html' %}
-                </div>
-                {% endfor %}
-            </div>
-        </div>
+<article class="message">
+    <div class="message-header">
+        <p>Betalingsoverzicht</p>
     </div>
+    <div class="message-body">
+        <p>
+            Hier zie je een overzicht van de betalingen.<br>
+            De betalingen die onder <i>Betalingsontwerpen</i> staan zijn de betalingen waar nog geen mail voor is
+            verstuurd. Door op de knop <b>Mail</b> te klikken kan je een mail versturen met het betalingsvoorstel<br>
+            De betalingen onder <i>Verstuurd</i> zijn reeds verstuurd, maar nog niet betaald. Hiervoor kan je een <b>herinnering
+            sturen</b>
+        </p>
+        <p>
+            Hieronder vind je een veld waar je CSV files kan uploaden om de betalingen automatisch in te lezen.
+        </p>
+    </div>
+</article>
+<div class="level">
+    <div class="level-item has-text-centered">
+        <a class="btn btn-secondary" href="#mail-verstuurd">Ga naar openstaande betalingen</a>
+    </div>
+    <div class="level-item has-text-centered">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" name="file" class="custom-file-input" id="inputGroupFile02"/>
+                    <label class="custom-file-label" for="inputGroupFile02">Betalingen inlezen</label>
+                </div>
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" name="button" type="submit">Upload</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% for table in tables %}
+<div class="section has-text-centered">
+    <h1 class="title is-2">
+        {{table.title}}
+    </h1>
+    {% render_table table 'django_tables2/bootstrap4.html' %}
+</div>
+{% endfor %}
 {% endblock content %}

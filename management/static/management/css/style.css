@@ -2,22 +2,18 @@
     cursor: pointer;
 }
 
-html {
-    position: relative;
-    min-height: 100%;
+.main {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
-body {
-  margin-bottom: 100px; /* Margin bottom by footer height */
+.section {
+  flex: 1;
 }
 
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 60px; /* Set the fixed height of the footer here */
-    line-height: 60px; /* Vertically center the text there */
-    background-color: #f5f5f5;
+tr.is-selected {
+    background-color: #000000!important;
 }
 
 .custom-file-input {
@@ -39,8 +35,12 @@ body {
   overflow-y: auto;
 }
 
-dl {
+dl.two-columns {
     columns: 2;
     -webkit-columns: 2;
     -moz-columns: 2;
+}
+
+a {
+    text-decoration: none !important;
 }

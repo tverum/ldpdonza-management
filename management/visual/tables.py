@@ -62,7 +62,7 @@ class PloegTable(tables.Table):
     )
     bekijk = tables.TemplateColumn(
         template_code="""
-        <i class="fas fa-eye"></i>
+        <i class="fas fa-eye" style="width: 16px;"></i>
         """,
         attrs={
             "td": {
@@ -73,7 +73,7 @@ class PloegTable(tables.Table):
     )
     edit = tables.TemplateColumn(
         template_code="""
-        <i class="fas fa-pencil-alt"></i>
+        <i class="fas fa-pencil-alt" style="width: 16px;"></i>
         """,
         attrs={
             "td": {

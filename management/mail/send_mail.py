@@ -139,6 +139,7 @@ def bevestig_betaling(pk, request):
     """
     Bevestig een bepaalde betaling en verstuur de mutualiteitsformulieren etc.
     :param pk: de betaling die bevestigd moet worden
+    :param request: request object, required to authenticate the user
     :return: None
     """
     filename = "temp.pdf"
@@ -176,7 +177,7 @@ def bevestig_betaling(pk, request):
         'datum_betaling': datum_betaling,
         'datum_afgifte': datum_afgifte,
     }
-    result = render_to_pdf_file('pdf/betalingsbevestiging.html', temp, request, context)
+    result = render_to_pdf_file('pdf/betalingsbevestiging.html', request, context)
     with tempfile.NamedTemporaryFile(delete=True, prefix="ldpdonza", suffix=".pdf") as output:
         output.write(result)
         output.flush()
@@ -194,6 +195,7 @@ def mail_w_attachment(from_email, to_email, filename, subject, message, reply_to
     :param filename: de file die moet verstuurd worden
     :param subject: het onderwerp dat aan de mail moet meegegeven worden
     :param message: de body van het bericht
+    :param reply_to: het reply-to adres voor de mail
     :return: None
     """
     msg = EmailMessage(subject,

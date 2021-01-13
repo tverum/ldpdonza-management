@@ -1,46 +1,59 @@
 {% load static %}
 {% load guardian_tags %}
-<nav class="navbar navbar-expand-lg py-3 navbar-dark" style="background-color:#000000;">
-  <a class="navbar-brand" href="{% url 'management:index'%}">
-    <img width=200 src="{% static 'management/images/logo_header.png' %}" alt="Logo LDP Donza" />
-  </a>
-
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'management:index' %}">Home</a>
-      </li>
-      {% if perms.management.view_lid %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'management:leden' %}">Leden</a>
-        </li>
-      {% endif %}
-      {% if perms.management.view_ploeg %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'management:ploegen' %}">Ploegen</a>
-        </li>
-      {% elif authorized_ploegen %}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Ploegen
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            {% for ploeg in authorized_ploegen %}
-              <a class="dropdown-item" href="{% url 'management:ploeg_view'  ploeg.ploeg_id%}">{{ploeg.naam}}</a>
-            {% endfor %}
-          </div>
-        </li>
-      {% endif %}
-      {% if perms.management.view_betaling %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'management:betalingen' %}">Betalingen</a>
-        </li>
-      {% endif %}
-      {% if perms.management.view_functie %}
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Functies</a>
-        </li>
-      {% endif %}
-    </ul>
-  </div>
+<nav class="navbar is-fixed-top navbar-dark" role="navigation" aria-label="main navigation"
+     style="background-color:#000000;">
+    <!-- Brand & Collapse -->
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'management:index'%}">
+                <img src="{% static 'management/images/logo_header.png' %}" alt="Logo LDP Donza"/>
+            </a>
+            <a role="button" id="navbar-burger-id" class="navbar-burger" aria-label="menu" aria-expanded="false"
+               data-target="navbarCollapse">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div id="navbar-menu-id" class="navbar-menu" id="navbarCollapse">
+            <div class="navbar-start">
+                <a class="navbar-item" href="{% url 'management:index' %}">Home</a>
+                {% if perms.management.view_lid %}
+                <a class="navbar-item" href="{% url 'management:leden' %}">Leden</a>
+                {% endif %}
+                {% if perms.management.view_ploeg %}
+                <a class="navbar-item" href="{% url 'management:ploegen' %}">Ploegen</a>
+                {% elif authorized_ploegen %}
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        Ploegen
+                    </a>
+                    <div class="navbar-dropdown">
+                        {% for ploeg in authorized_ploegen %}
+                        <a class="navbar-link"
+                           href="{% url 'management:ploeg_view'  ploeg.ploeg_id %}">{{ploeg.naam}}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                {% if perms.management.view_betaling %}
+                <a class="navbar-item" href="{% url 'management:betalingen' %}">Betalingen</a>
+                {% endif %}
+                {% if perms.management.view_functie %}
+                <a class="navbar-item">Functies</a>
+                {% endif %}
+            </div>
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-item">Huidig seizoen: {{ current_seizoen.naam }}</a>
+                    <div class="navbar-dropdown">
+                        {% for seizoen in seizoenen %}
+                        <a class="navbar-item"
+                           href="{% url 'management:change_seizoen' seizoen.seizoen_id%}?next={{ request.path }}">{{seizoen.naam}}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </nav>

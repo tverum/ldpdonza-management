@@ -192,7 +192,7 @@ class TeamSelector(Component):
         insert_ploegcoaches = [PloegLid(lid_id=lid.club_id, ploeg_id=ploeg.ploeg_id, functie=functie_coach) for lid in
                                self.ploegcoaches]
         insert_ploegpvn = [PloegLid(lid_id=lid.club_id, ploeg_id=ploeg.ploeg_id, functie=functie_pvn) for lid in
-                               self.ploegpvn]
+                           self.ploegpvn]
         for pl in insert_ploegleden:
             pl.save()
         for pl in insert_ploegcoaches:

@@ -7,17 +7,59 @@ Exporteren
 {% endblock title %}
 
 {% block content %}
-<form action="{% url 'management:exporteer_ploegen' %}" method="post">
-    {% csrf_token %}
-    <p>Selecteer hieronder de velden die je graag zou exporteren:</p>
-    <dl>
-        {% for field in fields %}
-        <dd>
-            <input type="checkbox" id="checkbox-{{field}}" name="{{ field }}" value="{{ field }}">
-            <label class="form-check-label" for="checkbox-{{field}}">{{ field.verbose_name }}</label>
-        </dd>
-        {% endfor %}
-    </dl>
-    <button type="submit" class="btn btn-success">Exporteer</button>
-</form>
+<article class="message">
+    <div class="message-header">
+        <p>Exporteer ploegen</p>
+    </div>
+    <div class="message-body">
+        <p>
+            Voor onderstaande ploegen kan je nu een selecteren welke velden je zou willen exporteren:
+        </p>
+        <ul>
+            {% for ploeg in ploegen %}
+            <li>{{ploeg}}</li>
+            {% endfor %}
+        </ul>
+        <p>Door vervolgens op <b>Exporteer</b> te klikken kan je de Excel-sheet genereren.</p>
+        <p>Vanaf dat de gegevens geëxporteerd zijn, kan de consistentie niet meer gegarandeerd worden, dus gebruik deze
+            lijsten bij voorkeur niet te langdurig.</p>
+    </div>
+</article>
+<div class="box">
+    <form action="{% url 'management:exporteer_ploegen' %}" method="post">
+        {% csrf_token %}
+        <div class="block">
+            <h2 class="subtitle">Gegevens Lid</h2>
+            <dl class="two-columns">
+                {% for field in fields %}
+                <dd>
+                    <label class="checkbox">
+                        <input type="checkbox" id="checkbox-{{field}}" name="{{ field }}" value="{{ field }}">
+                        {{ field.verbose_name }}
+                    </label>
+                </dd>
+                {% endfor %}
+            </dl>
+        </div>
+        <div class="block">
+            <h2 class="subtitle">Relationele gegevens</h2>
+            <dl class="two-columns">
+                <dd>
+                    <label class="checkbox">
+                        <input type="checkbox" id="checkbox-ouders" name="ouders" value="management.ouders">
+                        Inclusief ouders
+                    </label>
+                </dd>
+                <dd>
+                    <label class="checkbox">
+                        <input type="checkbox" id="checkbox-betaling" name="betaling" value="management.betaling">
+                        Inclusief betalingsgegevens
+                    </label>
+                </dd>
+            </dl>
+        </div>
+        <hr>
+        <button type="submit" class="btn btn-success">Exporteer</button>
+    </form>
+</div>
 {% endblock %}

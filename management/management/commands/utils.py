@@ -19,7 +19,8 @@ def mail_to_admin(filename):
     message = "Hierbij de gegenereerde accounts voor de coaches en de ploegverantwoordelijken"
 
     print("Mailing file to {}".format(to_email))
-    mail_w_attachment(from_email=from_email, to_email=to_email, filename=filename, subject=subject, message=message, reply_to=reply_to)
+    mail_w_attachment(from_email=from_email, to_email=to_email, filename=filename, subject=subject, message=message,
+                      reply_to=reply_to)
     print("File mailed!")
 
     print("Removing accounts file")
