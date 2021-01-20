@@ -52,7 +52,7 @@ def link_callback(url):
     return dict(path)
 
 
-def get_current_seizoen(request):
+def get_current_seizoen(request) -> Seizoen:
     """
     Retrieve the current seizoen. If the seizoen is saved in the session, retrieve it.
     Otherwise retrieve the currently active seizoen.
@@ -68,8 +68,13 @@ def get_current_seizoen(request):
             return Seizoen.objects.get(pk=pk)
     try:
         # If there is an active seizoen, select it
-        seizoen = Seizoen.objects.get(startdatum__lte=today, einddatum__gte=today)
+        seizoen = Seizoen.objects.get(
+            startdatum__lte=today, einddatum__gte=today)
     except ObjectDoesNotExist:
         # Default to the highest startdatum
-        seizoen = Seizoen.objects.aggregate(Max('startdatum'))
-    return seizoen
+        seizoen = Seizoen.objects.order_by('-startdatum').first()
+
+    if not seizoen:
+        return Seizoen()
+    else:
+        return seizoen

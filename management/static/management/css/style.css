@@ -1,5 +1,5 @@
 .clickable {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .main {
@@ -13,21 +13,21 @@
 }
 
 tr.is-selected {
-    background-color: #000000!important;
+  background-color: #000000 !important;
 }
 
 .custom-file-input {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .my-custom-scrollbar {
-    position: relative;
-    height: 400px;
-    overflow: auto;
+  position: relative;
+  height: 400px;
+  overflow: auto;
 }
 
 .table-wrapper-scroll-y {
-    display: block;
+  display: block;
 }
 
 .table-wrap {
@@ -36,11 +36,25 @@ tr.is-selected {
 }
 
 dl.two-columns {
-    columns: 2;
-    -webkit-columns: 2;
-    -moz-columns: 2;
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
 }
 
 a {
-    text-decoration: none !important;
+  text-decoration: none !important;
+}
+
+#tabs-with-content .tabs:not(:last-child) {
+  margin-bottom: 0;
+}
+
+#tabs-with-content .tab-content {
+  padding: 1rem;
+  display: none;
+}
+
+#tabs-with-content .tab-content.is-active {
+  display: block;
+  overflow: visible;
 }

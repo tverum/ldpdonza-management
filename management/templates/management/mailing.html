@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<article class="message">
+    <div class="message-header">
+        <p>Mailportaal</p>
+    </div>
+    <div class="message-body">
+        <p>Welkom in het mailportaal van het secretariaat</p>
+        <p>Hier kan je vanuit 1 gecentraliseerde plaats mails versturen naar verschillende groepen/subgroepen van onze
+            club</p>
+        <p>Selecteer een te versturen mail, selecteer de groep waarnaar je de mail wilt versturen, stel een REPLY
+            TO-adres in (zodat mensen weten naar waar ze moeten antwoorden) en verstuur vervolgens je mail</p>
+    </div>
+</article>
+<form method="post" action="{% url 'management:groep_mail' %}" id="mail">
+    {% csrf_token %}
+    <section>
+        <p class="title">Selecteer mail</p>
+        <div class="columns">
+            <aside class="column is-3 is-fullheight section">
+                <p class="menu-label">
+                    Spelers
+                </p>
+                <ul class="menu-list">
+                    <li>
+                        <a data-url="{% url 'management:fetch_mail' %}" data-target={{mail_template}}
+                            data-id="mail-intentie" class="mail-anchor">Intentiemail
+                        </a>
+                    </li>
+                </ul>
+                <p class="menu-label">
+                    Meer volgt (Coming soon)
+                </p>
+            </aside>
+            <div id="preview" class="container column is-9 box mb-3">
+                <section class="hero is-large has-text-centered">
+                    <div class="hero-body">
+                        <div class="container">
+                            <h1 class="title has-text-weight-light">
+                                Mail preview
+                            </h1>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <input type="hidden" class="mail-input" id="mail-template" name="mail-template" value="">
+    </section>
+    <hr>
+    <section>
+        <p class="title">
+            Selecteer groep
+        </p>
+        <div id="tabs-with-content">
+            <div class="tabs is-centered is-fullwidth">
+                <ul>
+                    <li><a>Spelers</a></li>
+                    <li><a>Ploegen</a></li>
+                    <li><a>Coaches</a></li>
+                </ul>
+            </div>
+            <div>
+                <section class="tab-content">
+                    <div class="field">
+                        <div class="control">
+                            <label class="checkbox">
+                                <input type="checkbox" id="group-all-active" name="group" value="all-active">
+                                Alle actieve spelers
+                                <p class="help">Dit zijn alle spelers die in het vorige seizoen
+                                    ingeschreven waren in een ploeg</p>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <label class="checkbox">
+                                <input type="checkbox" id="group-active-ladies" name="group" value="active-ladies">
+                                Alle actieve dames
+                                <p class="help">Dit zijn alle spelers die in het vorige seizoen
+                                    ingeschreven waren in een damesploeg</p>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <label class="checkbox">
+                                <input type="checkbox" id="group-active-men" name="group" value="active-men">
+                                Alle actieve heren
+                                <p class="help">Dit zijn alle spelers die in het vorige seizoen
+                                    ingeschreven waren in een herenploeg</p>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+                <section class="tab-content has-text-centered">
+                    <div class="field">
+                        <div class="control">
+                            <label class="checkbox">
+                                <input type="checkbox" id="group-bovenbouw-heren" name="group" value="bovenbouw-heren">
+                                Bovenbouw Heren
+                                <p class="help">Alle heren die geen senioren zijn, maar wel op hoge doelen spelen</p>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <label class="checkbox">
+                                <input type="checkbox" id="group-bovenbouw-dames" name="group" value="bovenbouw-dames">
+                                Bovenbouw Dames
+                                <p class="help">Alle dames die geen senioren zijn, maar wel op hoge doelen spelen</p>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <label class="checkbox">
+                                <input type="checkbox" id="group-onderbouw" name="group" value="onderbouw">
+                                Onderbouw
+                                <p class="help">Alle spelers die op lage doelen spelen</p>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <label class="checkbox">
+                                <input type="checkbox" id="group-senioren" name="group" value="senioren">
+                                Senioren
+                            </label>
+                        </div>
+                    </div>
+                </section>
+                <section class="tab-content has-text-centered">
+                    Coming soon
+                </section>
+            </div>
+        </div>
+    </section>
+    <hr>
+    <section>
+        <p class="title">
+            Algemene gegevens
+        </p>
+        <div class="content">
+            <div class="level">
+                <div class="level-item has-text-centered">
+                    <div class="field">
+                        <label class="label">Onderwerp</label>
+                        <div class="control">
+                            <input class="input" id="subject" name="subject" type="text" required
+                                placeholder="Onderwerp">
+                        </div>
+                        <p class="help">Dit is het onderwerp dat de ontvanger als 1e zal zien</p>
+                    </div>
+                </div>
+                <div class="level-item has-text-centered">
+                    <div class="field">
+                        <label class="label">Reply-adres</label>
+                        <div class="control">
+                            <input class="input" id="reply" name="reply" type="email" required
+                                placeholder="e.g. test@ldpdonza.be">
+                        </div>
+                        <p class="help">Dit is het e-mailadres waarnaar mensen zullen kunnen antwoorden.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <hr>
+    <section class="has-text-centered">
+        <input type="hidden" name="previous" value="{{request.path}}">
+        <button class="button">Verstuur mail</button>
+    </section>
+</form>
+{% endblock content %}
+
+{% block customscripts %}
+<script src="{% static 'management/js/tabs.js'%}"></script>
+<script src="{% static 'management/js/menu.js'%}"></script>
+{% endblock %}

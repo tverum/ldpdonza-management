@@ -127,8 +127,9 @@ dmypy.json
 # Exclude MAC-specific files
 **.DS_Store
 
-# Exclude PyCharm
+# IDE
 .idea/**
+.vscode/**
 
 # Exclude local settings
-donza/settings/local.py
+./donza/settings/local.py

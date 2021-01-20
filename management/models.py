@@ -52,6 +52,13 @@ class Seizoen(models.Model):
         return "({}-{})".format(self.startdatum.year, self.einddatum.year)
 
 
+class PloegKenmerk(models.Model):
+    kenmerk = models.CharField(max_length=20)
+
+    def __str__(self) -> str:
+        return self.kenmerk
+
+
 class Ploeg(models.Model):
     ploeg_id = models.AutoField(primary_key=True)
     seizoen = models.ForeignKey(
@@ -70,6 +77,7 @@ class Ploeg(models.Model):
         'management.LidgeldKlasse', default=None, null=True, blank=False, on_delete=models.SET_NULL
     )
     objects = models.Manager()
+    kenmerken = models.ManyToManyField(PloegKenmerk, blank=True)
 
     def __str__(self):
         return "({}) {} ({}-{})".format(self.geslacht, self.naam, self.seizoen.startdatum.year,
@@ -135,7 +143,8 @@ class Betaling(models.Model):
     afgelost_bedrag = models.FloatField()
     lid = models.ForeignKey('management.Lid', on_delete=models.CASCADE)
     seizoen = models.ForeignKey('management.Seizoen', on_delete=models.CASCADE)
-    mails_verstuurd = models.CharField(max_length=500, default="", null=True, blank=True)
+    mails_verstuurd = models.CharField(
+        max_length=500, default="", null=True, blank=True)
     mededeling = models.CharField(max_length=20)
     type = models.CharField(max_length=20)
     status = models.CharField(max_length=20)
@@ -152,7 +161,8 @@ class Betaling(models.Model):
         :return:
         """
         afl_nummers = self.aflossingen.split(",")
-        datum = datetime.strftime(datetime.strptime(aflossing["datum"], "%d/%m/%Y"), "%d/%m/%Y")
+        datum = datetime.strftime(datetime.strptime(
+            aflossing["datum"], "%d/%m/%Y"), "%d/%m/%Y")
 
         if not datum in afl_nummers:
             bedrag = aflossing["credit"].replace(",", ".")

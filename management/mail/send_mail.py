@@ -3,6 +3,7 @@ import os
 import tempfile
 from datetime import timedelta
 from email.mime.image import MIMEImage
+from typing import Sequence
 
 from django.conf import settings
 from django.core.mail import EmailMessage
@@ -14,7 +15,7 @@ from ..models import Betaling
 from ..utils import render_to_pdf_file
 
 
-def send_mail_template(template, context, to, from_email, subject, reply_to=None):
+def send_mail_template(html_template: str, txt_template: str, context: dict, to: Sequence[str], from_email: str, subject: str, reply_to=None):
     """
     Send the mail using a template
     :param template: the template to render
@@ -25,14 +26,15 @@ def send_mail_template(template, context, to, from_email, subject, reply_to=None
     :param reply_to: to who should the mail be answered
     :return:
     """
-    message = render_to_string(template, context)
+    html = get_template(html_template)
+    plaintext = get_template(txt_template)
+    html_content = html.render(context)
+    text_content = plaintext.render(context)
 
-    msg = EmailMessage(subject,
-                       message,
-                       from_email,
-                       to,
-                       reply_to=reply_to)
-    msg.content_subtype = "html"
+    msg = EmailMultiAlternatives(
+        subject, text_content, from_email, to, reply_to=[reply_to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.mixed_subtype = 'related'
     msg.send()
 
 
@@ -43,7 +45,8 @@ def lidgeld_mail(pk):
     betaling = Betaling.objects.get(pk=pk)
     lid = betaling.lid
     datum_versturen = datetime.date.today().strftime('%d-%m-%Y')
-    datum_verval = (datetime.date.today() + timedelta(days=40)).strftime('%d-%m-%Y')
+    datum_verval = (datetime.date.today() +
+                    timedelta(days=40)).strftime('%d-%m-%Y')
     to = []
     if lid.moeder:
         to.append(lid.moeder.email)
@@ -68,7 +71,8 @@ def lidgeld_mail(pk):
     text_content = plaintext.render(d)
     html_content = htmly.render(d)
 
-    msg = EmailMultiAlternatives(subject, text_content, from_email, to, reply_to=['pol@ldpdonza.be'])
+    msg = EmailMultiAlternatives(
+        subject, text_content, from_email, to, reply_to=['pol@ldpdonza.be'])
     msg.attach_alternative(html_content, "text/html")
     msg.mixed_subtype = 'related'
 
@@ -94,7 +98,8 @@ def send_herinnering(pk):
 
     betaling = Betaling.objects.get(pk=pk)
     lid = betaling.lid
-    datum_verval = (datetime.date.today() + timedelta(days=21)).strftime('%d-%m-%Y')
+    datum_verval = (datetime.date.today() +
+                    timedelta(days=21)).strftime('%d-%m-%Y')
     datum_vorige_mail = betaling.mails_verstuurd.split(";")[-1]
     to = []
     if lid.moeder:
@@ -120,7 +125,8 @@ def send_herinnering(pk):
     text_content = plaintext.render(d)
     html_content = htmly.render(d)
 
-    msg = EmailMultiAlternatives(subject, text_content, from_email, to, reply_to=['pol@ldpdonza.be'])
+    msg = EmailMultiAlternatives(
+        subject, text_content, from_email, to, reply_to=['pol@ldpdonza.be'])
     msg.attach_alternative(html_content, "text/html")
     msg.mixed_subtype = 'related'
 
@@ -149,7 +155,8 @@ def bevestig_betaling(pk, request):
     seizoen = betaling.seizoen
     datum_betaling = betaling.aflossingen.split(",")[-1]
 
-    subject = "Betalingsbevestiging en attest mutualiteit voor {} {}".format(lid.voornaam, lid.familienaam)
+    subject = "Betalingsbevestiging en attest mutualiteit voor {} {}".format(
+        lid.voornaam, lid.familienaam)
     context = {
         'lid': lid,
         'seizoen': seizoen,
@@ -177,11 +184,13 @@ def bevestig_betaling(pk, request):
         'datum_betaling': datum_betaling,
         'datum_afgifte': datum_afgifte,
     }
-    result = render_to_pdf_file('pdf/betalingsbevestiging.html', request, context)
+    result = render_to_pdf_file(
+        'pdf/betalingsbevestiging.html', request, context)
     with tempfile.NamedTemporaryFile(delete=True, prefix="ldpdonza", suffix=".pdf") as output:
         output.write(result)
         output.flush()
-        mail_w_attachment(from_email, to, output.name, subject=subject, message=message, reply_to=reply_to)
+        mail_w_attachment(from_email, to, output.name,
+                          subject=subject, message=message, reply_to=reply_to)
 
     betaling.status = 'voltooid'
     betaling.save()

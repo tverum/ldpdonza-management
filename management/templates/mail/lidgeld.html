@@ -1,98 +1,102 @@
 <!DOCTYPE html>
 {% load static %}
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1,
             shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-          crossorigin="anonymous">
-    <link
-            href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext'
-            rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 </head>
+
 <body class="container-fluid">
-<main role="main" class="flex-shrink-0">
-    <div class="content container pt-5">
-        <div class="row">
-            <div class="alert alert-secondary">
-                Mail verstuurd naar:
-                <ul>
-                    {% for adres in emailadressen %}
-                    <li>{{adres}}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <p>
-                    Beste Ouders,<br>
-                    Beste Speler/Speelster,
-                </p>
-                <p>
-                    Alvast welkom (terug) aan u en uw kind(eren) bij LDP Donza. LDP Donza staat voor heel wat plezier
-                    beleven aan basket
-                    gecombineerd met een zeer degelijke aanpak, waarbij we trainingen en wedstrijden in de best
-                    mogelijke omstandigheden
-                    organiseren, met gediplomeerde en gemotiveerde coaches werken, volop inzetten op de persoonlijke
-                    ontwikkeling van
-                    u/uw kind, ...
-                </p>
-                <p>
-                    Om dit alles te realiseren, steunen we voor een deel op inschrijvingsgelden, maar ook op de
-                    bijdragen van onze
-                    partners (zie www.ldpdonza.be voor meer info), op subsidies en natuurlijk op sportcafé 't Vijfde
-                    Kwart in De Pinte
-                    waar we u trouwens zo snel als mogelijk opnieuw willen ontvangen.
-                </p>
-                <p>
-                    Het inschrijvingsgeld bedraagt voor jullie <b>{{betaling.origineel_bedrag}} EUR per speler per
-                    seizoen</b> en is te
-                    betalen op <b>rekeningnummer BE91 7370 3583 5176</b> van LDP Donza <b>voor {{datum_verval}}</b>.
-                    Gebruik aub
-                    uitsluitend onderstaande gestructureerde mededeling bij de betaling, dat vereenvoudigt de verdere
-                    verwerking.
-                </p>
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <strong>Gestructureerde mededeling voor <b>{{lid.voornaam}} {{lid.familienaam}}</b>:
-                            <b>{{betaling.mededeling}}</b></strong>
-                    </div>
+    <main role="main" class="flex-shrink-0">
+        <div class="content container pt-5">
+            <div class="row">
+                <div class="alert alert-secondary">
+                    Mail verstuurd naar:
+                    <ul>
+                        {% for adres in emailadressen %}
+                        <li>{{adres}}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
-                <p>
-                    Het inschrijvingsgeld voor uw kind(eren) slim investeren als sponsoring? Het kan. En verzekert u van
-                    een jaar lang zichtbaarheid voor uw bedrijf in de sporthallen van Deinze en De Pinte én online op
-                    LDPDonza.be. Vraag er naar via pol@ldpdonza.be.
-                </p>
-                <p>
-                    Wie eventueel een gespreide betaling wil, kan dit ook via mij aanvragen, uw aanvraag wordt in alle
-                    discretie behandeld.
-                </p>
-                <p>
-                    We wensen jullie alvast een mooi seizoen toe. Laat zeker ook niet na om één van de vele wedstrijden
-                    van jeugd en
-                    senioren te komen bekijken. Meer info hierover op www.ldpdonza.be.
-                </p>
-                <p>
-                    <img src='cid:signature'/>
-                </p>
-                <footer>
+            </div>
+            <div class="row">
+                <div class="col">
                     <p>
-                        <small>
-                            B.B.C. LDP Donza V.Z.W.<br>
-                            's Gravenstraat 130, 9810 Nazareth<br>
-                            BE0464.016.722<br>
-                            RPR Gent afdeling Gent<br>
-                            info@ldpdonza.be - www.ldpdonza.be
-                        </small>
+                        Beste Ouders,<br>
+                        Beste Speler/Speelster,
                     </p>
-                </footer>
+                    <p>
+                        Alvast welkom (terug) aan u en uw kind(eren) bij LDP Donza. LDP Donza staat voor heel wat
+                        plezier
+                        beleven aan basket
+                        gecombineerd met een zeer degelijke aanpak, waarbij we trainingen en wedstrijden in de best
+                        mogelijke omstandigheden
+                        organiseren, met gediplomeerde en gemotiveerde coaches werken, volop inzetten op de persoonlijke
+                        ontwikkeling van
+                        u/uw kind, ...
+                    </p>
+                    <p>
+                        Om dit alles te realiseren, steunen we voor een deel op inschrijvingsgelden, maar ook op de
+                        bijdragen van onze
+                        partners (zie www.ldpdonza.be voor meer info), op subsidies en natuurlijk op sportcafé 't Vijfde
+                        Kwart in De Pinte
+                        waar we u trouwens zo snel als mogelijk opnieuw willen ontvangen.
+                    </p>
+                    <p>
+                        Het inschrijvingsgeld bedraagt voor jullie <b>{{betaling.origineel_bedrag}} EUR per speler per
+                            seizoen</b> en is te
+                        betalen op <b>rekeningnummer BE91 7370 3583 5176</b> van LDP Donza <b>voor {{datum_verval}}</b>.
+                        Gebruik aub
+                        uitsluitend onderstaande gestructureerde mededeling bij de betaling, dat vereenvoudigt de
+                        verdere
+                        verwerking.
+                    </p>
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <strong>Gestructureerde mededeling voor <b>{{lid.voornaam}} {{lid.familienaam}}</b>:
+                                <b>{{betaling.mededeling}}</b></strong>
+                        </div>
+                    </div>
+                    <p>
+                        Het inschrijvingsgeld voor uw kind(eren) slim investeren als sponsoring? Het kan. En verzekert u
+                        van
+                        een jaar lang zichtbaarheid voor uw bedrijf in de sporthallen van Deinze en De Pinte én online
+                        op
+                        LDPDonza.be. Vraag er naar via pol@ldpdonza.be.
+                    </p>
+                    <p>
+                        Wie eventueel een gespreide betaling wil, kan dit ook via mij aanvragen, uw aanvraag wordt in
+                        alle
+                        discretie behandeld.
+                    </p>
+                    <p>
+                        We wensen jullie alvast een mooi seizoen toe. Laat zeker ook niet na om één van de vele
+                        wedstrijden
+                        van jeugd en
+                        senioren te komen bekijken. Meer info hierover op www.ldpdonza.be.
+                    </p>
+                    <p>
+                        <img src='cid:signature' />
+                    </p>
+                    <footer>
+                        <p>
+                            <small>
+                                B.B.C. LDP Donza V.Z.W.<br>
+                                's Gravenstraat 130, 9810 Nazareth<br>
+                                BE0464.016.722<br>
+                                RPR Gent afdeling Gent<br>
+                                info@ldpdonza.be - www.ldpdonza.be
+                            </small>
+                        </p>
+                    </footer>
+                </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 </body>

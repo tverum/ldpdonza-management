@@ -1,10 +1,14 @@
 from datetime import datetime as datetime
+from management.mail.group_mail import group_mail
 from pprint import pprint
+from tempfile import template
 
 from bootstrap_modal_forms.generic import BSModalReadView
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import Http404, HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib.messages.api import warning
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, reverse, render
 from django.template import loader
 from django.views import generic
@@ -27,7 +31,7 @@ from .visual.forms import LidForm, OuderForm, PloegForm
 from .visual.tables import LidTable, DraftTable, VerstuurdTable, BetaaldTable, PloegTable
 
 PERMISSION_DENIED = """
-            Je hebt niet de juiste permissies om deze pagina te bekijken. 
+            Je hebt niet de juiste permissies om deze pagina te bekijken.
             Indien je dit wel nodig hebt, contacteer de webmaster. (TODO: add link)
             """
 
@@ -48,12 +52,15 @@ class IndexView(generic.TemplateView):
             PloegLid.objects.filter(functie__functie="Coach", ploeg__seizoen=get_current_seizoen(self.request)))
         aantal_pvn = len(PloegLid.objects.filter(functie__functie="Ploegverantwoordelijke",
                                                  ploeg__seizoen=get_current_seizoen(self.request)))
-        aantal_ploegen = len(Ploeg.objects.filter(seizoen=get_current_seizoen(self.request)))
-        aantal_betalingen = len(Betaling.objects.filter(seizoen=get_current_seizoen(self.request)))
+        aantal_ploegen = len(Ploeg.objects.filter(
+            seizoen=get_current_seizoen(self.request)))
+        aantal_betalingen = len(Betaling.objects.filter(
+            seizoen=get_current_seizoen(self.request)))
         aantal_onbetaalde = len(
             Betaling.objects.filter(seizoen=get_current_seizoen(self.request)).exclude(status='voltooid'))
         aantal_draft_betalingen = len(
-            Betaling.objects.filter(seizoen=get_current_seizoen(self.request), status='draft')
+            Betaling.objects.filter(
+                seizoen=get_current_seizoen(self.request), status='draft')
         )
         context_app = {
             'aantal_leden': aantal_leden,
@@ -195,7 +202,8 @@ class PloegSelectView(PermissionRequiredMixin, generic.DetailView):
     def get_coaches(ploegcoaches):
         functie = Functie.objects.get(functie="Coach")
         queryset = Lid.objects.filter(functies__functie=functie)
-        coaches = [lid.club_id for lid in queryset if lid.club_id not in ploegcoaches]
+        coaches = [
+            lid.club_id for lid in queryset if lid.club_id not in ploegcoaches]
         return coaches
 
     @staticmethod
@@ -271,9 +279,12 @@ class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.Templa
     def get_tables(self):
         request = self.request
         seizoen = get_current_seizoen(request)
-        draft_queryset = Betaling.objects.filter(status="draft", seizoen=seizoen).all()
-        verstuurd_queryset = Betaling.objects.filter(status="mail_sent", seizoen=seizoen).all()
-        betaald_queryset = Betaling.objects.filter(status="voltooid", seizoen=seizoen).all()
+        draft_queryset = Betaling.objects.filter(
+            status="draft", seizoen=seizoen).all()
+        verstuurd_queryset = Betaling.objects.filter(
+            status="mail_sent", seizoen=seizoen).all()
+        betaald_queryset = Betaling.objects.filter(
+            status="voltooid", seizoen=seizoen).all()
         return [
             DraftTable(draft_queryset, prefix="draft-"),
             VerstuurdTable(verstuurd_queryset, prefix="sent-"),
@@ -299,6 +310,15 @@ class LidModalView(BSModalReadView):
     template_name = 'management/lid_modal.html'
 
 
+class MailView(generic.TemplateView):
+    template_name = "management/mailing.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['mail_template'] = 'mail/intentiemail.html'
+        return context
+
+
 """
 Method based views
 """
@@ -317,7 +337,8 @@ def genereer(request):
         # genereer de betalingen voor de geselecteerde leden
         genereer_betalingen(geselecteerde_leden)
 
-        messages.success(request, "Betalingen voor geselecteerde leden gegenereerd")
+        messages.success(
+            request, "Betalingen voor geselecteerde leden gegenereerd")
         return redirect(reverse("management:leden"), permanent=True)
     else:
         raise Http404("Methode bestaat niet. Deze pagina is niet beschikbaar.")
@@ -416,7 +437,8 @@ def export_ploeg_csv(request, pk):
     coachdownload_resource = CoachLidDownloadResource()
     dataset = coachdownload_resource.export(queryset)
     response = HttpResponse(dataset.csv, content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="{}"'.format(download_name)
+    response['Content-Disposition'] = 'attachment; filename="{}"'.format(
+        download_name)
     return response
 
 
@@ -427,7 +449,8 @@ def export_ploeg_xlsx(request, pk):
     :param pk: the primary key
     :return: an HTTPResponse containing the Excel-file
     """
-    ploeg, queryset_coaches, queryset_spelers, queryset_pvn = retrieve_querysets(pk)
+    ploeg, queryset_coaches, queryset_spelers, queryset_pvn = retrieve_querysets(
+        pk)
 
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -437,7 +460,8 @@ def export_ploeg_xlsx(request, pk):
         date=datetime.now().strftime('%d-%m-%Y'),
     )
 
-    workbook = create_team_workbook(queryset_coaches, queryset_spelers, queryset_pvn)
+    workbook = create_team_workbook(
+        queryset_coaches, queryset_spelers, queryset_pvn)
 
     workbook.save(response)
     return response
@@ -476,7 +500,8 @@ def export_ploeg_preview(request):
     pks = request.POST.getlist("selection")
 
     if not pks:
-        messages.warning(request, 'Geen ploeg geselecteerd, er is niets om te exporteren')
+        messages.warning(
+            request, 'Geen ploeg geselecteerd, er is niets om te exporteren')
         return redirect(reverse('management:ploegen'))
 
     request.session['ploegen'] = pks
@@ -503,10 +528,12 @@ def exporteer_ploegen(request):
     # Retrieve the selected fields from the form
     ploegen = request.session.get('ploegen', [])
     selected_ploegen = list(Ploeg.objects.filter(pk__in=ploegen))
-    selected_fields = [f for f in request.POST.values() if f.startswith('management')]
+    selected_fields = [
+        f for f in request.POST.values() if f.startswith('management')]
 
     if not selected_fields:
-        messages.warning(request, 'Geen velden geselecteerd, er is niets om te exporteren')
+        messages.warning(
+            request, 'Geen velden geselecteerd, er is niets om te exporteren')
         return redirect(reverse('management:ploegen'))
 
     # Create a response with the returned export file
@@ -532,3 +559,42 @@ def change_seizoen(request, pk):
     """
     request.session['seizoen'] = pk
     return redirect(request.GET.get('next'))
+
+
+def groep_mail(request):
+    """[Mailing endpoint, stuur een mail naar een group mensen.]
+
+    Args:
+        request ([ASGIRequest]): [de request naar de endpoint]
+
+    Returns:
+        [HttpResponse]: [response]
+    """
+    seizoen = get_current_seizoen(request)
+    required_fields = ['mail-template', 'group', 'subject', 'reply']
+    if not all([field in request.POST for field in required_fields]):
+        messages.warning(request, """
+        Er ontbreken velden om een geldige mail te construeren.
+        Zorg er zeker voor dat er een mail-template geselecteerd is, er een groep geselecteerd is om naar te sturen 
+        en er een onderwerp en reply veld is ingesteld.
+        """)
+        return redirect(reverse('management:mails'))
+    else:
+        group = request.POST.get("group")
+        mail_template = request.POST.get("mail-template")
+        subject = request.POST.get("subject")
+        reply = request.POST.get("reply")
+        print(group, mail_template, subject, reply)
+        group_mail(group, mail_template, subject, reply, seizoen)
+        messages.success(request, """
+        Mails succesvol verstuurd.
+        """)
+        return redirect(reverse('management:mails'))
+
+
+def fetch_mail(request):
+    """
+    Fetch a mail template given with template
+    """
+    template = request.GET.get("template")
+    return render(request, template)

@@ -23,9 +23,12 @@ class Command(BaseCommand):
         :param parser: the parser that is used in parsing the command
         """
         # Named (optional) arguments
-        parser.add_argument('-p', '--send-mails-pa', action='store_true', help="Stuur mails naar de PAs")
-        parser.add_argument('-c', '--send-mails-coaches', action='store_true', help="Stuur mails naar de Coaches")
-        parser.add_argument('-m', '--mailadressen', nargs='+', help="Stuur mails voor de opgegeven mailadressen")
+        parser.add_argument('-p', '--send-mails-pa',
+                            action='store_true', help="Stuur mails naar de PAs")
+        parser.add_argument('-c', '--send-mails-coaches',
+                            action='store_true', help="Stuur mails naar de Coaches")
+        parser.add_argument('-m', '--mailadressen', nargs='+',
+                            help="Stuur mails voor de opgegeven mailadressen")
 
     def handle(self, *args, **kwargs):
 
@@ -36,10 +39,12 @@ class Command(BaseCommand):
         send_mails_coaches = kwargs['send_mails_coaches']
         mailadressen = kwargs['mailadressen']
 
-        self.stdout.write(self.style.SUCCESS("Generating accounts for coaches..."))
+        self.stdout.write(self.style.SUCCESS(
+            "Generating accounts for coaches..."))
         coaches_acc = generate_accounts("Coach")
 
-        self.stdout.write(self.style.SUCCESS("Generating accounts for ploegverantwoordelijken..."))
+        self.stdout.write(self.style.SUCCESS(
+            "Generating accounts for ploegverantwoordelijken..."))
         pv_acc = generate_accounts("Ploegverantwoordelijke")
 
         self.stdout.write(self.style.SUCCESS("Writing to file..."))
@@ -54,7 +59,8 @@ class Command(BaseCommand):
         if send_mails_coaches:
             send_mails(coaches_acc)
         if mailadressen:
-            entries = [entry for entry in (coaches_acc + pv_acc) if entry[3] in mailadressen]
+            entries = [entry for entry in (
+                coaches_acc + pv_acc) if entry[3] in mailadressen]
             send_mails(entries)
 
 
@@ -69,21 +75,7 @@ def send_mails(entries):
     reply_to = ["vanerum.tim@gmail.com", ]
     subject = "Account Ledenportaal LDP Donza"
 
-    for entry in entries:
-        context = {
-            "voornaam": entry[0],
-            "familienaam": entry[1],
-            "username": entry[2],
-            "wachtwoord": entry[4],
-        }
-        to = [entry[3]]
-
-        send_mail_template(template=mail_template,
-                           context=context,
-                           to=to,
-                           from_email=from_email,
-                           subject=subject,
-                           reply_to=reply_to)
+    raise NotImplementedError
 
 
 def generate_accounts(functie):
@@ -106,7 +98,8 @@ def generate_accounts(functie):
         if not ploegen:
             continue
 
-        username = '{}{}'.format(lid.voornaam.replace(" ", "").lower(), lid.familienaam.replace(" ", "").lower())
+        username = '{}{}'.format(lid.voornaam.replace(
+            " ", "").lower(), lid.familienaam.replace(" ", "").lower())
         password = '{}{}'.format(lid.voornaam[::-1].replace(" ", "").lower(),
                                  lid.familienaam[::-1].replace(" ", "").lower())
         try:
@@ -116,21 +109,26 @@ def generate_accounts(functie):
                 password
             )
         except IntegrityError as e:
-            print("Account was al gecreëerd voor de persoon: {} {}".format(lid.voornaam, lid.familienaam))
+            print("Account was al gecreëerd voor de persoon: {} {}".format(
+                lid.voornaam, lid.familienaam))
             user = User.objects.get_by_natural_key(username)
             if user.check_password(password):
-                entries.append((lid.voornaam, lid.familienaam, username, lid.email, password, False))
+                entries.append((lid.voornaam, lid.familienaam,
+                                username, lid.email, password, False))
             else:
-                entries.append((lid.voornaam, lid.familienaam, username, lid.email, password, True))
+                entries.append((lid.voornaam, lid.familienaam,
+                                username, lid.email, password, True))
             # Account was al gecreëerd voor deze persoon
             continue
 
         ploegen = [Ploeg.objects.get(ploeg_id=ploeglid.ploeg.ploeg_id) for ploeglid in PloegLid.objects.filter(
             lid=lid, functie=functie)]
 
-        entries.append((lid.voornaam, lid.familienaam, username, lid.email, password, False))
+        entries.append((lid.voornaam, lid.familienaam,
+                        username, lid.email, password, False))
         for ploeg in ploegen:
-            UserObjectPermission.objects.assign_perm('view_ploeg', user, obj=ploeg)
+            UserObjectPermission.objects.assign_perm(
+                'view_ploeg', user, obj=ploeg)
 
     return entries
 
@@ -142,7 +140,8 @@ def write_to_file(filename, entries):
     :param entries: de gegenereerde accounts
     :return: None
     """
-    keys = ("Voornaam", "Familienaam", "Username", "Email", "Passwoord", "Aangepast")
+    keys = ("Voornaam", "Familienaam", "Username",
+            "Email", "Passwoord", "Aangepast")
     dictionairy = [dict(zip(keys, entry)) for entry in entries]
     with open(os.path.join(settings.BASE_DIR, filename), 'w') as outfile:
         json.dump(dictionairy, outfile)
