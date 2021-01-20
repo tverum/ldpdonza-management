@@ -39,7 +39,7 @@
                 {% if perms.management.view_betaling %}
                 <a class="navbar-item" href="{% url 'management:betalingen' %}">Betalingen</a>
                 {% endif %}
-                {% if perms.management.view_mails %}
+                {% if user.is_staff %}
                 <a class="navbar-item" href="{% url 'management:mails' %}">Mails</a>
                 {% endif %}
                 {% if perms.management.view_functie %}
