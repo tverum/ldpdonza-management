@@ -1,11 +1,13 @@
 $(document).ready(function () {
     $(".slow-link").click(function () {
+        const url = $(this).data('url');
         $('#slowmodal').addClass('is-active');
         $.ajax({
             type: 'GET',
-            url: $(this).data('url'),
+            url: url,
             success: function (html) {
                 document.write(html);
+                window.location = url;
             }
         })
     })
