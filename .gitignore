@@ -132,4 +132,4 @@ dmypy.json
 .vscode/**
 
 # Exclude local settings
-./donza/settings/local.py
+**/settings/local.py
