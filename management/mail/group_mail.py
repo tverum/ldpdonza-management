@@ -125,7 +125,7 @@ def group_mail(group: str, mail_template: str, subject: str, reply: str, seizoen
     """
     # Retrieve the leden based on the group tag and retrieve the adresses of the group.
     leden = determine_group(group=group, seizoen=seizoen)
-    mails = retrieve_mails(leden=leden, incl_ouders=False)
+    mails = retrieve_mails(leden=leden, incl_ouders=True)
 
     # Send mail from no-reply to all the mailadresses.
     from_email = 'no-reply@ldpdonza.be'
