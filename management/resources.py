@@ -52,7 +52,7 @@ class CoachLidDownloadResource(resources.ModelResource):
         )
 
 
-def create_team_workbook(queryset_coaches, queryset_spelers, queryset_pvn):
+def create_team_workbook(queryset_coaches, queryset_spelers, queryset_pvn, queryset_hh):
     workbook = Workbook()
 
     # --- SPELERS ---
@@ -103,6 +103,22 @@ def create_team_workbook(queryset_coaches, queryset_spelers, queryset_pvn):
     row_num = 4
 
     create_team_sheet(columns, queryset_pvn, row_num, worksheet, minimal=True)
+
+    # --- HELPENDE HANDEN ---
+    columns = [
+        "Voornaam", "Familienaam", "Gsmnummer", "Email"
+    ]
+    worksheet = workbook.create_sheet(
+        title="Helpende Handen",
+        index=1,
+    )
+
+    cell = worksheet.cell(row=2, column=2)
+    cell.value = "HELPENDE HANDEN"
+    cell.font = Font(name='Calibri', bold=True, size=20)
+    row_num = 4
+
+    create_team_sheet(columns, queryset_hh, row_num, worksheet, minimal=True)
 
     return workbook
 
@@ -194,6 +210,14 @@ def create_general_workbook(ploegen, selected_fields):
     )
     ploegverantwoordelijke = Functie.objects.get(functie="Ploegverantwoordelijke")
     create_sheet(ploegen, selected_fields, worksheet, ploegverantwoordelijke, False, False, seizoen)
+
+    # --- HELPENDE HANDEN ---
+    worksheet = workbook.create_sheet(
+        title="Helpende handen",
+        index=1,
+    )
+    helpende_handen = Functie.objects.get(functie="Helpende Handen")
+    create_sheet(ploegen, selected_fields, worksheet, helpende_handen, False, False, seizoen)
     return workbook
 
 

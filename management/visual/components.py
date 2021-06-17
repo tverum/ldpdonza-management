@@ -15,12 +15,14 @@ class TeamSelector(Component):
     coaches = set([])
     pvn = set([])
     ploegpvn = set([])
+    hhn = set([])
+    ploeghhn = set([])
     ploeg_id = 0
     showall = False
     message = []
 
     # deze methode is verantwoordelijk om gegeven een state, de initialisatie te doen
-    def mount(self, eligible_players, ploegleden, coaches, ploegcoaches, pvn, ploegpvn, ploeg_id, **kwargs):
+    def mount(self, eligible_players, ploegleden, coaches, ploegcoaches, pvn, ploegpvn, hhn, ploeghhn, ploeg_id, **kwargs):
         # set ploegid
         self.ploeg_id = ploeg_id
 
@@ -60,6 +62,18 @@ class TeamSelector(Component):
             self.pvn = set([Lid.objects.get(pk=lid_id) for lid_id in pvn])
         else:
             self.get_pvn()
+
+        # Helpende Handen gedeelte
+        if not ploeghhn:
+            functie = Functie.objects.get(functie="Helpende Handen")
+            ploeghhn = [ploeglid.lid.club_id for ploeglid in
+                        PloegLid.objects.filter(ploeg=ploeg_id, functie=functie)]
+        self.ploeghhn = set([Lid.objects.get(pk=lid) for lid in ploeghhn])
+
+        if hhn:
+            self.hhn = set([Lid.objects.get(pk=lid_id) for lid_id in hhn])
+        else:
+            self.get_hhn()
 
     def get_display_players(self):
         if self.showall:
@@ -124,6 +138,10 @@ class TeamSelector(Component):
         pvn_functie = Functie.objects.get(functie="Ploegverantwoordelijke")
         self.pvn = Lid.objects.filter(functies__functie=pvn_functie).all()
 
+    def get_hhn(self):
+        hhn_functie = Functie.objects.get(functie="Helpende Handen")
+        self.hhn = Lid.objects.filter(functies__functie=hhn_functie).all()
+
     # deze methode is verantwoordelijk om de essentie van de state te capturen
     def serialize(self):
         ep = [player.club_id for player in self.eligible_players]
@@ -132,9 +150,11 @@ class TeamSelector(Component):
         ploegcoaches = [coach.club_id for coach in self.ploegcoaches]
         pvn = [pv.club_id for pv in self.pvn]
         ploegpvn = [ploegpv.club_id for ploegpv in self.ploegpvn]
+        hhn = [hh.club_id for hh in self.hhn]
+        ploeghhn = [ploeghh.club_id for ploeghh in self.ploeghhn]
         ploeg_id = self.ploeg_id
         return dict(id=self.id, eligible_players=ep, ploegleden=pl, coaches=coaches, ploegcoaches=ploegcoaches,
-                    pvn=pvn, ploegpvn=ploegpvn, ploeg_id=ploeg_id)
+                    pvn=pvn, ploegpvn=ploegpvn, hhn=hhn, ploeghhn=ploeghhn, ploeg_id=ploeg_id)
 
     # This are the event handlers they always start with `receive_`
 
@@ -154,6 +174,11 @@ class TeamSelector(Component):
         self.pvn.remove(Lid.objects.get(pk=pv))
         self.ploegpvn.add(Lid.objects.get(pk=pv))
 
+    # Receive an add event for a helpende hand
+    def receive_voegtoe_hh(self, hh, **kwargs):
+        self.hhn.remove(Lid.objects.get(pk=hh))
+        self.ploeghhn.add(Lid.objects.get(pk=hh))
+
     # Receive a delete event
     def receive_verwijder_lid(self, lid, **kwargs):
         self.eligible_players.add(Lid.objects.get(pk=lid))
@@ -170,6 +195,11 @@ class TeamSelector(Component):
         self.pvn.add(Lid.objects.get(pk=pv))
         self.ploegpvn.remove(Lid.objects.get(pk=pv))
 
+    # Receive a delete event
+    def receive_verwijder_hh(self, hh, **kwargs):
+        self.hhn.add(Lid.objects.get(pk=hh))
+        self.ploeghhn.remove(Lid.objects.get(pk=hh))
+
     # Receive a submit event
     def receive_indienen(self, **kwargs):
         ploeg = Ploeg.objects.get(ploeg_id=self.ploeg_id)
@@ -181,9 +211,10 @@ class TeamSelector(Component):
             functie_speler = Functie.objects.get(functie="Speler")
             functie_coach = Functie.objects.get(functie="Coach")
             functie_pvn = Functie.objects.get(functie="Ploegverantwoordelijke")
+            functie_hhn = Functie.objects.get(functie="Helpende Handen")
         except Functie.DoesNotExist:
             self.message = """
-            Functie "Speler", Functie "Coach", Functie "Ploegverantwoordelijke" is nog niet gedefinieerd.
+            Functie "Speler", Functie "Coach", Functie "Ploegverantwoordelijke", Functie "Helpende Handen" is nog niet gedefinieerd.
             """
             return
 
@@ -193,11 +224,15 @@ class TeamSelector(Component):
                                self.ploegcoaches]
         insert_ploegpvn = [PloegLid(lid_id=lid.club_id, ploeg_id=ploeg.ploeg_id, functie=functie_pvn) for lid in
                            self.ploegpvn]
+        insert_ploeghhn = [PloegLid(lid_id=lid.club_id, ploeg_id=ploeg.ploeg_id, functie=functie_hhn) for lid in
+                           self.ploeghhn]
         for pl in insert_ploegleden:
             pl.save()
         for pl in insert_ploegcoaches:
             pl.save()
         for pl in insert_ploegpvn:
+            pl.save()
+        for pl in insert_ploeghhn:
             pl.save()
 
         self.send_redirect(reverse("management:ploegen"))

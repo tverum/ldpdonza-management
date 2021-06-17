@@ -105,6 +105,7 @@ class Lid(models.Model):
     )
     sportief_lid = models.BooleanField(default=False)
     betalend_lid = models.BooleanField(default=False)
+    actief_lid = models.BooleanField(default=True)
     straatnaam_en_huisnummer = models.CharField(max_length=50)
     postcode = models.IntegerField()
     gemeente = models.CharField(max_length=50)

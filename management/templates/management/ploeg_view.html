@@ -84,6 +84,22 @@ Ploegsamenstelling: {{object.naam}}
         </th>
     </tr>
     {% endfor %}
+    <tr class="is-selected">
+        <th colspan="4" class="is-4 has-text-centered">Helpende Handen</th>
+    </tr>
+    {% for hh in hhn %}
+    <tr>
+        <th>{{hh.voornaam}} {{hh.familienaam}}</th>
+        <th>{{hh.email}}</th>
+        <th>{{hh.gsmnummer}}</th>
+        <th>
+            <button type="button" class="view-modal btn btn-sm btn-primary"
+                    data-id="{% url 'management:lid_modal' hh.pk %}">
+                <span class="fa fa-eye"></span>
+            </button>
+        </th>
+    </tr>
+    {% endfor %}
     </tbody>
 </table>
 {% endblock %}

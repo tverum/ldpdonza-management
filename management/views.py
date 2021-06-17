@@ -154,6 +154,9 @@ class PloegSelectView(PermissionRequiredMixin, generic.DetailView):
         ploegpvn = self.get_ploegpvn(ploeg)
         context['ploegpvn'] = ploegpvn
         context['pvn'] = self.get_pvn(ploegpvn)
+        ploeghhn = self.get_ploeghhn(ploeg)
+        context['ploeghhn'] = ploeghhn
+        context['hhn'] = self.get_hhn(ploeghhn)
         return context
 
     @staticmethod
@@ -164,7 +167,8 @@ class PloegSelectView(PermissionRequiredMixin, generic.DetailView):
             queryset = Lid.objects.all() \
                 .filter(
                 sportief_lid=True,
-                geslacht=ploeg.geslacht
+                geslacht=ploeg.geslacht,
+                actief_lid=True
             ) \
                 .exclude(geboortedatum=None) \
                 .filter(
@@ -175,7 +179,8 @@ class PloegSelectView(PermissionRequiredMixin, generic.DetailView):
             queryset = Lid.objects.all() \
                 .filter(
                 sportief_lid=True,
-                geslacht=ploeg.geslacht
+                geslacht=ploeg.geslacht,
+                actief_lid=True
             ) \
                 .exclude(geboortedatum=None) \
                 .filter(
@@ -201,7 +206,7 @@ class PloegSelectView(PermissionRequiredMixin, generic.DetailView):
     @staticmethod
     def get_coaches(ploegcoaches):
         functie = Functie.objects.get(functie="Coach")
-        queryset = Lid.objects.filter(functies__functie=functie)
+        queryset = Lid.objects.filter(functies__functie=functie, actief_lid=True)
         coaches = [
             lid.club_id for lid in queryset if lid.club_id not in ploegcoaches]
         return coaches
@@ -216,9 +221,23 @@ class PloegSelectView(PermissionRequiredMixin, generic.DetailView):
     @staticmethod
     def get_pvn(ploegpvn):
         functie = Functie.objects.get(functie="Ploegverantwoordelijke")
-        queryset = Lid.objects.filter(functies__functie=functie)
+        queryset = Lid.objects.filter(functies__functie=functie, actief_lid=True)
         pvn = [lid.club_id for lid in queryset if lid.club_id not in ploegpvn]
         return pvn
+
+    @staticmethod
+    def get_ploeghhn(ploeg):
+        functie = Functie.objects.get(functie="Helpende Handen")
+        pvn_ids = [ploeglid.lid.club_id for ploeglid in PloegLid.objects.filter(
+            ploeg_id=ploeg.ploeg_id, functie=functie)]
+        return pvn_ids
+
+    @staticmethod
+    def get_hhn(ploeghhn):
+        functie = Functie.objects.get(functie="Helpende Handen")
+        queryset = Lid.objects.filter(functies__functie=functie, actief_lid=True)
+        hhn = [lid.club_id for lid in queryset if lid.club_id not in ploeghhn]
+        return hhn
 
 
 class PloegView(GuardianPermissionMixin, generic.DetailView):
@@ -234,15 +253,19 @@ class PloegView(GuardianPermissionMixin, generic.DetailView):
         functie_speler = Functie.objects.get(functie="Speler")
         functie_coach = Functie.objects.get(functie="Coach")
         functie_pvn = Functie.objects.get(functie="Ploegverantwoordelijke")
+        functie_hh = Functie.objects.get(functie="Helpende Handen")
         ploegleden = [Lid.objects.get(pk=ploeglid.lid.club_id)
                       for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id, functie=functie_speler)]
         coaches = [Lid.objects.get(pk=ploeglid.lid.club_id)
                    for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id, functie=functie_coach)]
         pvn = [Lid.objects.get(pk=ploeglid.lid.club_id)
                for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id, functie=functie_pvn)]
+        hhn = [Lid.objects.get(pk=ploeglid.lid.club_id)
+               for ploeglid in PloegLid.objects.filter(ploeg_id=ploeg.ploeg_id, functie=functie_hh)]
         context['ploegleden'] = ploegleden
         context['coaches'] = coaches
         context['pvn'] = pvn
+        context['hhn'] = hhn
         return context
 
 
@@ -449,7 +472,7 @@ def export_ploeg_xlsx(request, pk):
     :param pk: the primary key
     :return: an HTTPResponse containing the Excel-file
     """
-    ploeg, queryset_coaches, queryset_spelers, queryset_pvn = retrieve_querysets(
+    ploeg, queryset_coaches, queryset_spelers, queryset_pvn, queryset_hh = retrieve_querysets(
         pk)
 
     response = HttpResponse(
@@ -478,16 +501,20 @@ def retrieve_querysets(pk):
     functie_speler = Functie.objects.get(functie="Speler")
     functie_coach = Functie.objects.get(functie="Coach")
     functie_pv = Functie.objects.get(functie="Ploegverantwoordelijke")
+    functie_hh = Functie.objects.get(functie="Helpende Handen")
     ploegleden = PloegLid.objects.filter(ploeg=ploeg, functie=functie_speler)
     coaches = PloegLid.objects.filter(ploeg=ploeg, functie=functie_coach)
     pvn = PloegLid.objects.filter(ploeg=ploeg, functie=functie_pv)
+    hhn = PloegLid.objects.filter(ploeg=ploeg, functie=functie_hh)
     lid_ids = [ploeglid.lid.club_id for ploeglid in ploegleden]
     coach_ids = [coach.lid.club_id for coach in coaches]
     pv_ids = [pv.lid.club_id for pv in pvn]
+    hh_ids = [hh.lid.club_id for hh in hhn]
     queryset_spelers = Lid.objects.filter(club_id__in=lid_ids)
     queryset_coaches = Lid.objects.filter(club_id__in=coach_ids)
     queryset_pvn = Lid.objects.filter(club_id__in=pv_ids)
-    return ploeg, queryset_coaches, queryset_spelers, queryset_pvn
+    queryset_hh = Lid.objects.filter(club_id__in=hh_ids)
+    return ploeg, queryset_coaches, queryset_spelers, queryset_pvn, queryset_hh
 
 
 def export_ploeg_preview(request):

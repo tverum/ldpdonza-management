@@ -179,6 +179,61 @@
         </div>
     </div>
     <!-- Ploegverantwoordelijken end -->
+
+    <!-- Helpende Handen -->
+    <div class="row justify-content-center">
+        <h2>Helpende Handen</h2>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-6">
+            <div class="row justify-content-center mb-2">
+                <h3>Beschikbaar</h3>
+            </div>
+            <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                <table class="table table-sm table-hover">
+                    <thead class="text-center">
+                        <tr>
+                            <th>Naam</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for hh in this.hhn %}
+                        <tr>
+                            <td>
+                                <button @click="voegtoe_hh {hh: {{hh.club_id|tostring}}}" class="btn btn-sm btn-block">{{hh.voornaam}} {{hh.familienaam}}</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row justify-content-center mb-2">
+                <h3>Helpende Handen</h3>
+            </div>
+            <div class="table-wrapper-scroll-y my-custom-scrollbar mb-3">
+                <table class="table table-sm table-hover">
+                    <thead class="text-center">
+                        <tr>
+                            <th>Naam</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for hh in this.ploeghhn %}
+                        <tr>
+                            <td>
+                                <button class="btn btn-sm btn-block" @click="verwijder_hh {hh: {{hh.club_id|tostring}}}">{{hh.voornaam}} {{hh.familienaam}}</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Helpende Handen end -->
     <!-- Indienen -->
     <div class="row justify-content-center">
         <button class="btn btn-block btn-success" @click="indienen">Indienen</button>

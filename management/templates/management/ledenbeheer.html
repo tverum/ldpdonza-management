@@ -14,7 +14,39 @@ Ledenbeheer
             <div class="col-6">
                 {% if filter %}
                     <form method="get" class="form" id="filter">
-                        {% bootstrap_form filter.form layout='inline' %}
+                        <div class="form-group row">
+                            {% with field=filter.form.voornaam %}
+                                <label class="col-sm-4 col-form-label">{{ field.label_tag }}</label>
+                                <div class="col-sm-8">
+                                    {{ field }}
+                                </div>
+                            {% endwith %}
+                        </div>
+                        <div class="form-group row">
+                            {% with field=filter.form.familienaam %}
+                                <label class="col-sm-4 col-form-label">{{ field.label_tag }}</label>
+                                <div class="col-sm-8">
+                                    {{ field }}
+                                </div>
+                            {% endwith %}
+                        </div>
+                        <div class="form-group row">
+                            {% with field=filter.form.geboortedatum %}
+                                <label class="col-sm-4 col-form-label">{{ field.label_tag }}</label>
+                                <div class="col-sm-8 text-center">
+                                        {{ field }}
+                                </div>
+                            {% endwith %}
+                        </div>
+                        <div class="form-group row">
+                            {% with field=filter.form.actief_lid %}
+                                <label class="col-sm-4 col-form-label">{{ field.label_tag }}</label>
+                                <div class="col-sm-8">
+                                    {{ field }}
+                                </div>
+                            {% endwith %}
+                        </div>
+                        <!-- {% bootstrap_form filter.form layout='inline' %} -->
                         <button class="btn btn-block btn-primary" form="filter" action="submit">Filter Resultaten</button>
                     </form>
                 {% endif %}
