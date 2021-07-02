@@ -484,7 +484,8 @@ def export_ploeg_xlsx(request, pk):
     )
 
     workbook = create_team_workbook(
-        queryset_coaches, queryset_spelers, queryset_pvn)
+        queryset_coaches, queryset_spelers, queryset_pvn, queryset_hh
+    )
 
     workbook.save(response)
     return response
