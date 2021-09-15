@@ -38,7 +38,7 @@ django-phonenumber-field==4.0.0
 django-reactor==1.4.0b0
 django-seed==0.2.2
 django-tables2==2.3.1
-djangorestframework==3.11.1
+djangorestframework==3.11.2
 docutils==0.16
 et-xmlfile==1.0.1
 Faker==4.0.2
