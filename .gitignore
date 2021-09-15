@@ -136,3 +136,6 @@ dmypy.json
 
 # Virtual Environment
 venv/**
+
+# Ignore runtime information
+.run/**
