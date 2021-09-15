@@ -133,3 +133,6 @@ dmypy.json
 
 # Exclude local settings
 **/settings/local.py
+
+# Virtual Environment
+venv/**
