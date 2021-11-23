@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'guardian',
     'bulma',
     'fontawesome-free',
+    'command_interface',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',

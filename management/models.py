@@ -165,7 +165,7 @@ class Betaling(models.Model):
         datum = datetime.strftime(datetime.strptime(
             aflossing["datum"], "%d/%m/%Y"), "%d/%m/%Y")
 
-        if not datum in afl_nummers:
+        if datum not in afl_nummers:
             bedrag = aflossing["credit"].replace(",", ".")
             self.afgelost_bedrag += float(bedrag)
             if self.afgelost_bedrag >= self.origineel_bedrag:

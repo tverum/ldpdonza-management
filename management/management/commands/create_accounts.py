@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand
 from django.db.utils import IntegrityError
 from guardian.models import UserObjectPermission
 
-from .utils import mail_to_admin
+from .mail_to_admin import mail_to_admin
 from ...models import Lid, Functie, PloegLid, Ploeg
 from ...mail.send_mail import send_mail_template
 

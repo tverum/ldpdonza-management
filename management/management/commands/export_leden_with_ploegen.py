@@ -4,7 +4,7 @@ import os
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from management.management.commands.utils import mail_to_admin
+from management.management.commands.mail_to_admin import mail_to_admin
 from management.models import PloegLid
 
 

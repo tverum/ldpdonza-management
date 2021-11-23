@@ -1,7 +1,6 @@
 import os
 
 from django.conf import settings
-from django.db.models import Max
 from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -61,7 +60,7 @@ def get_current_seizoen(request) -> Seizoen:
     :return: the current seizoen object
     """
     today = date.today()
-    if 'seizoen' in request.session:
+    if request and 'seizoen' in request.session:
         pk = request.session['seizoen']
         if pk:
             # If a seizoen is stored in the session, retrieve this seizoen
