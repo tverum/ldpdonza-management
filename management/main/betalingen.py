@@ -10,7 +10,7 @@ import chardet
 from django.contrib import messages
 from django.core.mail import mail_admins
 
-from ..models import Betaling, PloegLid, Seizoen, Functie
+from ..models import Betaling, PloegLid, Functie
 
 
 def no_payment(lid, seizoen):
@@ -65,7 +65,11 @@ def get_discount(lid, seizoen):
     :param seizoen: het seizoen waarvoor de discount moet berekend worden
     :return: het bedrag dat afgetrokken moet worden
     """
-    familieleden = [lid for lid in lid.familieleden.all() if lid.sportief_lid and has_team(lid, seizoen)]
+    familieleden = [
+        lid
+        for lid in lid.familieleden.all()
+        if lid.sportief_lid and has_team(lid, seizoen)
+    ]
     if not familieleden:
         return 0
     elif oldest(lid, familieleden, seizoen):
@@ -82,11 +86,15 @@ def bereken_bedrag(lid, seizoen):
     :return: het bedrag dat het lid moet betalen
     """
     functie = Functie.objects.get(functie="Speler")
-    ploegen = [ploeglid.ploeg for ploeglid in PloegLid.objects.filter(lid=lid, functie=functie)]
+    ploegen = [
+        ploeglid.ploeg
+        for ploeglid in PloegLid.objects.filter(lid=lid, functie=functie)
+        if ploeglid.ploeg.seizoen == seizoen
+    ]
     # als het lid niet in een ploeg zit, moet er geen lidgeld betaald worden
     if not ploegen:
         return 0
-    lidgeldklassen = [ploeg.lidgeldklasse for ploeg in ploegen if ploeg.seizoen == seizoen]
+    lidgeldklassen = [ploeg.lidgeldklasse for ploeg in ploegen]
     bedragen = [lidgeldklasse.lidgeld for lidgeldklasse in lidgeldklassen]
 
     bedrag = max(bedragen)
@@ -107,11 +115,11 @@ def get_type(lid):
     :return:
     """
     if lid.facturatie:
-        return 'facturatie'
+        return "facturatie"
     elif lid.afbetaling:
-        return 'afbetaling'
+        return "afbetaling"
     else:
-        return 'normaal'
+        return "normaal"
 
 
 def mededeling(lid, seizoen):
@@ -123,9 +131,11 @@ def mededeling(lid, seizoen):
     :return:
     """
     # begin met de berekening van het getal
-    berekening = (lid.uid + seizoen.startdatum.year * seizoen.einddatum.year) % (10 ** 10)
+    berekening = (lid.uid + seizoen.startdatum.year * seizoen.einddatum.year) % (
+        10**10
+    )
     # voeg nullen toe indien nodig
-    start_nul = ("0" * (10 - len(str(berekening))))
+    start_nul = "0" * (10 - len(str(berekening)))
     # bereken controlegetal
     # indien controlegetal = 0 --> 97
     # indien controlegetal < 10, voeg een nul toe
@@ -138,24 +148,24 @@ def mededeling(lid, seizoen):
 
     # construeer de uiteindelijke gestructureerde mededeling
     resultaat = start_nul + str(berekening) + additionele_nul + str(laatste_twee)
-    return '***{}/{}/{}***'.format(resultaat[:3], resultaat[3:7], resultaat[7:])
+    return "***{}/{}/{}***".format(resultaat[:3], resultaat[3:7], resultaat[7:])
 
 
-def genereer_betaling(lid):
+def genereer_betaling(lid, seizoen):
     """
     Genereer een openstaande betaling voor een lid.
     Hierbij wordt er vanuitgegaan dat dit lid nog geen openstaande betalingen heeft.
     (Zou elders moeten gefilterd zijn)
     :param lid: het lid waarvoor de betaling gegenereerd moet worden
+    :param seizoen: het seizoen waarvoor de betaling gegenereerd moet worden
     :return: None
     """
-    seizoen = Seizoen.objects.get(naam="2020-2021")
     origineel_bedrag = bereken_bedrag(lid, seizoen)
     if origineel_bedrag <= 0:
         return
     ge_mededeling = mededeling(lid, seizoen)
     betalings_type = get_type(lid)
-    status = 'draft'
+    status = "draft"
 
     Betaling.objects.create(
         origineel_bedrag=origineel_bedrag,
@@ -168,17 +178,17 @@ def genereer_betaling(lid):
     )
 
 
-def genereer_betalingen(leden):
+def genereer_betalingen(leden, seizoen):
     """
     Genereer de betalingen voor de geselecteerde leden
     :param leden: de lijst met leden waarvoor betalingen gegenereerd moeten worden
+    :param seizoen: het seizoen waarvoor de betalingen gegenereeerd moeten worden
     :return: None
     """
-    seizoen = Seizoen.objects.get(naam="2020-2021")
     # filter alle leden waarvoor er reeds een betaling bestaat
     leden_todo = list(filter(lambda c_lid: no_payment(c_lid, seizoen), leden))
     for lid in leden_todo:
-        genereer_betaling(lid)
+        genereer_betaling(lid, seizoen)
 
 
 def check_keys(keys):
@@ -187,7 +197,13 @@ def check_keys(keys):
     :param keys:
     :return:
     """
-    required_keys = ["bedrag", "credit", "debet", "gestructureerde mededeling", "afschriftnummer"]
+    required_keys = [
+        "bedrag",
+        "credit",
+        "debet",
+        "gestructureerde mededeling",
+        "afschriftnummer",
+    ]
     return all(x.lower() in keys for x in required_keys)
 
 
@@ -200,7 +216,7 @@ def check_encoding(csv_file):
     result = chardet.detect(csv_file.read(-1))
     # Reset the file pointer
     csv_file.seek(0)
-    return result['encoding']
+    return result["encoding"]
 
 
 def registreer_betalingen(csv_file, request):
@@ -210,7 +226,7 @@ def registreer_betalingen(csv_file, request):
     :param request: de request waarbij de csv-filie geupload is
     :return: None
     """
-    csv_file = request.FILES['file']
+    csv_file = request.FILES["file"]
     # set up the filestream
     encoding = check_encoding(csv_file)
 
@@ -218,7 +234,9 @@ def registreer_betalingen(csv_file, request):
     io_string = io.StringIO(data_set)
     keys = []
 
-    for index, aflossing in enumerate(csv.reader(io_string, delimiter=';', dialect=csv.excel_tab)):
+    for index, aflossing in enumerate(
+        csv.reader(io_string, delimiter=";", dialect=csv.excel_tab)
+    ):
         if index == 0:
             # haal de kolomnamen uit de csv-file
             keys = [key.strip().lower() for key in aflossing]
@@ -245,18 +263,36 @@ def registreer_betalingen(csv_file, request):
                 if len(betaling) == 1:
                     betaling[0].los_af(aflossing)
                 elif len(betaling) == 0:
-                    messages.warning(request,
-                                     "Geen record gevonden voor betaling {}".format(aflossing["omschrijving"]))
+                    messages.warning(
+                        request,
+                        "Geen record gevonden voor betaling {}".format(
+                            aflossing["omschrijving"]
+                        ),
+                    )
                 else:
-                    messages.warning(request, "Meerdere betalingsrecords gevonden voor mededeling {}".format(
-                        aflossing["gestructureerde mededeling"]))
-                    mail_admins("Meerdere records voor mededeling {}".format(g_mededeling), """
+                    messages.warning(
+                        request,
+                        "Meerdere betalingsrecords gevonden voor mededeling {}".format(
+                            aflossing["gestructureerde mededeling"]
+                        ),
+                    )
+                    mail_admins(
+                        "Meerdere records voor mededeling {}".format(g_mededeling),
+                        """
                     Meerdere records voor mededeling {}.
                     Tijdens het verwerken van aflossing: {}, werden meerdere betalingsrecords met mededeling {} gevonden.
-                    """.format(g_mededeling, aflossing, g_mededeling))
+                    """.format(
+                            g_mededeling, aflossing, g_mededeling
+                        ),
+                    )
             except Exception as e:
-                messages.error(request, """
+                messages.error(
+                    request,
+                    """
                 <p>Probleem bij het processen van afschrift {}</p>
                 <p>{}</p>
-                """.format(aflossing["afschriftnummer"], e))
+                """.format(
+                        aflossing["afschriftnummer"], e
+                    ),
+                )
                 raise e
