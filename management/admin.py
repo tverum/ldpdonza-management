@@ -4,7 +4,17 @@ from django.contrib import admin
 from django.http import HttpResponse
 from guardian.admin import GuardedModelAdmin
 
-from .models import Lid, Functie, Ouder, Ploeg, PloegKenmerk, PloegLid, Seizoen, LidgeldKlasse, Betaling
+from .models import (
+    Lid,
+    Functie,
+    Ouder,
+    Ploeg,
+    PloegKenmerk,
+    PloegLid,
+    Seizoen,
+    LidgeldKlasse,
+    Betaling,
+)
 
 
 class ExportCsvMixin:
@@ -12,15 +22,13 @@ class ExportCsvMixin:
         meta = self.model._meta
         field_names = [field.name for field in meta.fields]
 
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(
-            meta)
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename={}.csv".format(meta)
         writer = csv.writer(response)
 
         writer.writerow(field_names)
         for obj in queryset:
-            row = writer.writerow([getattr(obj, field)
-                                   for field in field_names])
+            row = writer.writerow([getattr(obj, field) for field in field_names])
 
         return response
 
@@ -29,15 +37,20 @@ class ExportCsvMixin:
 
 @admin.register(Betaling)
 class BetalingAdmin(admin.ModelAdmin, ExportCsvMixin):
-    search_fields = ('mededeling',)
-    list_display = ("origineel_bedrag", "afgelost_bedrag",
-                    "lid", "seizoen", "mails_verstuurd")
+    search_fields = ("mededeling",)
+    list_display = (
+        "origineel_bedrag",
+        "afgelost_bedrag",
+        "lid",
+        "seizoen",
+        "mails_verstuurd",
+    )
     actions = ["export_as_csv"]
 
 
 @admin.register(Lid)
 class LidAdmin(admin.ModelAdmin, ExportCsvMixin):
-    search_fields = ('voornaam', 'familienaam')
+    search_fields = ("voornaam", "familienaam")
     actions = ["export_as_csv"]
 
 
