@@ -38,13 +38,11 @@ INSTALLED_APPS = [
     "django_filters",
     "django_tables2",
     "bootstrap_modal_forms",
+    "bootstrap4",
     "import_export",
     "localflavor",
-    "bootstrapform",
-    "bootstrap4",
     "guardian",
     "bulma",
-    "fontawesome-free",
     "django_extensions",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -163,3 +161,6 @@ FIXTURE_DIRS = (os.path.join(os.path.dirname(BASE_DIR), "config", "fixtures"),)
 
 # for the import_export package
 IMPORT_EXPORT_USE_TRANSACTIONS = True
+
+# set default type of auto-created primary keys
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'

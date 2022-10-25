@@ -9,42 +9,43 @@ from ..models import Lid, Betaling, Ploeg
 
 class LidTable(tables.Table):
     selection = tables.CheckBoxColumn(
-        accessor="pk",
-        attrs={
-            "th__input": {
-                "onclick": "toggle(this)"
-            }
-        },
-        orderable=False
+        accessor="pk", attrs={"th__input": {"onclick": "toggle(this)"}}, orderable=False
     )
-    voornaam = tables.Column(attrs={
-        "td": {
-            "class": "clickable",
-            "data-href": lambda record: reverse('management:lid', kwargs={'pk': record.club_id}),
+    voornaam = tables.Column(
+        attrs={
+            "td": {
+                "class": "clickable",
+                "data-href": lambda record: reverse(
+                    "management:lid", kwargs={"pk": record.club_id}
+                ),
+            }
         }
-    })
-    familienaam = tables.Column(attrs={
-        "td": {
-            "class": "clickable",
-            "data-href": lambda record: reverse('management:lid', kwargs={'pk': record.club_id}),
+    )
+    familienaam = tables.Column(
+        attrs={
+            "td": {
+                "class": "clickable",
+                "data-href": lambda record: reverse(
+                    "management:lid", kwargs={"pk": record.club_id}
+                ),
+            }
         }
-    })
-    geboortedatum = tables.Column(attrs={
-        "td": {
-            "class": "clickable",
-            "data-href": lambda record: reverse('management:lid', kwargs={'pk': record.club_id}),
+    )
+    geboortedatum = tables.Column(
+        attrs={
+            "td": {
+                "class": "clickable",
+                "data-href": lambda record: reverse(
+                    "management:lid", kwargs={"pk": record.club_id}
+                ),
+            }
         }
-    })
+    )
 
     class Meta:
         model = Lid
         template_name = "django_tables2/bootstrap4.html"
-        fields = (
-            "voornaam",
-            "familienaam",
-            "geboortedatum",
-            "familieleden"
-        )
+        fields = ("voornaam", "familienaam", "geboortedatum", "familieleden")
         attrs = {
             "class": "table table-hover",
         }
@@ -52,13 +53,7 @@ class LidTable(tables.Table):
 
 class PloegTable(tables.Table):
     selection = tables.CheckBoxColumn(
-        accessor='pk',
-        attrs={
-            "th__input": {
-                "onclick": "toggle(this)"
-            }
-        },
-        orderable=False
+        accessor="pk", attrs={"th__input": {"onclick": "toggle(this)"}}, orderable=False
     )
     bekijk = tables.TemplateColumn(
         template_code="""
@@ -67,9 +62,11 @@ class PloegTable(tables.Table):
         attrs={
             "td": {
                 "class": "clickable",
-                "data-href": lambda record: reverse('management:ploeg_view', args=[record.ploeg_id]),
+                "data-href": lambda record: reverse(
+                    "management:ploeg_view", args=[record.ploeg_id]
+                ),
             },
-        }
+        },
     )
     edit = tables.TemplateColumn(
         template_code="""
@@ -78,44 +75,36 @@ class PloegTable(tables.Table):
         attrs={
             "td": {
                 "class": "clickable",
-                "data-href": lambda record: reverse('management:ploeg_select', args=[record.ploeg_id]),
+                "data-href": lambda record: reverse(
+                    "management:ploeg_select", args=[record.ploeg_id]
+                ),
             }
-        }
+        },
     )
 
     class Meta:
         model = Ploeg
         template_name = "django_tables2/bootstrap4.html"
-        fields = (
-            "naam",
-            "bekijk",
-            "edit",
-            "selection"
-        )
+        fields = ("naam", "bekijk", "edit", "selection")
 
 
 class DraftTable(tables.Table):
     title = "Betalingsontwerpen"
-    table_pagination = {
-        "per_page": 20
-    }
-    mail_column = tables.LinkColumn("management:betalingen_mail",
-                                    text="MAIL",
-                                    args=[A("pk")],
-                                    attrs={
-                                        "a": {
-                                            "class": "btn btn-sm btn-success",
-                                        }
-                                    })
+    table_pagination = {"per_page": 20}
+    mail_column = tables.LinkColumn(
+        "management:betalingen_mail",
+        text="MAIL",
+        args=[A("pk")],
+        attrs={
+            "a": {
+                "class": "btn btn-sm btn-success",
+            }
+        },
+    )
 
     class Meta:
         model = Betaling
-        fields = (
-            "lid",
-            "origineel_bedrag",
-            "mededeling",
-            "type"
-        )
+        fields = ("lid", "origineel_bedrag", "mededeling", "type")
         attrs = {
             "class": "table table-hover table-sm",
             "td": {
@@ -129,17 +118,17 @@ class DraftTable(tables.Table):
 
 class VerstuurdTable(tables.Table):
     title = "Verstuurd"
-    table_pagination = {
-        "per_page": 30
-    }
-    mail_column = tables.LinkColumn("management:herinnering_mail",
-                                    text="HERINNERING",
-                                    args=[A("pk")],
-                                    attrs={
-                                        "a": {
-                                            "class": "btn btn-sm btn-warning",
-                                        }
-                                    })
+    table_pagination = {"per_page": 30}
+    mail_column = tables.LinkColumn(
+        "management:herinnering_mail",
+        text="HERINNERING",
+        args=[A("pk")],
+        attrs={
+            "a": {
+                "class": "btn btn-sm btn-warning",
+            }
+        },
+    )
 
     class Meta:
         model = Betaling
@@ -151,9 +140,7 @@ class VerstuurdTable(tables.Table):
             "type",
             "mails_verstuurd",
         )
-        row_attrs = {
-            "class": lambda record: overdue(record)
-        }
+        row_attrs = {"class": lambda record: overdue(record)}
         attrs = {
             "class": "table table-hover table-sm",
             "id": "mail-verstuurd",
@@ -168,17 +155,17 @@ class VerstuurdTable(tables.Table):
 
 class BetaaldTable(tables.Table):
     title = "Betaald"
-    table_pagination = {
-        "per_page": 30
-    }
-    bevestiging_column = tables.LinkColumn("management:bevestig_mail",
-                                           text="Bevestiging",
-                                           args=[A("pk")],
-                                           attrs={
-                                               "a": {
-                                                   "class": "btn btn-sm btn-success",
-                                               }
-                                           })
+    table_pagination = {"per_page": 30}
+    bevestiging_column = tables.LinkColumn(
+        "management:bevestig_mail",
+        text="Bevestiging",
+        args=[A("pk")],
+        attrs={
+            "a": {
+                "class": "btn btn-sm btn-success",
+            }
+        },
+    )
 
     class Meta:
         model = Betaling

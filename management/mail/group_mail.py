@@ -1,6 +1,4 @@
-from os import terminal_size
 from typing import Sequence
-from django.conf import settings
 
 from django.core import mail
 from django.core.exceptions import ImproperlyConfigured
@@ -24,7 +22,7 @@ def determine_group(group: str, seizoen: Seizoen) -> Sequence[Lid]:
         ploegleden = PloegLid.objects.filter(
             functie=Functie.objects.get(functie="Speler"),
             ploeg__seizoen=seizoen,
-            ploeg__kenmerken=kenmerk
+            ploeg__kenmerken=kenmerk,
         )
         leden = [pl.lid for pl in ploegleden]
         return list(set(leden))
@@ -33,7 +31,7 @@ def determine_group(group: str, seizoen: Seizoen) -> Sequence[Lid]:
         ploegleden = PloegLid.objects.filter(
             functie=Functie.objects.get(functie="Speler"),
             ploeg__seizoen=seizoen,
-            ploeg__kenmerken=kenmerk
+            ploeg__kenmerken=kenmerk,
         )
         leden = [pl.lid for pl in ploegleden]
         return list(set(leden))
@@ -43,10 +41,8 @@ def determine_group(group: str, seizoen: Seizoen) -> Sequence[Lid]:
         ploegleden = PloegLid.objects.filter(
             functie=Functie.objects.get(functie="Speler"),
             ploeg__seizoen=seizoen,
-            ploeg__kenmerken=kenmerk_bovenbouw
-        ).filter(
-            ploeg__kenmerken=kenmerk_heren
-        )
+            ploeg__kenmerken=kenmerk_bovenbouw,
+        ).filter(ploeg__kenmerken=kenmerk_heren)
         leden = [pl.lid for pl in ploegleden]
         return list(set(leden))
     elif group == "bovenbouw-dames":
@@ -55,10 +51,8 @@ def determine_group(group: str, seizoen: Seizoen) -> Sequence[Lid]:
         ploegleden = PloegLid.objects.filter(
             functie=Functie.objects.get(functie="Speler"),
             ploeg__seizoen=seizoen,
-            ploeg__kenmerken=kenmerk_bovenbouw
-        ).filter(
-            ploeg__kenmerken=kenmerk_dames
-        )
+            ploeg__kenmerken=kenmerk_bovenbouw,
+        ).filter(ploeg__kenmerken=kenmerk_dames)
         leden = [pl.lid for pl in ploegleden]
         return list(set(leden))
     elif group == "onderbouw":
@@ -66,7 +60,7 @@ def determine_group(group: str, seizoen: Seizoen) -> Sequence[Lid]:
         ploegleden = PloegLid.objects.filter(
             functie=Functie.objects.get(functie="Speler"),
             ploeg__seizoen=seizoen,
-            ploeg__kenmerken=kenmerk
+            ploeg__kenmerken=kenmerk,
         )
         leden = [pl.lid for pl in ploegleden]
         return list(set(leden))
@@ -75,13 +69,14 @@ def determine_group(group: str, seizoen: Seizoen) -> Sequence[Lid]:
         ploegleden = PloegLid.objects.filter(
             functie=Functie.objects.get(functie="Speler"),
             ploeg__seizoen=seizoen,
-            ploeg__kenmerken=kenmerk
+            ploeg__kenmerken=kenmerk,
         )
         leden = [pl.lid for pl in ploegleden]
         return list(set(leden))
-    elif group == 'all-active':
+    elif group == "all-active":
         ploegleden = PloegLid.objects.filter(
-            functie=Functie.objects.get(functie="Speler"), ploeg__seizoen=seizoen)
+            functie=Functie.objects.get(functie="Speler"), ploeg__seizoen=seizoen
+        )
         leden = [pl.lid for pl in ploegleden]
         return list(set(leden))
     else:
@@ -112,7 +107,9 @@ def retrieve_mails(leden: Sequence[Lid], incl_ouders: bool) -> Sequence[str]:
     return mails
 
 
-def group_mail(group: str, mail_template: str, subject: str, reply: str, seizoen: Seizoen) -> None:
+def group_mail(
+    group: str, mail_template: str, subject: str, reply: str, seizoen: Seizoen
+) -> None:
     """
     [Send a mail to a given group identified by the group tag 'group']
 
@@ -128,13 +125,14 @@ def group_mail(group: str, mail_template: str, subject: str, reply: str, seizoen
     mails = retrieve_mails(leden=leden, incl_ouders=True)
 
     # Send mail from no-reply to all the mailadresses.
-    from_email = 'no-reply@ldpdonza.be'
+    from_email = "no-reply@ldpdonza.be"
     for mail in mails:
-        send_mail_template(mail_template,
-                           mail_template.replace('html', 'txt'),
-                           {},
-                           [mail],
-                           from_email,
-                           subject,
-                           [reply]
-                           )
+        send_mail_template(
+            mail_template,
+            mail_template.replace("html", "txt"),
+            {},
+            [mail],
+            from_email,
+            subject,
+            [reply],
+        )

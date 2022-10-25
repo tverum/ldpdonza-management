@@ -149,7 +149,6 @@ def bevestig_betaling(pk, request):
     :return: None
     """
     filename = "temp.pdf"
-    temp = os.path.join(settings.BASE_DIR, filename)
     betaling = Betaling.objects.get(pk=pk)
     lid = betaling.lid
     seizoen = betaling.seizoen
