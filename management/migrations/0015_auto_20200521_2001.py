@@ -13,6 +13,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="betaling",
             name="mails_verstuurd",
-            field=models.CharField(blank=True, default="", max_length=500, null=True),
+            field=models.CharField(
+                blank=True, default="", max_length=500, null=True
+            ),
         ),
     ]

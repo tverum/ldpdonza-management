@@ -14,7 +14,11 @@ class Migration(migrations.Migration):
             model_name="ploeg",
             name="geslacht",
             field=models.CharField(
-                choices=[("m", "Man"), ("v", "Vrouw"), ("x", "Verkies niet te zeggen")],
+                choices=[
+                    ("m", "Man"),
+                    ("v", "Vrouw"),
+                    ("x", "Verkies niet te zeggen"),
+                ],
                 default="m",
                 max_length=1,
             ),

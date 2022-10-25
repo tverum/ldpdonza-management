@@ -64,7 +64,9 @@ def construct_betalingen(_lidgelden: pd.DataFrame) -> None:
 
     Returns: Een lijst met Betalingen (zijn nog niet opgeslagen in de database)
     """
-    _lidgelden["Lidgeld"] = _lidgelden.groupby(["club id"])["Lidgeld"].transform("max")
+    _lidgelden["Lidgeld"] = _lidgelden.groupby(["club id"])[
+        "Lidgeld"
+    ].transform("max")
     _lidgelden = _lidgelden.drop_duplicates(subset=["club id"])
     _lidgelden = _lidgelden[_lidgelden["Lidgeld"].notna()]
     print(_lidgelden[["club id", "voornaam", "familienaam", "Lidgeld"]])

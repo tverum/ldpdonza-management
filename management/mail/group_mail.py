@@ -75,7 +75,8 @@ def determine_group(group: str, seizoen: Seizoen) -> Sequence[Lid]:
         return list(set(leden))
     elif group == "all-active":
         ploegleden = PloegLid.objects.filter(
-            functie=Functie.objects.get(functie="Speler"), ploeg__seizoen=seizoen
+            functie=Functie.objects.get(functie="Speler"),
+            ploeg__seizoen=seizoen,
         )
         leden = [pl.lid for pl in ploegleden]
         return list(set(leden))

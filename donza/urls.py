@@ -21,5 +21,8 @@ urlpatterns = [
     path("management/", include("management.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     path("admin/", admin.site.urls),
-    re_path("", RedirectView.as_view(pattern_name="management:index", permanent=False)),
+    re_path(
+        "",
+        RedirectView.as_view(pattern_name="management:index", permanent=False),
+    ),
 ]

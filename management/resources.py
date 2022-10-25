@@ -9,12 +9,21 @@ from .models import Lid, Ouder, Functie, PloegLid, Seizoen
 # No better reverse determination of fields was found so bit of a hack
 LID_FIELDS = dict(
     zip(
-        [str(field) for field in Lid._meta.get_fields() if not field.is_relation],
+        [
+            str(field)
+            for field in Lid._meta.get_fields()
+            if not field.is_relation
+        ],
         [field for field in Lid._meta.get_fields() if not field.is_relation],
     )
 )
 
-OUDER_FIELDS = ["ouder 1: gsm", "ouder 1: email", "ouder 2: gsm", "ouder 2: email"]
+OUDER_FIELDS = [
+    "ouder 1: gsm",
+    "ouder 1: email",
+    "ouder 2: gsm",
+    "ouder 2: email",
+]
 BETALING_FIELDS = ["origineel bedrag", "afgelost bedrag"]
 
 
@@ -54,7 +63,9 @@ class CoachLidDownloadResource(resources.ModelResource):
         )
 
 
-def create_team_workbook(queryset_coaches, queryset_spelers, queryset_pvn, queryset_hh):
+def create_team_workbook(
+    queryset_coaches, queryset_spelers, queryset_pvn, queryset_hh
+):
     workbook = Workbook()
 
     # --- SPELERS ---
@@ -77,7 +88,9 @@ def create_team_workbook(queryset_coaches, queryset_spelers, queryset_pvn, query
     cell.font = Font(name="Calibri", bold=True, size=20)
     row_num = 4
 
-    create_team_sheet(columns, queryset_spelers, row_num, worksheet, minimal=False)
+    create_team_sheet(
+        columns, queryset_spelers, row_num, worksheet, minimal=False
+    )
 
     # --- COACHES ---
     # Create new worksheet
@@ -92,7 +105,9 @@ def create_team_workbook(queryset_coaches, queryset_spelers, queryset_pvn, query
     cell.font = Font(name="Calibri", bold=True, size=20)
     row_num = 4
 
-    create_team_sheet(columns, queryset_coaches, row_num, worksheet, minimal=True)
+    create_team_sheet(
+        columns, queryset_coaches, row_num, worksheet, minimal=True
+    )
 
     # --- PLOEGVERANTWOORDELIJKEN ---
     columns = ["Voornaam", "Familienaam", "Gsmnummer", "Email"]
@@ -186,7 +201,9 @@ def create_general_workbook(ploegen, selected_fields):
         include_ouders = True
     if "management.betaling" in selected_fields:
         selected_fields = [
-            field for field in selected_fields if field != "management.betaling"
+            field
+            for field in selected_fields
+            if field != "management.betaling"
         ]
         include_betaling = True
 
@@ -215,14 +232,18 @@ def create_general_workbook(ploegen, selected_fields):
         index=1,
     )
     coach = Functie.objects.get(functie="Coach")
-    create_sheet(ploegen, selected_fields, worksheet, coach, False, False, seizoen)
+    create_sheet(
+        ploegen, selected_fields, worksheet, coach, False, False, seizoen
+    )
 
     # --- PLOEGVERANTWOORDELIJKEN ---
     worksheet = workbook.create_sheet(
         title="Ploegverantwoordelijken",
         index=1,
     )
-    ploegverantwoordelijke = Functie.objects.get(functie="Ploegverantwoordelijke")
+    ploegverantwoordelijke = Functie.objects.get(
+        functie="Ploegverantwoordelijke"
+    )
     create_sheet(
         ploegen,
         selected_fields,
@@ -240,7 +261,13 @@ def create_general_workbook(ploegen, selected_fields):
     )
     helpende_handen = Functie.objects.get(functie="Helpende Handen")
     create_sheet(
-        ploegen, selected_fields, worksheet, helpende_handen, False, False, seizoen
+        ploegen,
+        selected_fields,
+        worksheet,
+        helpende_handen,
+        False,
+        False,
+        seizoen,
     )
     return workbook
 

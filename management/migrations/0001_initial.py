@@ -15,14 +15,20 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Functie",
             fields=[
-                ("functie_id", models.AutoField(primary_key=True, serialize=False)),
+                (
+                    "functie_id",
+                    models.AutoField(primary_key=True, serialize=False),
+                ),
                 ("functie", models.CharField(max_length=20)),
             ],
         ),
         migrations.CreateModel(
             name="Ouder",
             fields=[
-                ("ouder_id", models.AutoField(primary_key=True, serialize=False)),
+                (
+                    "ouder_id",
+                    models.AutoField(primary_key=True, serialize=False),
+                ),
                 (
                     "gsmnummer",
                     phonenumber_field.modelfields.PhoneNumberField(
@@ -37,7 +43,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Lid",
             fields=[
-                ("club_id", models.AutoField(primary_key=True, serialize=False)),
+                (
+                    "club_id",
+                    models.AutoField(primary_key=True, serialize=False),
+                ),
                 ("voornaam", models.CharField(max_length=20)),
                 ("familienaam", models.CharField(max_length=50)),
                 (
@@ -80,7 +89,10 @@ class Migration(migrations.Migration):
                         "naar beide ouders gestuurd",
                     ),
                 ),
-                ("extra_informatie", models.CharField(default="", max_length=500)),
+                (
+                    "extra_informatie",
+                    models.CharField(default="", max_length=500),
+                ),
                 (
                     "rekeningnummer",
                     localflavor.generic.models.IBANField(

@@ -32,8 +32,12 @@ class LidForm(forms.ModelForm):
         }
         widgets = {
             "voornaam": forms.TextInput(attrs={"placeholder": "Voornaam"}),
-            "familienaam": forms.TextInput(attrs={"placeholder": "Familienaam"}),
-            "geboortedatum": forms.DateInput(attrs={"placeholder": "YYYY-MM-DD"}),
+            "familienaam": forms.TextInput(
+                attrs={"placeholder": "Familienaam"}
+            ),
+            "geboortedatum": forms.DateInput(
+                attrs={"placeholder": "YYYY-MM-DD"}
+            ),
             "straatnaam_en_huisnummer": forms.TextInput(
                 attrs={"placeholder": "e.g. Teststraat 123 Bus A"}
             ),

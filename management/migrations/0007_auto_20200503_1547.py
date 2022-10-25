@@ -69,28 +69,32 @@ class Migration(migrations.Migration):
             model_name="ploeg",
             name="seizoen",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="management.Seizoen"
+                on_delete=django.db.models.deletion.CASCADE,
+                to="management.Seizoen",
             ),
         ),
         migrations.AlterField(
             model_name="ploeglid",
             name="functie",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="management.Functie"
+                on_delete=django.db.models.deletion.CASCADE,
+                to="management.Functie",
             ),
         ),
         migrations.AlterField(
             model_name="ploeglid",
             name="lid_id",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="management.Lid"
+                on_delete=django.db.models.deletion.CASCADE,
+                to="management.Lid",
             ),
         ),
         migrations.AlterField(
             model_name="ploeglid",
             name="ploeg_id",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="management.Ploeg"
+                on_delete=django.db.models.deletion.CASCADE,
+                to="management.Ploeg",
             ),
         ),
     ]

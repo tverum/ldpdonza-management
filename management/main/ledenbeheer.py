@@ -30,7 +30,9 @@ def import_from_csv(csv_file, request):
     io_string = io.StringIO(data_set)
 
     keys = []
-    for index, row in enumerate(csv.reader(io_string, delimiter=";", quotechar="|")):
+    for index, row in enumerate(
+        csv.reader(io_string, delimiter=";", quotechar="|")
+    ):
         if index == 0:
             # something is messed up with the first column of the csv file
             keys = [key.strip() for key in row]
@@ -80,7 +82,9 @@ def import_from_csv(csv_file, request):
                     )
 
 
-def update_lid(geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2, row):
+def update_lid(
+    geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2, row
+):
     """
     Update het lid in de database
     :param geboortedatum: geboortedatum in correct format
@@ -128,7 +132,8 @@ def lid_update_familieleden(lid):
     """
     # selecteer alle leden die op hetzelfde adres wonen, met uitzondering van het lid zelf
     familieleden = Lid.objects.filter(
-        straatnaam_en_huisnummer=lid.straatnaam_en_huisnummer, postcode=lid.postcode
+        straatnaam_en_huisnummer=lid.straatnaam_en_huisnummer,
+        postcode=lid.postcode,
     ).exclude(club_id=lid.club_id)
     for familielid in familieleden:
         lid.familieleden.add(familielid.club_id)
@@ -153,7 +158,9 @@ def lid_update_functies(lid, row):
         lid.betalend_lid = True
 
 
-def get_lid(geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2, row):
+def get_lid(
+    geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2, row
+):
     """
     Creëer het lid indien het nog niet bestaat, anders, fetch het uit de database.
     :param geboortedatum: Correct geformatte geboortedatum

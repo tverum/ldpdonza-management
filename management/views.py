@@ -80,9 +80,9 @@ class IndexView(generic.TemplateView):
             Betaling.objects.filter(seizoen=get_current_seizoen(self.request))
         )
         aantal_onbetaalde = len(
-            Betaling.objects.filter(seizoen=get_current_seizoen(self.request)).exclude(
-                status="voltooid"
-            )
+            Betaling.objects.filter(
+                seizoen=get_current_seizoen(self.request)
+            ).exclude(status="voltooid")
         )
         aantal_draft_betalingen = len(
             Betaling.objects.filter(
@@ -169,7 +169,9 @@ class LidTableView(PermissionRequiredMixin, SingleTableMixin, FilterView):
         return redirect(reverse("management:leden"), permanent=True)
 
 
-class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.TemplateView):
+class BetalingTableView(
+    PermissionRequiredMixin, MultiTableMixin, generic.TemplateView
+):
     model = Betaling
     permission_required = ("management.view_betaling",)
     template_name = "management/betalingen.html"
@@ -178,7 +180,9 @@ class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.Templa
     def get_tables(self):
         request = self.request
         seizoen = get_current_seizoen(request)
-        draft_queryset = Betaling.objects.filter(status="draft", seizoen=seizoen).all()
+        draft_queryset = Betaling.objects.filter(
+            status="draft", seizoen=seizoen
+        ).all()
         verstuurd_queryset = Betaling.objects.filter(
             status="mail_sent", seizoen=seizoen
         ).all()
@@ -237,7 +241,9 @@ def genereer(request):
         # genereer de betalingen voor de geselecteerde leden
         genereer_betalingen(geselecteerde_leden, seizoen)
 
-        messages.success(request, "Betalingen voor geselecteerde leden gegenereerd")
+        messages.success(
+            request, "Betalingen voor geselecteerde leden gegenereerd"
+        )
         return redirect(reverse("management:leden"), permanent=True)
     else:
         raise Http404("Methode bestaat niet. Deze pagina is niet beschikbaar.")
@@ -336,7 +342,9 @@ def export_ploeg_csv(request, pk):
     coachdownload_resource = CoachLidDownloadResource()
     dataset = coachdownload_resource.export(queryset)
     response = HttpResponse(dataset.csv, content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="{}"'.format(download_name)
+    response["Content-Disposition"] = 'attachment; filename="{}"'.format(
+        download_name
+    )
     return response
 
 
@@ -424,7 +432,9 @@ def export_ploeg_preview(request):
     fields = Lid._meta.get_fields(include_parents=False)
     fields = [field for field in fields if not field.is_relation]
     return HttpResponse(
-        template.render(request=request, context={"fields": fields, "ploegen": ploegen})
+        template.render(
+            request=request, context={"fields": fields, "ploegen": ploegen}
+        )
     )
 
 
@@ -438,7 +448,9 @@ def exporteer_ploegen(request):
     # Retrieve the selected fields from the form
     ploegen = request.session.get("ploegen", [])
     selected_ploegen = list(Ploeg.objects.filter(pk__in=ploegen))
-    selected_fields = [f for f in request.POST.values() if f.startswith("management")]
+    selected_fields = [
+        f for f in request.POST.values() if f.startswith("management")
+    ]
 
     if not selected_fields:
         messages.warning(

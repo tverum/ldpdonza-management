@@ -14,7 +14,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Ploeg",
             fields=[
-                ("ploeg_id", models.AutoField(primary_key=True, serialize=False)),
+                (
+                    "ploeg_id",
+                    models.AutoField(primary_key=True, serialize=False),
+                ),
                 ("naam", models.CharField(max_length=20)),
                 ("korte_naam", models.CharField(max_length=5)),
                 ("leeftijdscategorie", models.IntegerField()),
@@ -23,7 +26,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Seizoen",
             fields=[
-                ("seizoen_id", models.AutoField(primary_key=True, serialize=False)),
+                (
+                    "seizoen_id",
+                    models.AutoField(primary_key=True, serialize=False),
+                ),
                 ("naam", models.CharField(max_length=20)),
                 ("startdatum", models.DateField()),
                 ("einddatum", models.DateField()),
@@ -73,7 +79,8 @@ class Migration(migrations.Migration):
             model_name="ploeg",
             name="seizoen",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.DO_NOTHING, to="management.Seizoen"
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                to="management.Seizoen",
             ),
         ),
     ]

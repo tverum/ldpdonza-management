@@ -65,7 +65,9 @@ def get_current_seizoen(request) -> Seizoen:
             return Seizoen.objects.get(pk=pk)
     try:
         # If there is an active seizoen, select it
-        seizoen = Seizoen.objects.get(startdatum__lte=today, einddatum__gte=today)
+        seizoen = Seizoen.objects.get(
+            startdatum__lte=today, einddatum__gte=today
+        )
     except ObjectDoesNotExist:
         # Default to the highest startdatum
         seizoen = Seizoen.objects.order_by("-startdatum").first()

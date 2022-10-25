@@ -54,7 +54,9 @@ def lidgeld_mail(pk):
     betaling = Betaling.objects.get(pk=pk)
     lid = betaling.lid
     datum_versturen = datetime.date.today().strftime("%d-%m-%Y")
-    datum_verval = (datetime.date.today() + timedelta(days=40)).strftime("%d-%m-%Y")
+    datum_verval = (datetime.date.today() + timedelta(days=40)).strftime(
+        "%d-%m-%Y"
+    )
     to = []
     if lid.moeder:
         to.append(lid.moeder.email)
@@ -109,7 +111,9 @@ def send_herinnering(pk):
 
     betaling = Betaling.objects.get(pk=pk)
     lid = betaling.lid
-    datum_verval = (datetime.date.today() + timedelta(days=21)).strftime("%d-%m-%Y")
+    datum_verval = (datetime.date.today() + timedelta(days=21)).strftime(
+        "%d-%m-%Y"
+    )
     datum_vorige_mail = betaling.mails_verstuurd.split(";")[-1]
     to = []
     if lid.moeder:
@@ -131,7 +135,9 @@ def send_herinnering(pk):
     image_name = "signature"
 
     subject, from_email = (
-        "HERINNERING: Inschrijvingsgeld {} LDP Donza, seizoen '20-'21".format(lid),
+        "HERINNERING: Inschrijvingsgeld {} LDP Donza, seizoen '20-'21".format(
+            lid
+        ),
         "no-reply@ldpdonza.be",
     )
     text_content = plaintext.render(d)
@@ -197,7 +203,9 @@ def bevestig_betaling(pk, request):
         "datum_betaling": datum_betaling,
         "datum_afgifte": datum_afgifte,
     }
-    result = render_to_pdf_file("pdf/betalingsbevestiging.html", request, context)
+    result = render_to_pdf_file(
+        "pdf/betalingsbevestiging.html", request, context
+    )
     with tempfile.NamedTemporaryFile(
         delete=True, prefix="ldpdonza", suffix=".pdf"
     ) as output:
@@ -216,7 +224,9 @@ def bevestig_betaling(pk, request):
     betaling.save()
 
 
-def mail_w_attachment(from_email, to_email, filename, subject, message, reply_to):
+def mail_w_attachment(
+    from_email, to_email, filename, subject, message, reply_to
+):
     """
     Verstuur een mail met een attachment gespecifieerd in filename
     :param from_email: het emailadres van waarop te sturen
@@ -227,7 +237,9 @@ def mail_w_attachment(from_email, to_email, filename, subject, message, reply_to
     :param reply_to: het reply-to adres voor de mail
     :return: None
     """
-    msg = EmailMessage(subject, message, from_email, to_email, reply_to=reply_to)
+    msg = EmailMessage(
+        subject, message, from_email, to_email, reply_to=reply_to
+    )
 
     msg.content_subtype = "html"
     msg.attach_file(filename)

@@ -1,4 +1,9 @@
-from django_filters import FilterSet, BooleanFilter, CharFilter, DateFromToRangeFilter
+from django_filters import (
+    FilterSet,
+    BooleanFilter,
+    CharFilter,
+    DateFromToRangeFilter,
+)
 from django_filters.widgets import RangeWidget
 from django.forms import TextInput, CheckboxInput
 from ..models import Lid
@@ -8,13 +13,17 @@ class LidFilter(FilterSet):
     voornaam = CharFilter(
         label="Voornaam",
         field_name="voornaam",
-        widget=TextInput(attrs={"class": "form-control", "placeholder": "voornaam"}),
+        widget=TextInput(
+            attrs={"class": "form-control", "placeholder": "voornaam"}
+        ),
     )
 
     familienaam = CharFilter(
         label="Familienaam",
         field_name="familienaam",
-        widget=TextInput(attrs={"class": "form-control", "placeholder": "familienaam"}),
+        widget=TextInput(
+            attrs={"class": "form-control", "placeholder": "familienaam"}
+        ),
     )
 
     geboortedatum = DateFromToRangeFilter(

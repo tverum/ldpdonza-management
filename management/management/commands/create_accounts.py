@@ -24,7 +24,10 @@ class Command(BaseCommand):
         """
         # Named (optional) arguments
         parser.add_argument(
-            "-p", "--send-mails-pa", action="store_true", help="Stuur mails naar de PAs"
+            "-p",
+            "--send-mails-pa",
+            action="store_true",
+            help="Stuur mails naar de PAs",
         )
         parser.add_argument(
             "-c",
@@ -48,11 +51,15 @@ class Command(BaseCommand):
         send_mails_coaches = kwargs["send_mails_coaches"]
         mailadressen = kwargs["mailadressen"]
 
-        self.stdout.write(self.style.SUCCESS("Generating accounts for coaches..."))
+        self.stdout.write(
+            self.style.SUCCESS("Generating accounts for coaches...")
+        )
         coaches_acc = generate_accounts("Coach")
 
         self.stdout.write(
-            self.style.SUCCESS("Generating accounts for ploegverantwoordelijken...")
+            self.style.SUCCESS(
+                "Generating accounts for ploegverantwoordelijken..."
+            )
         )
         pv_acc = generate_accounts("Ploegverantwoordelijke")
 
@@ -69,7 +76,9 @@ class Command(BaseCommand):
             send_mails(coaches_acc)
         if mailadressen:
             entries = [
-                entry for entry in (coaches_acc + pv_acc) if entry[3] in mailadressen
+                entry
+                for entry in (coaches_acc + pv_acc)
+                if entry[3] in mailadressen
             ]
             send_mails(entries)
 
@@ -142,7 +151,14 @@ def generate_accounts(functie):
                 )
             else:
                 entries.append(
-                    (lid.voornaam, lid.familienaam, username, lid.email, password, True)
+                    (
+                        lid.voornaam,
+                        lid.familienaam,
+                        username,
+                        lid.email,
+                        password,
+                        True,
+                    )
                 )
             # Account was al gecreëerd voor deze persoon
             continue
@@ -153,10 +169,19 @@ def generate_accounts(functie):
         ]
 
         entries.append(
-            (lid.voornaam, lid.familienaam, username, lid.email, password, False)
+            (
+                lid.voornaam,
+                lid.familienaam,
+                username,
+                lid.email,
+                password,
+                False,
+            )
         )
         for ploeg in ploegen:
-            UserObjectPermission.objects.assign_perm("view_ploeg", user, obj=ploeg)
+            UserObjectPermission.objects.assign_perm(
+                "view_ploeg", user, obj=ploeg
+            )
 
     return entries
 
@@ -168,7 +193,14 @@ def write_to_file(filename, entries):
     :param entries: de gegenereerde accounts
     :return: None
     """
-    keys = ("Voornaam", "Familienaam", "Username", "Email", "Passwoord", "Aangepast")
+    keys = (
+        "Voornaam",
+        "Familienaam",
+        "Username",
+        "Email",
+        "Passwoord",
+        "Aangepast",
+    )
     dictionairy = [dict(zip(keys, entry)) for entry in entries]
     with open(os.path.join(settings.BASE_DIR, filename), "w") as outfile:
         json.dump(dictionairy, outfile)

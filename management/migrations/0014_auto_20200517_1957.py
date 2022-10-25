@@ -41,7 +41,11 @@ class Migration(migrations.Migration):
             model_name="lid",
             name="uid",
             field=models.DecimalField(
-                blank=True, decimal_places=0, max_digits=10, null=True, unique=True
+                blank=True,
+                decimal_places=0,
+                max_digits=10,
+                null=True,
+                unique=True,
             ),
         ),
         migrations.AlterField(
@@ -67,14 +71,18 @@ class Migration(migrations.Migration):
                 ),
                 ("origineel_bedrag", models.FloatField()),
                 ("afgelost_bedrag", models.FloatField()),
-                ("mails_verstuurd", models.CharField(default="", max_length=500)),
+                (
+                    "mails_verstuurd",
+                    models.CharField(default="", max_length=500),
+                ),
                 ("mededeling", models.CharField(max_length=20)),
                 ("type", models.CharField(max_length=20)),
                 ("status", models.CharField(max_length=20)),
                 (
                     "lid",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="management.Lid"
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="management.Lid",
                     ),
                 ),
                 (

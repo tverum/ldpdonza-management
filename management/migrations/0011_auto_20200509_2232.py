@@ -19,7 +19,9 @@ class Migration(migrations.Migration):
             model_name="lid",
             name="familieleden",
             field=models.ManyToManyField(
-                blank=True, related_name="_lid_familieleden_+", to="management.Lid"
+                blank=True,
+                related_name="_lid_familieleden_+",
+                to="management.Lid",
             ),
         ),
         migrations.AlterField(

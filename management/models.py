@@ -96,14 +96,18 @@ class PloegLid(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return "Ploeg: {} -- Lid: {} ({})".format(self.ploeg, self.lid, self.functie)
+        return "Ploeg: {} -- Lid: {} ({})".format(
+            self.ploeg, self.lid, self.functie
+        )
 
 
 class Lid(models.Model):
     club_id = models.AutoField(primary_key=True)
     voornaam = models.CharField(max_length=20)
     familienaam = models.CharField(max_length=50)
-    geslacht = models.CharField(max_length=1, choices=LID_GESLACHT_CHOICES, default=MAN)
+    geslacht = models.CharField(
+        max_length=1, choices=LID_GESLACHT_CHOICES, default=MAN
+    )
     sportief_lid = models.BooleanField(default=False)
     betalend_lid = models.BooleanField(default=False)
     actief_lid = models.BooleanField(default=True)
@@ -147,7 +151,9 @@ class Lid(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return "{} {}".format(self.voornaam, self.familienaam, self.lidnummer_vbl)
+        return "{} {}".format(
+            self.voornaam, self.familienaam, self.lidnummer_vbl
+        )
 
 
 class Betaling(models.Model):

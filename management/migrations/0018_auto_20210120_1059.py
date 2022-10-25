@@ -28,6 +28,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="ploeg",
             name="kenmerken",
-            field=models.ManyToManyField(blank=True, to="management.PloegKenmerk"),
+            field=models.ManyToManyField(
+                blank=True, to="management.PloegKenmerk"
+            ),
         ),
     ]

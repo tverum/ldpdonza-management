@@ -49,7 +49,11 @@ def has_team(lid, seizoen):
     ploegleden = PloegLid.objects.filter(lid=lid).all()
 
     # filter alleen ploegen van dit seizoen
-    ploegen = [ploeglid for ploeglid in ploegleden if ploeglid.ploeg.seizoen == seizoen]
+    ploegen = [
+        ploeglid
+        for ploeglid in ploegleden
+        if ploeglid.ploeg.seizoen == seizoen
+    ]
 
     return len(ploegen) != 0
 
@@ -131,9 +135,9 @@ def mededeling(lid, seizoen):
     :return:
     """
     # begin met de berekening van het getal
-    berekening = (lid.uid + seizoen.startdatum.year * seizoen.einddatum.year) % (
-        10**10
-    )
+    berekening = (
+        lid.uid + seizoen.startdatum.year * seizoen.einddatum.year
+    ) % (10**10)
     # voeg nullen toe indien nodig
     start_nul = "0" * (10 - len(str(berekening)))
     # bereken controlegetal
@@ -147,8 +151,12 @@ def mededeling(lid, seizoen):
         additionele_nul = "0"
 
     # construeer de uiteindelijke gestructureerde mededeling
-    resultaat = start_nul + str(berekening) + additionele_nul + str(laatste_twee)
-    return "***{}/{}/{}***".format(resultaat[:3], resultaat[3:7], resultaat[7:])
+    resultaat = (
+        start_nul + str(berekening) + additionele_nul + str(laatste_twee)
+    )
+    return "***{}/{}/{}***".format(
+        resultaat[:3], resultaat[3:7], resultaat[7:]
+    )
 
 
 def genereer_betaling(lid, seizoen):
@@ -244,7 +252,9 @@ def registreer_betalingen(csv_file, request):
             # check dat de correcte kolomnamen aanwezig zijn in de file
             if not check_keys(keys):
                 # indien niet, error
-                messages.error(request, "CSV-bestand bevat niet de correcte headers")
+                messages.error(
+                    request, "CSV-bestand bevat niet de correcte headers"
+                )
                 return
         else:
             # haal de values uit de row
@@ -277,7 +287,9 @@ def registreer_betalingen(csv_file, request):
                         ),
                     )
                     mail_admins(
-                        "Meerdere records voor mededeling {}".format(g_mededeling),
+                        "Meerdere records voor mededeling {}".format(
+                            g_mededeling
+                        ),
                         """
                     Meerdere records voor mededeling {}.
                     Tijdens het verwerken van aflossing: {}, werden meerdere betalingsrecords met mededeling {} gevonden.
