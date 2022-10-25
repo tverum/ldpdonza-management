@@ -6,23 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('management', '0008_auto_20200503_1548'),
+        ("management", "0008_auto_20200503_1548"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='lid',
-            name='familieleden',
-            field=models.ManyToManyField(related_name='_lid_familieleden_+', to='management.Lid'),
+            model_name="lid",
+            name="familieleden",
+            field=models.ManyToManyField(
+                related_name="_lid_familieleden_+", to="management.Lid"
+            ),
         ),
         migrations.AlterField(
-            model_name='lid',
-            name='functies',
-            field=models.ManyToManyField(to='management.Functie'),
+            model_name="lid",
+            name="functies",
+            field=models.ManyToManyField(to="management.Functie"),
         ),
         migrations.AlterField(
-            model_name='lid',
-            name='lidnummer_vbl',
+            model_name="lid",
+            name="lidnummer_vbl",
             field=models.IntegerField(null=True),
         ),
     ]

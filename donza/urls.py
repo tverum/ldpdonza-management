@@ -18,8 +18,8 @@ from django.urls import path, include, re_path
 from django.views.generic.base import RedirectView
 
 urlpatterns = [
-    path('management/', include('management.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('admin/', admin.site.urls),
-    re_path('', RedirectView.as_view(pattern_name='management:index', permanent=False)),
+    path("management/", include("management.urls")),
+    path("accounts/", include("django.contrib.auth.urls")),
+    path("admin/", admin.site.urls),
+    re_path("", RedirectView.as_view(pattern_name="management:index", permanent=False)),
 ]

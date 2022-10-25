@@ -14,15 +14,18 @@ class Command(BaseCommand):
     def handle(self, **options):
         ploegleden = PloegLid.objects.all()
 
-        leden = [(
-            ploeglid.lid.familienaam,
-            ploeglid.lid.voornaam,
-            ploeglid.lid.straatnaam_en_huisnummer,
-            ploeglid.lid.gemeente,
-            ploeglid.lid.postcode,
-            ploeglid.ploeg.naam,
-            ploeglid.functie.functie
-        ) for ploeglid in ploegleden]
+        leden = [
+            (
+                ploeglid.lid.familienaam,
+                ploeglid.lid.voornaam,
+                ploeglid.lid.straatnaam_en_huisnummer,
+                ploeglid.lid.gemeente,
+                ploeglid.lid.postcode,
+                ploeglid.ploeg.naam,
+                ploeglid.functie.functie,
+            )
+            for ploeglid in ploegleden
+        ]
 
         print("Writing to file...")
         filename = "ploegleden.json"
@@ -46,8 +49,8 @@ def write_to_file(filename, entries):
         "Gemeente",
         "Postcode",
         "Ploeg",
-        "Functie"
+        "Functie",
     )
     dictionairy = [dict(zip(keys, entry)) for entry in entries]
-    with open(os.path.join(settings.BASE_DIR, filename), 'w') as outfile:
+    with open(os.path.join(settings.BASE_DIR, filename), "w") as outfile:
         json.dump(dictionairy, outfile)

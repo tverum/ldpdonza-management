@@ -9,62 +9,108 @@ import phonenumber_field.modelfields
 class Migration(migrations.Migration):
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Functie',
+            name="Functie",
             fields=[
-                ('functie_id', models.AutoField(primary_key=True, serialize=False)),
-                ('functie', models.CharField(max_length=20)),
+                ("functie_id", models.AutoField(primary_key=True, serialize=False)),
+                ("functie", models.CharField(max_length=20)),
             ],
         ),
         migrations.CreateModel(
-            name='Ouder',
+            name="Ouder",
             fields=[
-                ('ouder_id', models.AutoField(primary_key=True, serialize=False)),
-                ('gsmnummer', phonenumber_field.modelfields.PhoneNumberField(max_length=128, region=None)),
-                ('voornaam', models.CharField(max_length=20)),
-                ('familienaam', models.CharField(max_length=50)),
-                ('email', models.EmailField(max_length=254)),
+                ("ouder_id", models.AutoField(primary_key=True, serialize=False)),
+                (
+                    "gsmnummer",
+                    phonenumber_field.modelfields.PhoneNumberField(
+                        max_length=128, region=None
+                    ),
+                ),
+                ("voornaam", models.CharField(max_length=20)),
+                ("familienaam", models.CharField(max_length=50)),
+                ("email", models.EmailField(max_length=254)),
             ],
         ),
         migrations.CreateModel(
-            name='Lid',
+            name="Lid",
             fields=[
-                ('club_id', models.AutoField(primary_key=True, serialize=False)),
-                ('voornaam', models.CharField(max_length=20)),
-                ('familienaam', models.CharField(max_length=50)),
-                ('geslacht',
-                 models.CharField(choices=[('m', 'Man'), ('v', 'Vrouw'), ('x', 'Verkies niet te zeggen')], default='m',
-                                  max_length=1)),
-                ('betalend_lid',
-                 models.BooleanField(default=False, help_text='Dit moet waar zijn als het lid lidgeld moet betalen')),
-                ('straatnaam', models.CharField(max_length=50)),
-                ('huisnummer', models.IntegerField()),
-                ('bus', models.CharField(blank=True, max_length=50)),
-                ('postcode', models.IntegerField()),
-                ('gemeente', models.CharField(max_length=50)),
-                ('geboortedatum', models.DateField()),
-                ('gsmnummer', phonenumber_field.modelfields.PhoneNumberField(max_length=128, region=None)),
-                ('email', models.EmailField(max_length=254)),
-                ('gescheiden_ouders', models.BooleanField(default=False,
-                                                          help_text='Voor gescheiden ouders worden de mails standaard '
-                                                                    'naar beide ouders gestuurd')),
-                ('extra_informatie', models.CharField(default='', max_length=500)),
-                ('rekeningnummer', localflavor.generic.models.IBANField(include_countries=None, max_length=34,
-                                                                        use_nordea_extensions=False)),
-                ('lidnummer_vbl', models.IntegerField(unique=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('functies', models.ManyToManyField(to='management.Functie')),
-                ('moeder_id',
-                 models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='moeder',
-                                   to='management.Ouder')),
-                ('vader_id',
-                 models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='vader',
-                                   to='management.Ouder')),
+                ("club_id", models.AutoField(primary_key=True, serialize=False)),
+                ("voornaam", models.CharField(max_length=20)),
+                ("familienaam", models.CharField(max_length=50)),
+                (
+                    "geslacht",
+                    models.CharField(
+                        choices=[
+                            ("m", "Man"),
+                            ("v", "Vrouw"),
+                            ("x", "Verkies niet te zeggen"),
+                        ],
+                        default="m",
+                        max_length=1,
+                    ),
+                ),
+                (
+                    "betalend_lid",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Dit moet waar zijn als het lid lidgeld moet betalen",
+                    ),
+                ),
+                ("straatnaam", models.CharField(max_length=50)),
+                ("huisnummer", models.IntegerField()),
+                ("bus", models.CharField(blank=True, max_length=50)),
+                ("postcode", models.IntegerField()),
+                ("gemeente", models.CharField(max_length=50)),
+                ("geboortedatum", models.DateField()),
+                (
+                    "gsmnummer",
+                    phonenumber_field.modelfields.PhoneNumberField(
+                        max_length=128, region=None
+                    ),
+                ),
+                ("email", models.EmailField(max_length=254)),
+                (
+                    "gescheiden_ouders",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Voor gescheiden ouders worden de mails standaard "
+                        "naar beide ouders gestuurd",
+                    ),
+                ),
+                ("extra_informatie", models.CharField(default="", max_length=500)),
+                (
+                    "rekeningnummer",
+                    localflavor.generic.models.IBANField(
+                        include_countries=None,
+                        max_length=34,
+                        use_nordea_extensions=False,
+                    ),
+                ),
+                ("lidnummer_vbl", models.IntegerField(unique=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("functies", models.ManyToManyField(to="management.Functie")),
+                (
+                    "moeder_id",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="moeder",
+                        to="management.Ouder",
+                    ),
+                ),
+                (
+                    "vader_id",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="vader",
+                        to="management.Ouder",
+                    ),
+                ),
             ],
         ),
     ]

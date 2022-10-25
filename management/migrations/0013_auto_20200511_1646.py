@@ -6,29 +6,33 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('management', '0012_ploeg_geslacht'),
+        ("management", "0012_ploeg_geslacht"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='ploeg',
-            old_name='leeftijdscategorie',
-            new_name='max_geboortejaar',
+            model_name="ploeg",
+            old_name="leeftijdscategorie",
+            new_name="max_geboortejaar",
         ),
         migrations.AddField(
-            model_name='ploeg',
-            name='min_geboortejaar',
+            model_name="ploeg",
+            name="min_geboortejaar",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='ploeg',
-            name='uitzonderings_geboortejaar',
+            model_name="ploeg",
+            name="uitzonderings_geboortejaar",
             field=models.IntegerField(default=1),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='ploeg',
-            name='geslacht',
-            field=models.CharField(choices=[('m', 'Man'), ('v', 'Vrouw'), ('x', 'Verkies niet te zeggen')], default='m', max_length=2),
+            model_name="ploeg",
+            name="geslacht",
+            field=models.CharField(
+                choices=[("m", "Man"), ("v", "Vrouw"), ("x", "Verkies niet te zeggen")],
+                default="m",
+                max_length=2,
+            ),
         ),
     ]

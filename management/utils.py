@@ -45,9 +45,7 @@ def link_callback(url):
 
     # make sure that file exists
     if not os.path.isfile(path):
-        raise Exception(
-            'media URI must start with %s or %s' % (s_url, m_url)
-        )
+        raise Exception("media URI must start with %s or %s" % (s_url, m_url))
     return dict(path)
 
 
@@ -60,18 +58,17 @@ def get_current_seizoen(request) -> Seizoen:
     :return: the current seizoen object
     """
     today = date.today()
-    if request and 'seizoen' in request.session:
-        pk = request.session['seizoen']
+    if request and "seizoen" in request.session:
+        pk = request.session["seizoen"]
         if pk:
             # If a seizoen is stored in the session, retrieve this seizoen
             return Seizoen.objects.get(pk=pk)
     try:
         # If there is an active seizoen, select it
-        seizoen = Seizoen.objects.get(
-            startdatum__lte=today, einddatum__gte=today)
+        seizoen = Seizoen.objects.get(startdatum__lte=today, einddatum__gte=today)
     except ObjectDoesNotExist:
         # Default to the highest startdatum
-        seizoen = Seizoen.objects.order_by('-startdatum').first()
+        seizoen = Seizoen.objects.order_by("-startdatum").first()
 
     if not seizoen:
         return Seizoen()
