@@ -16,7 +16,7 @@ def mail_to_admin(filename):
     reply_to = None
     filename = os.path.join(settings.BASE_DIR, filename)
     subject = "Accounts Secretariaat"
-    message = "Hierbij de gegenereerde accounts voor de coaches en de ploegverantwoordelijken"
+    message = "Hierbij de gegenereerde accounts."
 
     print("Mailing file to {}".format(to_email))
     mail_w_attachment(

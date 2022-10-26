@@ -151,9 +151,7 @@ class Lid(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return "{} {}".format(
-            self.voornaam, self.familienaam, self.lidnummer_vbl
-        )
+        return f"{self.voornaam} {self.familienaam} ({self.lidnummer_vbl})"
 
 
 class Betaling(models.Model):

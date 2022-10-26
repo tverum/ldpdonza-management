@@ -8,11 +8,7 @@ class Command(BaseCommand):
 
     def handle(self, **options):
 
-        postcode = int(
-            input(
-                "Geef de postcode op van welke de leden moeten gefilterd worden"
-            )
-        )
+        postcode = int(input("Geef de postcode waarop gefilterd moet worden"))
         functie_speler = Functie.objects.get(functie="Speler")
 
         # Iterereer over alle betalingen

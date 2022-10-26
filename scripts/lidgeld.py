@@ -1,10 +1,10 @@
 import csv
 import pandas as pd
 
-from typing import List
 
-
-def read_lidgeld_csv(filename: str) -> pd.DataFrame:
+def read_lidgeld_csv(
+    filename: str,
+) -> pd.DataFrame:
     """
     Read the lidgelden from the csv and return dictionaries
     Args:
@@ -13,7 +13,11 @@ def read_lidgeld_csv(filename: str) -> pd.DataFrame:
     Returns: a list of dictionaries for each row.
     """
     with open(filename) as csvfile:
-        lidgeldreader = csv.DictReader(csvfile, delimiter=";", quotechar='"')
+        lidgeldreader = csv.DictReader(
+            csvfile,
+            delimiter=";",
+            quotechar='"',
+        )
         _lidgelden = list(lidgeldreader)
         _lidgelden = [
             {k: v for k, v in row.items() if k} for row in _lidgelden
@@ -30,7 +34,9 @@ def read_lidgeld_csv(filename: str) -> pd.DataFrame:
         return pd.DataFrame(_lidgelden)
 
 
-def inspect_values(_lidgelden: pd.DataFrame) -> None:
+def inspect_values(
+    _lidgelden: pd.DataFrame,
+) -> None:
     """
     Do data exploration on the lidgelden
     Args:
@@ -41,7 +47,12 @@ def inspect_values(_lidgelden: pd.DataFrame) -> None:
     print(_lidgelden.keys())  # Alle kolommen
     print(
         _lidgelden[_lidgelden["Lidgeld"].notna()][
-            ["voornaam", "familienaam", "Lidgeld", "sponsor"]
+            [
+                "voornaam",
+                "familienaam",
+                "Lidgeld",
+                "sponsor",
+            ]
         ]
     )
     # print(_lidgelden.Ploeg.unique())  # Alle ploegen
@@ -56,7 +67,9 @@ def inspect_values(_lidgelden: pd.DataFrame) -> None:
     # print(_lidgelden['Lidgeld'].unique())
 
 
-def construct_betalingen(_lidgelden: pd.DataFrame) -> None:
+def construct_betalingen(
+    _lidgelden: pd.DataFrame,
+) -> None:
     """
     Construeer betalingen obv. de lijst met lidgelden
     Args:
@@ -69,7 +82,16 @@ def construct_betalingen(_lidgelden: pd.DataFrame) -> None:
     ].transform("max")
     _lidgelden = _lidgelden.drop_duplicates(subset=["club id"])
     _lidgelden = _lidgelden[_lidgelden["Lidgeld"].notna()]
-    print(_lidgelden[["club id", "voornaam", "familienaam", "Lidgeld"]])
+    print(
+        _lidgelden[
+            [
+                "club id",
+                "voornaam",
+                "familienaam",
+                "Lidgeld",
+            ]
+        ]
+    )
     return None
 
 

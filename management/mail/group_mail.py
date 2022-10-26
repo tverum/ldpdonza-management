@@ -1,7 +1,5 @@
 from typing import Sequence
 
-from django.core import mail
-from django.core.exceptions import ImproperlyConfigured
 from ..models import Functie, Lid, PloegKenmerk, PloegLid, Seizoen
 from .send_mail import send_mail_template
 
@@ -12,7 +10,10 @@ def determine_group(group: str, seizoen: Seizoen) -> Sequence[Lid]:
 
     Args:
         group (str): [de group tag gegeven in de form]
-        seizoen (Seizoen): [het seizoen waarvoor de mails moeten verstuurd worden. Belangrijk bij het bepalen van de actieve leden]
+        seizoen (Seizoen): [
+            Het seizoen waarvoor de mails moeten verstuurd worden.
+            Belangrijk bij het bepalen van de actieve leden
+        ]
 
     Returns:
         [Sequence[Lid]]: [alle leden die binnen de groep vallen]
@@ -89,11 +90,11 @@ def retrieve_mails(leden: Sequence[Lid], incl_ouders: bool) -> Sequence[str]:
     [Haal de e-mailadressen op waarvoor de mails moeten verstuurd worden]
 
     Args:
-        leden (Sequence[Lid]): [de leden waarvoor de mails moeten opgehaald worden]
-        incl_ouders (bool): [boolean die aangeeft of de ouder-mailadressen mee moeten opgehaald worden]
+        leden (Sequence[Lid]): [ontvangers van de mail]
+        incl_ouders (bool): [vlag om ouders mee te includeren]
 
     Returns:
-        Sequence[str]: [een lijst van e-mailadressen waarnaar de mail moet verstuurd worden]
+        Sequence[str]: [bestemmelingen van de mail]
     """
     mails = []
     for lid in leden:
@@ -119,9 +120,8 @@ def group_mail(
         mail_template (str): [the location of the mail template to be sent]
         subject (str): [the subject of the mail]
         reply (str): [the reply adress of the subject]
-        seizoen (Seizoen): [the current seizoen, for which the group should be determined]
+        seizoen (Seizoen): [the current seizoen]
     """
-    # Retrieve the leden based on the group tag and retrieve the adresses of the group.
     leden = determine_group(group=group, seizoen=seizoen)
     mails = retrieve_mails(leden=leden, incl_ouders=True)
 

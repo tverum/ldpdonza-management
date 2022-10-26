@@ -288,7 +288,7 @@ def create_sheet(
     :param worksheet:
     :param functie: the functie for which to create the sheet
     :param include_ouders: if the export should include the ouders or not
-    :param include_betaling: if the export should include payment records or not
+    :param include_betaling: if the export should include payment records
     :param seizoen: the seizoen to export the betalingen for
     :return:
     """
@@ -328,12 +328,11 @@ def create_sheet(
             row_num += 1
 
             if "management.ouders" in selected_fields:
-                s_fields = [
+                selected_fields = [
                     field
                     for field in selected_fields
-                    if field is not "management.ouders"
+                    if field != "management.ouders"
                 ]
-                pass
 
             row = [
                 str(getattr(lid, field.name))

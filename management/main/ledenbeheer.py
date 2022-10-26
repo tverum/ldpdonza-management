@@ -126,11 +126,11 @@ def lid_update_uid(lid):
 def lid_update_familieleden(lid):
     """
     Update de familieleden van het lid.
-    Gebeurt op basis van het adres. Mensen die op hetzelfde adres wonen worden verondersteld om tot hetzelfde gezin te behoren
+    Gebeurt op basis van het adres.
+    Het gezin wordt bepaald op basis van adres.
     :param lid: Het lid dat moet geupdate worden
     :return: None
     """
-    # selecteer alle leden die op hetzelfde adres wonen, met uitzondering van het lid zelf
     familieleden = Lid.objects.filter(
         straatnaam_en_huisnummer=lid.straatnaam_en_huisnummer,
         postcode=lid.postcode,
@@ -141,7 +141,8 @@ def lid_update_familieleden(lid):
 
 def lid_update_functies(lid, row):
     """
-    Voeg de functies van het lid toe. Pas ook eventuele flags aan op basis van de functie.
+    Voeg de functies van het lid toe.
+    Pas ook eventuele flags aan op basis van de functie.
     :param lid: Het lid dat geupdate moet worden
     :param row: Row van de csv-reader
     :return:
@@ -162,9 +163,10 @@ def get_lid(
     geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2, row
 ):
     """
-    Creëer het lid indien het nog niet bestaat, anders, fetch het uit de database.
+    Creëer het lid indien het nog niet bestaat.
+    Anders, fetch het uit de database.
     :param geboortedatum: Correct geformatte geboortedatum
-    :param gescheiden: Boolean die aanduidt of er sprake is van gescheiden ouders
+    :param gescheiden: vlag voor gescheiden ouders
     :param gsm_nummer: Correct geformat gsmnummer
     :param geslacht: Correct geformat geslacht
     :param ouder_1: Ouder instantie

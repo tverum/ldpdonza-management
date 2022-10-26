@@ -38,7 +38,7 @@ class Command(BaseCommand):
 def write_to_file(filename, entries):
     """
     Schrijf de gegenereerde accounts naar een file weg
-    :param filename: de filename waar de accounts naar moeten weggeschreven worden
+    :param filename: de filename voor wegschrijven
     :param entries: de gegenereerde accounts
     :return: None
     """

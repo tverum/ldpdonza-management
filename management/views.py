@@ -1,21 +1,16 @@
 from datetime import datetime as datetime
 from management.mail.group_mail import group_mail
-from pprint import pprint
-from tempfile import template
 
 from bootstrap_modal_forms.generic import BSModalReadView
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.contrib.auth.decorators import login_required
-from django.contrib.messages.api import warning
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, reverse, render
 from django.template import loader
 from django.views import generic
 from django.views.generic.edit import FormView, UpdateView
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin, MultiTableMixin
-from guardian.mixins import PermissionRequiredMixin as GuardianPermissionMixin
 
 from .mail.send_mail import lidgeld_mail, send_herinnering, bevestig_betaling
 from .main.betalingen import genereer_betalingen, registreer_betalingen
@@ -41,7 +36,7 @@ from .visual.tables import (
 
 PERMISSION_DENIED = """
             Je hebt niet de juiste permissies om deze pagina te bekijken.
-            Indien je dit wel nodig hebt, contacteer de webmaster. (TODO: add link)
+            Indien je dit wel nodig hebt, contacteer de webmaster.
             """
 
 """
@@ -250,12 +245,8 @@ def genereer(request):
 
 
 def create_ouder(request):
-    lid_form = LidForm(request.POST.get("lid_form"))
     ouder_form = OuderForm(request.POST)
     redirect_path = request.POST.get("next")
-    context = {
-        "form": lid_form,
-    }
     if ouder_form.is_valid():
         ouder_form.save()
     else:
@@ -364,7 +355,7 @@ def export_ploeg_xlsx(request, pk):
     ) = retrieve_querysets(pk)
 
     response = HttpResponse(
-        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        content_type="application/vnd.ms-excel",
     )
     response[
         "Content-Disposition"
@@ -384,9 +375,15 @@ def export_ploeg_xlsx(request, pk):
 def retrieve_querysets(pk):
     """
     Retrieve the querysets corresponding with the primary key.
-    Help function for the export to xlsx
-    :param pk: the primary key of the team for which the download should be executed
-    :return:
+    Help function for the export to xlsx.
+    Will retrieve:
+        - Ploeg
+        - Coaches
+        - Spelers
+        - Ploegverantwoordelijken
+        - Helpende handen
+    :param pk: the primary key of the team
+    :return: De ploeg, querysets van de coaches, spelers, pvn en hhn.
     """
     ploeg = Ploeg.objects.get(pk=pk)
     functie_speler = Functie.objects.get(functie="Speler")
@@ -410,9 +407,10 @@ def retrieve_querysets(pk):
 
 def export_ploeg_preview(request):
     """
-    After selecting the ploegen to export, save these in the session and proceed to selecting the variables to export
+    After selecting the ploegen to export
+    Save in session and select variables to export
     :param request: request containing the requested teams
-    :return:
+    :return: HttpResponse
     """
     # Retrieve the selection of teams to be exported from the request
     pks = request.POST.getlist("selection")
@@ -460,7 +458,7 @@ def exporteer_ploegen(request):
 
     # Create a response with the returned export file
     response = HttpResponse(
-        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        content_type="application/vnd.ms-excel",
     )
     response[
         "Content-Disposition"
@@ -468,7 +466,6 @@ def exporteer_ploegen(request):
         date=datetime.now().strftime("%d-%m-%Y"),
     )
 
-    # Create a workbook which shows the selected fields for the selected ploegen
     workbook = create_general_workbook(selected_ploegen, selected_fields)
     workbook.save(response)
     return response
@@ -501,7 +498,8 @@ def groep_mail(request):
             request,
             """
         Er ontbreken velden om een geldige mail te construeren.
-        Zorg er zeker voor dat er een mail-template geselecteerd is, er een groep geselecteerd is om naar te sturen 
+        Zorg er zeker voor dat er een mail-template geselecteerd is,
+        er een groep geselecteerd is om naar te sturen
         en er een onderwerp en reply veld is ingesteld.
         """,
         )

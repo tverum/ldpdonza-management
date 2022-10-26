@@ -1,11 +1,9 @@
 import datetime
-import os
 import tempfile
 from datetime import timedelta
 from email.mime.image import MIMEImage
 from typing import Sequence
 
-from django.conf import settings
 from django.core.mail import EmailMessage
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
@@ -103,8 +101,7 @@ def lidgeld_mail(pk):
 def send_herinnering(pk):
     """
     Stuur een betalingsherinnering voor een bepaalde betaling
-    :param pk: de betalingsinstantie waarvoor de herinnering moet gegenereerd worden
-    :return: None
+    :param pk: de betalingsinstantie voor herinnering
     """
     plaintext = get_template("mail/herinnering.txt")
     htmly = get_template("mail/herinnering.html")
@@ -165,9 +162,7 @@ def bevestig_betaling(pk, request):
     Bevestig een bepaalde betaling en verstuur de mutualiteitsformulieren etc.
     :param pk: de betaling die bevestigd moet worden
     :param request: request object, required to authenticate the user
-    :return: None
     """
-    filename = "temp.pdf"
     betaling = Betaling.objects.get(pk=pk)
     lid = betaling.lid
     seizoen = betaling.seizoen
