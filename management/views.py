@@ -17,8 +17,12 @@ from .mail.send_mail import bevestig_betaling, lidgeld_mail, send_herinnering
 from .main.betalingen import genereer_betalingen, registreer_betalingen
 from .main.ledenbeheer import import_from_csv, lid_update_uid
 from .models import Betaling, Functie, Lid, Ploeg, PloegLid
-from .resources import (CoachLidDownloadResource, create_general_workbook,
-                        create_team_workbook)
+from .resources import (
+    CoachLidDownloadResource,
+    create_general_workbook,
+    create_team_workbook,
+)
+
 # Deze lijn moet er in blijven staan om de TeamSelector te kunnen laden
 # noinspection PyUnresolvedReferences
 from .utils import get_current_seizoen

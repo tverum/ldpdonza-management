@@ -4,8 +4,17 @@ from django.contrib import admin
 from django.http import HttpResponse
 from guardian.admin import GuardedModelAdmin
 
-from .models import (Betaling, Functie, Lid, LidgeldKlasse, Ouder, Ploeg,
-                     PloegKenmerk, PloegLid, Seizoen)
+from .models import (
+    Betaling,
+    Functie,
+    Lid,
+    LidgeldKlasse,
+    Ouder,
+    Ploeg,
+    PloegKenmerk,
+    PloegLid,
+    Seizoen,
+)
 
 
 class ExportCsvMixin:
