@@ -1,11 +1,8 @@
-from django_filters import (
-    FilterSet,
-    BooleanFilter,
-    CharFilter,
-    DateFromToRangeFilter,
-)
+from django.forms import CheckboxInput, TextInput
+from django_filters import (BooleanFilter, CharFilter, DateFromToRangeFilter,
+                            FilterSet)
 from django_filters.widgets import RangeWidget
-from django.forms import TextInput, CheckboxInput
+
 from ..models import Lid
 
 

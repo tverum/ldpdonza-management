@@ -1,9 +1,9 @@
-from import_export import resources, fields
+from import_export import fields, resources
 from import_export.widgets import ForeignKeyWidget
 from openpyxl import Workbook
 from openpyxl.styles import Font
 
-from .models import Lid, Ouder, Functie, PloegLid, Seizoen
+from .models import Functie, Lid, Ouder, PloegLid, Seizoen
 
 # A mapping of the string representation of Lid to the actual field.
 # No better reverse determination of fields was found so bit of a hack

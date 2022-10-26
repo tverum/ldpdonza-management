@@ -1,11 +1,10 @@
 import os
+from datetime import date
 
 from django.conf import settings
-from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.template.loader import render_to_string
 from weasyprint import HTML
-from datetime import date
 
 from management.models import Seizoen
 

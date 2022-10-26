@@ -1,38 +1,30 @@
 from datetime import datetime as datetime
-from management.mail.group_mail import group_mail
 
 from bootstrap_modal_forms.generic import BSModalReadView
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import Http404, HttpResponse
-from django.shortcuts import redirect, reverse, render
+from django.shortcuts import redirect, render, reverse
 from django.template import loader
 from django.views import generic
 from django.views.generic.edit import FormView, UpdateView
 from django_filters.views import FilterView
-from django_tables2.views import SingleTableMixin, MultiTableMixin
+from django_tables2.views import MultiTableMixin, SingleTableMixin
 
-from .mail.send_mail import lidgeld_mail, send_herinnering, bevestig_betaling
+from management.mail.group_mail import group_mail
+
+from .mail.send_mail import bevestig_betaling, lidgeld_mail, send_herinnering
 from .main.betalingen import genereer_betalingen, registreer_betalingen
 from .main.ledenbeheer import import_from_csv, lid_update_uid
-from .models import Lid, Ploeg, PloegLid, Betaling, Functie
-from .resources import (
-    CoachLidDownloadResource,
-    create_team_workbook,
-    create_general_workbook,
-)
-
+from .models import Betaling, Functie, Lid, Ploeg, PloegLid
+from .resources import (CoachLidDownloadResource, create_general_workbook,
+                        create_team_workbook)
 # Deze lijn moet er in blijven staan om de TeamSelector te kunnen laden
 # noinspection PyUnresolvedReferences
 from .utils import get_current_seizoen
 from .visual.filters import LidFilter
 from .visual.forms import LidForm, OuderForm, PloegForm
-from .visual.tables import (
-    LidTable,
-    DraftTable,
-    VerstuurdTable,
-    BetaaldTable,
-)
+from .visual.tables import BetaaldTable, DraftTable, LidTable, VerstuurdTable
 
 PERMISSION_DENIED = """
             Je hebt niet de juiste permissies om deze pagina te bekijken.

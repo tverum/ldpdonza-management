@@ -4,7 +4,7 @@ import django_tables2 as tables
 from django.urls import reverse
 from django_tables2.utils import A  # alias for Accessor
 
-from ..models import Lid, Betaling, Ploeg
+from ..models import Betaling, Lid, Ploeg
 
 
 class LidTable(tables.Table):

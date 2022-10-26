@@ -5,12 +5,12 @@ Omvat alle functies voor het genereren van betalingen, versturen van e-mails etc
 """
 import csv
 import io
-import chardet
 
+import chardet
 from django.contrib import messages
 from django.core.mail import mail_admins
 
-from ..models import Betaling, PloegLid, Functie
+from ..models import Betaling, Functie, PloegLid
 
 
 def no_payment(lid, seizoen):

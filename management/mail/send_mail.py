@@ -4,10 +4,8 @@ from datetime import timedelta
 from email.mime.image import MIMEImage
 from typing import Sequence
 
-from django.core.mail import EmailMessage
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import get_template
-from django.template.loader import render_to_string
+from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.template.loader import get_template, render_to_string
 
 from ..models import Betaling
 from ..utils import render_to_pdf_file

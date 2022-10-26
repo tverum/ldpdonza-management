@@ -1,12 +1,11 @@
-from django.core.management.base import BaseCommand
-
-from ...models import Lid, Betaling
-from ...utils import get_current_seizoen
-
+import csv
 from datetime import datetime
 
 import pandas as pd
-import csv
+from django.core.management.base import BaseCommand
+
+from ...models import Betaling, Lid
+from ...utils import get_current_seizoen
 
 
 class Command(BaseCommand):

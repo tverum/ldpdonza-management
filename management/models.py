@@ -1,7 +1,8 @@
+from datetime import datetime
+
 from django.db import models
 from localflavor.generic.models import IBANField
 from phonenumber_field.modelfields import PhoneNumberField
-from datetime import datetime
 
 MAN = "m"
 VROUW = "v"
