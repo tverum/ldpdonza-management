@@ -2,117 +2,91 @@
 <!DOCTYPE html>
 <!--suppress ALL -->
 <html lang="nl">
-  <head>
-    <title>{% block title %}LDP Donza{% endblock %}</title>
-    <link
-      rel="shortcut icon"
-      type="image/png"
-      href="{% static 'management/images/logo.png' %}"
-    />
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1,
-                shrink-to-fit=no"
-    />
-
-    <!-- Bootstrap CSS -->
-    <!-- CSS only -->
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-      crossorigin="anonymous"
-    />
-
-    <link
-      href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext"
-      rel="stylesheet"
-      type="text/css"
-    />
-
-    <!-- Own CSS -->
-    <link
-      rel="stylesheet"
-      href="{% static 'management/css/style.css' %}"
-      type="text/css"
-    />
-
-    <!-- Fontawesome -->
-    <link
-      href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
-      rel="stylesheet"
-    />
-
-    <!-- Bulma -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css"
-    />
-
-    <!-- Scripts -->
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-      crossorigin="anonymous"
-    ></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script
-      defer
-      src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
-    ></script>
-
-    <script src="{% static 'management/js/script.js'%}"></script>
-    <script src="{% static 'management/js/bulma.js' %}"></script>
-    <script src="{% static 'management/js/nav.js' %}"></script>
-    <script src="{% static 'management/js/slowlink.js' %}"></script>
-    <script src="{% static 'fontawesome_free/js/all.min.js' %}"></script>
-  </head>
-
-  <body class="main">
-    <!-- Header -->
-    <section class="section">{% include "header.html" %}</section>
-
-    <!-- this is the main content -->
-    <section class="section">
-      <div class="container">
-        {% if messages %}
-        <div class="block">
-          <!-- Messages to inform the user -->
-          {% for message in messages %}
-          <div class="notification is-{{ message.tags }}">
-            <button class="delete"></button>
-            <strong>{{message|safe}}</strong>
-          </div>
-          {% endfor %}
-        </div>
-        {% endif %} {% block content %} {% endblock %}
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="content has-text-centered">
-        <div class="row justify-content-between">
-          <div class="col-4">
-            <span class="text-muted text-uppercase">LDP Donza</span>
-          </div>
-          <div class="col-4">
-            <span class="float-right"
-              ><a href="{% url 'logout' %}">Logout</a></span
-            >
-          </div>
-        </div>
-      </div>
-      <div class="footer-copyright text-center py-3">
-        © 2020 Copyright: Tim Van Erum
-      </div>
-    </footer>
-
-    {% block customscripts %} {% endblock %}
-  </body>
-
-  <!-- place to keep the modals at the top-level -->
-  {% block modals %} {% endblock %} {% include "slowmodal.html" %}
-</html>
+    <head>
+        <title>
+            {% block title %}LDP Donza{% endblock %}
+        </title>
+        <link rel="shortcut icon"
+              type="image/png"
+              href="{% static 'management/images/logo.png' %}"/>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <!-- Bootstrap CSS -->
+        <!-- CSS only -->
+        <link rel="stylesheet"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+              crossorigin="anonymous"/>
+        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext"
+              rel="stylesheet"
+              type="text/css"/>
+        <!-- Own CSS -->
+        <link rel="stylesheet"
+              href="{% static 'management/css/style.css' %}"
+              type="text/css"/>
+        <!-- Fontawesome -->
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
+              rel="stylesheet"/>
+        <!-- Bulma -->
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css"/>
+        <!-- Scripts -->
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+        <script src="{% static 'management/js/script.js'%}"></script>
+        <script src="{% static 'management/js/bulma.js' %}"></script>
+        <script src="{% static 'management/js/nav.js' %}"></script>
+        <script src="{% static 'management/js/slowlink.js' %}"></script>
+        <script src="{% static 'fontawesome_free/js/all.min.js' %}"></script>
+        <meta charset="UTF-8"/>
+        <meta name="description" content="LDP Donza internal management tooling"/>
+        <meta name="keywords" content="Django, HTML, JS"/>
+        <meta name="author" content="Tim Van Erum"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body class="main">
+        <!-- Header -->
+        <section class="section">
+            {% include "header.html" %}
+        </section>
+        <!-- this is the main content -->
+        <section class="section">
+            <div class="container">
+                {% if messages %}
+                    <div class="block">
+                        <!-- Messages to inform the user -->
+                        {% for message in messages %}
+                            <div class="notification is-{{ message.tags }}">
+                                <button class="delete"></button>
+                                <strong>{{ message|safe }}</strong>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% block content %}{% endblock %}
+            </div>
+        </section>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <div class="row justify-content-between">
+                    <div class="col-4">
+                        <span class="text-muted text-uppercase">LDP Donza</span>
+                    </div>
+                    <div class="col-4">
+                        <span class="float-right"><a href="{% url 'logout' %}">Logout</a></span
+                            >
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-copyright text-center py-3">© 2020 Copyright: Tim Van Erum</div>
+            </footer>
+            {% block customscripts %}{% endblock %}
+        </body>
+        <!-- place to keep the modals at the top-level -->
+        {% block modals %}{% endblock %}
+        {% include "slowmodal.html" %}
+    </html>

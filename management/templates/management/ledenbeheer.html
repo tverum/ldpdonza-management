@@ -3,7 +3,7 @@
 {% load render_table from django_tables2 %}
 {% load bootstrap4 %}
 {% block title %}
-Ledenbeheer
+    Ledenbeheer
 {% endblock title %}
 {% block content %}
     <div class="col">
@@ -17,33 +17,25 @@ Ledenbeheer
                         <div class="form-group row">
                             {% with field=filter.form.voornaam %}
                                 <label class="col-sm-4 col-form-label">{{ field.label_tag }}</label>
-                                <div class="col-sm-8">
-                                    {{ field }}
-                                </div>
+                                <div class="col-sm-8">{{ field }}</div>
                             {% endwith %}
                         </div>
                         <div class="form-group row">
                             {% with field=filter.form.familienaam %}
                                 <label class="col-sm-4 col-form-label">{{ field.label_tag }}</label>
-                                <div class="col-sm-8">
-                                    {{ field }}
-                                </div>
+                                <div class="col-sm-8">{{ field }}</div>
                             {% endwith %}
                         </div>
                         <div class="form-group row">
                             {% with field=filter.form.geboortedatum %}
                                 <label class="col-sm-4 col-form-label">{{ field.label_tag }}</label>
-                                <div class="col-sm-8 text-center">
-                                        {{ field }}
-                                </div>
+                                <div class="col-sm-8 text-center">{{ field }}</div>
                             {% endwith %}
                         </div>
                         <div class="form-group row">
                             {% with field=filter.form.actief_lid %}
                                 <label class="col-sm-4 col-form-label">{{ field.label_tag }}</label>
-                                <div class="col-sm-8">
-                                    {{ field }}
-                                </div>
+                                <div class="col-sm-8">{{ field }}</div>
                             {% endwith %}
                         </div>
                         <!-- {% bootstrap_form filter.form layout='inline' %} -->
@@ -52,13 +44,24 @@ Ledenbeheer
                 {% endif %}
             </div>
             <div class="col-6 float-right">
-                <button type="submit" form="verwerk" class="btn btn-success btn-block mb-3" value="Genereer" name="genereer">Genereer Betalingen</button>
-                <a type="button" class="btn btn-secondary btn-block mb-3" href="{% url 'management:nieuw_lid' %}">Nieuw Lid</a>
+                <button type="submit"
+                        form="verwerk"
+                        class="btn btn-success btn-block mb-3"
+                        value="Genereer"
+                        name="genereer">
+                    Genereer Betalingen
+                </button>
+                <a type="button"
+                   class="btn btn-secondary btn-block mb-3"
+                   href="{% url 'management:nieuw_lid' %}">Nieuw Lid</a>
                 <form class="mb-3" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="input-group">
                         <div class="custom-file">
-                            <input type="file" name="file" class="custom-file-input" id="inputGroupFile02"/>
+                            <input type="file"
+                                   name="file"
+                                   class="custom-file-input"
+                                   id="inputGroupFile02"/>
                             <label class="custom-file-label" for="inputGroupFile02">Kies CSV-bestand</label>
                         </div>
                         <div class="input-group-append">
@@ -66,23 +69,28 @@ Ledenbeheer
                         </div>
                     </div>
                 </form>
-                <button type="submit" form="verwerk" class="btn btn-danger btn-block mb-3" value="Verwijder" name="verwijder">Verwijder leden</button>
+                <button type="submit"
+                        form="verwerk"
+                        class="btn btn-danger btn-block mb-3"
+                        value="Verwijder"
+                        name="verwijder">
+                    Verwijder leden
+                </button>
             </div>
         </div>
         <div class="row alert alert-secondary justify-content-center">
             <p>Voor meer informatie over een lid, klik op de rij.</p>
         </div>
         <div class="row justify-content-center">
-            <form action="{% url 'management:verwerk_leden' %}" method="post" id="verwerk">
+            <form action="{% url 'management:verwerk_leden' %}"
+                  method="post"
+                  id="verwerk">
                 {% csrf_token %}
-                <div class="row">
-                    {% render_table table 'django_tables2/semantic.html' %}
-                </div>
+                <div class="row">{% render_table table 'django_tables2/semantic.html' %}</div>
             </form>
         </div>
     </div>
 {% endblock content %}
-
 {% block customscripts %}
-<script src="{% static 'management/js/toggle.js'%}"></script>
+    <script src="{% static 'management/js/toggle.js'%}"></script>
 {% endblock %}

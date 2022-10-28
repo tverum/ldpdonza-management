@@ -1,64 +1,56 @@
-{% load static %} {% load guardian_tags %}
-<nav
-  class="navbar is-fixed-top navbar-dark"
-  role="navigation"
-  aria-label="main navigation"
-  style="background-color: #000000"
->
-  <!-- Brand & Collapse -->
-  <div class="container">
-    <div class="navbar-brand">
-      <a class="navbar-item" href="{% url 'management:index'%}">
-        <img
-          src="{% static 'management/images/logo_header.png' %}"
-          alt="Logo LDP Donza"
-        />
-      </a>
-      <a
-        role="button"
-        id="navbar-burger-id"
-        class="navbar-burger"
-        aria-label="menu"
-        aria-expanded="false"
-        data-target="navbarCollapse"
-      >
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    </div>
-    <div id="navbar-menu-id" class="navbar-menu" id="navbarCollapse">
-      <div class="navbar-start">
-        <a class="navbar-item" href="{% url 'management:index' %}">Home</a>
-        {% if perms.management.view_lid %}
-        <a class="navbar-item slow-link" data-url="{% url 'management:leden' %}"
-          >Leden</a
-        >
-        {% endif %} {% if perms.management.view_betaling %}
-        <a class="navbar-item" href="{% url 'management:betalingen' %}"
-          >Betalingen</a
-        >
-        {% endif %} {% if perms.management.view_mails %}
-        <a class="navbar-item" href="{% url 'management:mails' %}">Mails</a>
-        {% endif %} {% if perms.management.view_functie %}
-        <a class="navbar-item">Functies</a>
-        {% endif %}
-      </div>
-      <div class="navbar-end">
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-item">Huidig seizoen: {{ current_seizoen.naam }}</a>
-          <div class="navbar-dropdown">
-            {% for seizoen in seizoenen %}
-            <a
-              class="navbar-item"
-              href="{% url 'management:change_seizoen' seizoen.seizoen_id%}?next={{ request.path }}"
-              >{{seizoen.naam}}</a
-            >
-            {% endfor %}
-          </div>
+{% load static %}
+{% load guardian_tags %}
+<nav class="navbar is-fixed-top navbar-dark black"
+     role="navigation"
+     aria-label="main navigation">
+    <!-- Brand & Collapse -->
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'management:index' %}">
+                <img src="{% static 'management/images/logo_header.png' %}"
+                     alt="Logo LDP Donza"
+                     width="120"
+                     height="80"/>
+            </a>
+            <a role="button"
+               id="navbar-burger-id"
+               class="navbar-burger"
+               aria-label="menu"
+               aria-expanded="false"
+               data-target="navbarCollapse">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
         </div>
-      </div>
-    </div>
-  </div>
-</nav>
-
+        <div id="navbar-menu-id" class="navbar-menu" id="navbarCollapse">
+            <div class="navbar-start">
+                <a class="navbar-item" href="{% url 'management:index' %}">Home</a>
+                {% if perms.management.view_lid %}
+                    <a class="navbar-item slow-link" data-url="{% url 'management:leden' %}">Leden</a
+                        >
+                    {% endif %}
+                    {% if perms.management.view_betaling %}
+                        <a class="navbar-item" href="{% url 'management:betalingen' %}">Betalingen</a
+                            >
+                        {% endif %}
+                        {% if perms.management.view_mails %}
+                            <a class="navbar-item" href="{% url 'management:mails' %}">Mails</a>
+                        {% endif %}
+                        {% if perms.management.view_functie %}<a class="navbar-item">Functies</a>{% endif %}
+                    </div>
+                    <div class="navbar-end">
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-item">Huidig seizoen: {{ current_seizoen.naam }}</a>
+                            <div class="navbar-dropdown">
+                                {% for seizoen in seizoenen %}
+                                    <a class="navbar-item"
+                                       href="{% url 'management:change_seizoen' seizoen.seizoen_id %}?next={{ request.path }}">{{ seizoen.naam }}</a
+                                        >
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>

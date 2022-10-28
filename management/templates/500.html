@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-	<div class="col">
-		<div class="row justify-content-center mb-4">
-			<img src="{% static 'management/images/error.png' %}">
-		</div>
-		<div class="row justify-content-center mb-3">
-			<h1>Oeps, er is iets misgegaan</h1>
-		</div>
-	</div>
+    <div class="col">
+        <div class="row justify-content-center mb-4">
+            <img alt="Error.png"
+                 height="100"
+                 width="100"
+                 src="{% static 'management/images/error.png' %}"/>
+        </div>
+        <div class="row justify-content-center mb-3">
+            <h1>Oeps, er is iets misgegaan</h1>
+        </div>
+    </div>
 {% endblock content %}

@@ -1,67 +1,75 @@
 {% extends "base.html" %}
 {% block content %}
-<article class="message">
-    <div class="message-header">
-        <p>Welkom bij het (online) secretariaat van LDP Donza</p>
-    </div>
-    <div class="message-body">
-        <p>Klik door naar de verschillende subpanelen voor verdere acties.</p>
-        <p>Bij <strong>Leden</strong> vind je een overzicht van de verschillende leden in de club, zowel spelers, coaches als
-            ploegverantwoordelijken zitten hier</p>
-        <p>Bij <strong>Ploegen</strong> kan je alle ploegen terugvinden waar jij toegang tot hebt, hier kan je de gegevens van je
-            ploegen downloaden, ploegsamenstellingen wijzigen, etc.</p>
-        <p>Bij <strong>Betalingen</strong> vind je een volledig overzicht van de betalingstoestand van het lidgeld van de club</p>
-        <p>Rechtsboven kan je de historiek zien van de verschillende seizoenen, door te klikken in het dropdownmenu kan
-            je wisselen tussen seizoenen en zal de data automatisch ingeladen worden</p>
-    </div>
-</article>
-<section class="section">
-    <div class="tile is-ancestor">
-        <div class="tile is-parent is-6 is-vertical">
-            <article class="tile is-child notification box">
-                <p class="title">
-                    <i class="fas fa-running"></i>
-                    Aantal Leden
-                </p>
-                <div class="content">
-                    Er zijn momenteel <b>{{aantal_leden}} leden</b> geregistreerd: <b>{{ aantal_spelers }} spelers,
-                    {{ aantal_coaches }} coaches, {{ aantal_pvn }} ploegverantwoordelijken</b>.
-                </div>
-            </article>
-            <article class="tile is-child is-success is-light notification box">
-                <p class="title">
-                    <i class="fas fa-users"></i>
-                    Aantal ploegen
-                </p>
-                <div class="content">
-                    We hadden in het jaar <b>{{current_seizoen.naam}} {{aantal_ploegen}} ploegen</b>. En dit voor een totaal
-                    van <b>{{ aantal_spelers }} spelers</b>.
-                </div>
-            </article>
+    <article class="message">
+        <div class="message-header">
+            <p>Welkom bij het (online) secretariaat van LDP Donza</p>
         </div>
-        <div class="tile is-parent is-6 is-vertical">
-            <article class="tile is-child is-danger is-light notification box">
-                <p class="title">
-                    <i class="fas fa-money-bill-alt"></i>
-                    Betalingen
-                </p>
-                <div class="content">
-                    In het jaar <b>{{current_seizoen.naam}}</b> hadden we <b>{{aantal_betalingen}} betalende leden</b>, waarvan er
-                    <b>{{aantal_onbetaalde}} leden (nog) niet betaald hebben/hadden</b>.
-                </div>
-            </article>
-            <article class="tile is-child is-warning is-light notification box">
-                <p class="title">
-                    <i class="fas fa-money-bill-alt"></i>
-                    Betalingen
-                </p>
-                <div class="content">
-                    Voor het huidige geselecteerde jaar <b>({{current_seizoen.naam}})</b> staan er <b>nog
-                    {{aantal_draft_betalingen}} open.</b> Gelieve deze te versturen, of te verwijderen als ze niet nodig
-                    zijn.
-                </div>
-            </article>
+        <div class="message-body">
+            <p>Klik door naar de verschillende subpanelen voor verdere acties.</p>
+            <p>
+                Bij <strong>Leden</strong> vind je een overzicht van de verschillende leden in de club, zowel spelers, coaches als
+                ploegverantwoordelijken zitten hier
+            </p>
+            <p>
+                Bij <strong>Ploegen</strong> kan je alle ploegen terugvinden waar jij toegang tot hebt, hier kan je de gegevens van je
+                ploegen downloaden, ploegsamenstellingen wijzigen, etc.
+            </p>
+            <p>
+                Bij <strong>Betalingen</strong> vind je een volledig overzicht van de betalingstoestand van het lidgeld van de club
+            </p>
+            <p>
+                Rechtsboven kan je de historiek zien van de verschillende seizoenen, door te klikken in het dropdownmenu kan
+                je wisselen tussen seizoenen en zal de data automatisch ingeladen worden
+            </p>
         </div>
-    </div>
-</section>
+    </article>
+    <section class="section">
+        <div class="tile is-ancestor">
+            <div class="tile is-parent is-6 is-vertical">
+                <article class="tile is-child notification box">
+                    <p class="title">
+                        <i class="fas fa-running"></i>
+                        Aantal Leden
+                    </p>
+                    <div class="content">
+                        Er zijn momenteel <b>{{ aantal_leden }} leden</b> geregistreerd: <b>{{ aantal_spelers }} spelers,
+                        {{ aantal_coaches }} coaches, {{ aantal_pvn }} ploegverantwoordelijken</b>.
+                    </div>
+                </article>
+                <article class="tile is-child is-success is-light notification box">
+                    <p class="title">
+                        <i class="fas fa-users"></i>
+                        Aantal ploegen
+                    </p>
+                    <div class="content">
+                        We hadden in het jaar <b>{{ current_seizoen.naam }} {{ aantal_ploegen }} ploegen</b>. En dit voor een totaal
+                        van <b>{{ aantal_spelers }} spelers</b>.
+                    </div>
+                </article>
+            </div>
+            <div class="tile is-parent is-6 is-vertical">
+                <article class="tile is-child is-danger is-light notification box">
+                    <p class="title">
+                        <i class="fas fa-money-bill-alt"></i>
+                        Betalingen
+                    </p>
+                    <div class="content">
+                        In het jaar <b>{{ current_seizoen.naam }}</b> hadden we <b>{{ aantal_betalingen }} betalende leden</b>, waarvan er
+                        <b>{{ aantal_onbetaalde }} leden (nog) niet betaald hebben/hadden</b>.
+                    </div>
+                </article>
+                <article class="tile is-child is-warning is-light notification box">
+                    <p class="title">
+                        <i class="fas fa-money-bill-alt"></i>
+                        Betalingen
+                    </p>
+                    <div class="content">
+                        Voor het huidige geselecteerde jaar <b>({{ current_seizoen.naam }})</b> staan er <b>nog
+                        {{ aantal_draft_betalingen }} open.</b> Gelieve deze te versturen, of te verwijderen als ze niet nodig
+                        zijn.
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
 {% endblock content %}
