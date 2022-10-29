@@ -10,4 +10,4 @@ jobs:
       - name: Install djlint
         run: pip install djlint
       - name: Run djlint
-        run: djlint --reformat --lint /management/templates
+        run: djlint --reformat --lint management/templates
