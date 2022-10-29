@@ -6,13 +6,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('management', '0011_auto_20200509_2232'),
+        ("management", "0011_auto_20200509_2232"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='ploeg',
-            name='geslacht',
-            field=models.CharField(choices=[('m', 'Man'), ('v', 'Vrouw'), ('x', 'Verkies niet te zeggen')], default='m', max_length=1),
+            model_name="ploeg",
+            name="geslacht",
+            field=models.CharField(
+                choices=[
+                    ("m", "Man"),
+                    ("v", "Vrouw"),
+                    ("x", "Verkies niet te zeggen"),
+                ],
+                default="m",
+                max_length=1,
+            ),
         ),
     ]

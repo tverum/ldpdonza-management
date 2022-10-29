@@ -3,6 +3,10 @@ from django import forms
 
 from ..models import Lid, Ouder, Ploeg
 
+SHIFT_MEERDERE_OPTIES = (
+    "Houd de SHIFT-toets ingedrukt om meerdere opties te selecteren"
+)
+
 
 class LidForm(forms.ModelForm):
 
@@ -27,13 +31,17 @@ class LidForm(forms.ModelForm):
         model = Lid
         exclude = ["updated_at", "created_at", "uid"]
         help_texts = {
-            "functies": "Houd de SHIFT-toets ingedrukt om meerdere functies te selecteren",
-            "familieleden": "Houd de SHIFT-toets ingedrukt om meerdere familieleden te selecteren",
+            "functies": SHIFT_MEERDERE_OPTIES,
+            "familieleden": SHIFT_MEERDERE_OPTIES,
         }
         widgets = {
             "voornaam": forms.TextInput(attrs={"placeholder": "Voornaam"}),
-            "familienaam": forms.TextInput(attrs={"placeholder": "Familienaam"}),
-            "geboortedatum": forms.DateInput(attrs={"placeholder": "YYYY-MM-DD"}),
+            "familienaam": forms.TextInput(
+                attrs={"placeholder": "Familienaam"}
+            ),
+            "geboortedatum": forms.DateInput(
+                attrs={"placeholder": "YYYY-MM-DD"}
+            ),
             "straatnaam_en_huisnummer": forms.TextInput(
                 attrs={"placeholder": "e.g. Teststraat 123 Bus A"}
             ),
@@ -71,7 +79,7 @@ class PloegForm(forms.ModelForm):
         model = Ploeg
         exclude = ["ploeg_id"]
         help_texts = {
-            "min_geboortejaar": "Dit is (onder normale omstandigheden) het oudst dat een speler mag zijn voor deze leeftijdscategorie, laat leeg voor Seniorenploegen",
-            "max_geboortejaar": "Dit is (onder normale omstandigheden) het jongst dat een speler mag zijn voor deze leeftijdscategorie",
-            "uitzonderings_geboortejaar": 'Dit is het jongst dat een speler kan zijn, uitzonderingsgevallen waarbij een speler een jaar hoger speelt meegerekend. Als er geen uitzonderingen mogelijk zijn, vul hetzelfde in als "min jaar"',
+            "min_geboortejaar": "Dit is (onder normale omstandigheden) het oudst dat een speler mag zijn voor deze leeftijdscategorie, laat leeg voor Seniorenploegen",  # noqa: E501
+            "max_geboortejaar": "Dit is (onder normale omstandigheden) het jongst dat een speler mag zijn voor deze leeftijdscategorie",  # noqa: E501
+            "uitzonderings_geboortejaar": 'Dit is het jongst dat een speler kan zijn, uitzonderingsgevallen waarbij een speler een jaar hoger speelt meegerekend. Als er geen uitzonderingen mogelijk zijn, vul hetzelfde in als "min jaar"',  # noqa: E501
         }

@@ -5,17 +5,17 @@ Omvat alle functies voor het genereren van betalingen, versturen van e-mails etc
 """
 import csv
 import io
-import chardet
 
+import chardet
 from django.contrib import messages
 from django.core.mail import mail_admins
 
-from ..models import Betaling, PloegLid, Functie
+from ..models import Betaling, Functie, PloegLid
 
 
 def no_payment(lid, seizoen):
     """
-    Filter om ervoor te zorgen dat voor een gegeven lid geen 2 betalingen gegenereerd worden
+    Filter die aangeeft of er voor een lid reeds een betaling is.
     :param lid: het lid waarvoor de betaling moet gegenereerd worden
     :param seizoen: het seizoen waarvoor de betalingen gegenereerd worden
     :return: boolean die aangeeft of er al betalingen zijn voor dit lid.
@@ -28,8 +28,8 @@ def oldest(lid, familieleden, seizoen):
     Check of het lid in kwestie het oudst spelende lid is van de familie
     :param lid: lid waarvoor de betaling gegenereerd wordt
     :param familieleden: familieleden in de db waarvoor 'spelend_lid' == True
-    :param seizoen: het seizoen in kwestie waarvoor de betaling gegenereerd wordt
-    :return: boolean die aangeeft True is als het lid het oudst is van zijn/haar familie, anders False
+    :param seizoen: het seizoen in kwestie
+    :return: flag voor oudste lid in de familie
     """
     for fl in familieleden:
         if not has_team(fl, seizoen):
@@ -44,12 +44,16 @@ def has_team(lid, seizoen):
     Filter die aangeeft of een lid een ploeg heeft in een bepaald seizoen.
     :param lid: Het lid waarvoor gecheckt moet worden
     :param seizoen: Het seizoen waarvoor betalingen gegenereerd worden
-    :return: True als het lid een ploeg heeft in het seizoen in kwestie. Anders False
+    :return: True als het lid een ploeg heeft in het seizoen in kwestie.
     """
     ploegleden = PloegLid.objects.filter(lid=lid).all()
 
     # filter alleen ploegen van dit seizoen
-    ploegen = [ploeglid for ploeglid in ploegleden if ploeglid.ploeg.seizoen == seizoen]
+    ploegen = [
+        ploeglid
+        for ploeglid in ploegleden
+        if ploeglid.ploeg.seizoen == seizoen
+    ]
 
     return len(ploegen) != 0
 
@@ -58,7 +62,7 @@ def get_discount(lid, seizoen):
     """
     Bereken de discount voor het lid.
     Regels:
-    - 0 als het lid het enigste is van de familie (familieleden worden geïdentificeerd op basis van adres)
+    - 0 als het lid het enigste is van de familie (obv. adres)
     - 0 als het lid het oudste is van de spelende familieleden
     - 50 als het lid niet het oudste is.
     :param lid: het lid waarvoor de discount moet berekend worden
@@ -106,11 +110,11 @@ def get_type(lid):
     """
     Betaal het type betaling dat geldt voor het lid.
     Mogelijkheden zijn:
-    - 'facturatie': Hierbij betaalt het lid zijn/haar lidgeld via sponsoring (dit verloopt via facturatie).
+    - 'facturatie': Hierbij betaalt het lid zijn/haar lidgeld via sponsoring.
         Hier moeten geen herinneringsmails voor gestuurd worden.
-    - 'afbetaling': Hierbij betaalt het lid zijn/haar lidgeld via afbetaling, in schijven.
+    - 'afbetaling': Hierbij betaalt het lid zijn/haar lidgeld in schijven.
         Hier moeten geen herinneringsmails voor verstuurd worden.
-    - 'normaal': Lidgeld wordt eenmalig betaald, herinneringsmails moeten verstuurd worden.
+    - 'normaal': Lidgeld wordt eenmalig betaald.
     :param lid: het lid waarvoor de betaling gegenereerd moet worden.
     :return:
     """
@@ -124,16 +128,16 @@ def get_type(lid):
 
 def mededeling(lid, seizoen):
     """
-    Genereer gestructureerde mededeling op basis van uid van het lid (random gegenereerd bij aanmaak)
-    en het seizoen.
+    Genereer gestructureerde mededeling op basis van uid en seizoen
+    Mededeling wordt random gegenereerd bij aanmaak van het lid
     :param lid: het lid waarvoor de mededeling gegenereerd moet worden
     :param seizoen: het seizoen waarvoor de mededeling moet gegenereerd worden
     :return:
     """
     # begin met de berekening van het getal
-    berekening = (lid.uid + seizoen.startdatum.year * seizoen.einddatum.year) % (
-        10**10
-    )
+    berekening = (
+        lid.uid + seizoen.startdatum.year * seizoen.einddatum.year
+    ) % (10**10)
     # voeg nullen toe indien nodig
     start_nul = "0" * (10 - len(str(berekening)))
     # bereken controlegetal
@@ -147,14 +151,18 @@ def mededeling(lid, seizoen):
         additionele_nul = "0"
 
     # construeer de uiteindelijke gestructureerde mededeling
-    resultaat = start_nul + str(berekening) + additionele_nul + str(laatste_twee)
-    return "***{}/{}/{}***".format(resultaat[:3], resultaat[3:7], resultaat[7:])
+    resultaat = (
+        start_nul + str(berekening) + additionele_nul + str(laatste_twee)
+    )
+    return "***{}/{}/{}***".format(
+        resultaat[:3], resultaat[3:7], resultaat[7:]
+    )
 
 
 def genereer_betaling(lid, seizoen):
     """
     Genereer een openstaande betaling voor een lid.
-    Hierbij wordt er vanuitgegaan dat dit lid nog geen openstaande betalingen heeft.
+    Er vanuitgaande dat het lid geen openstaande betalingen heeft
     (Zou elders moeten gefilterd zijn)
     :param lid: het lid waarvoor de betaling gegenereerd moet worden
     :param seizoen: het seizoen waarvoor de betaling gegenereerd moet worden
@@ -181,9 +189,8 @@ def genereer_betaling(lid, seizoen):
 def genereer_betalingen(leden, seizoen):
     """
     Genereer de betalingen voor de geselecteerde leden
-    :param leden: de lijst met leden waarvoor betalingen gegenereerd moeten worden
-    :param seizoen: het seizoen waarvoor de betalingen gegenereeerd moeten worden
-    :return: None
+    :param leden: de lijst met leden
+    :param seizoen: het seizoen in kwestie
     """
     # filter alle leden waarvoor er reeds een betaling bestaat
     leden_todo = list(filter(lambda c_lid: no_payment(c_lid, seizoen), leden))
@@ -244,7 +251,9 @@ def registreer_betalingen(csv_file, request):
             # check dat de correcte kolomnamen aanwezig zijn in de file
             if not check_keys(keys):
                 # indien niet, error
-                messages.error(request, "CSV-bestand bevat niet de correcte headers")
+                messages.error(
+                    request, "CSV-bestand bevat niet de correcte headers"
+                )
                 return
         else:
             # haal de values uit de row
@@ -277,10 +286,13 @@ def registreer_betalingen(csv_file, request):
                         ),
                     )
                     mail_admins(
-                        "Meerdere records voor mededeling {}".format(g_mededeling),
+                        "Meerdere records voor mededeling {}".format(
+                            g_mededeling
+                        ),
                         """
                     Meerdere records voor mededeling {}.
-                    Tijdens het verwerken van aflossing: {}, werden meerdere betalingsrecords met mededeling {} gevonden.
+                    Tijdens het verwerken van aflossing: {},
+                    werden meerdere betalingsrecords met mededeling {} gevonden.
                     """.format(
                             g_mededeling, aflossing, g_mededeling
                         ),

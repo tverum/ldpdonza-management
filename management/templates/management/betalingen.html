@@ -3,24 +3,24 @@
 {% load render_table from django_tables2 %}
 {% load bootstrap4 %}
 {% block title %}
-Betalingen
+    Betalingen
 {% endblock title %}
 {% block content %}
-<article class="message">
-    <div class="message-header">
-        <p>Betalingsoverzicht</p>
-    </div>
-    <div class="message-body">
-        <p>
-            Hier zie je een overzicht van de betalingen.<br>
-            De betalingen die onder <i>Betalingsontwerpen</i> staan zijn de betalingen waar nog geen mail voor is
-            verstuurd. Door op de knop <b>Mail</b> te klikken kan je een mail versturen met het betalingsvoorstel<br>
-            De betalingen onder <i>Verstuurd</i> zijn reeds verstuurd, maar nog niet betaald. Hiervoor kan je een <b>herinnering
-            sturen</b>
+    <article class="message">
+        <div class="message-header">
+            <p>Betalingsoverzicht</p>
+        </div>
+        <div class="message-body">
+            <p>
+                Hier zie je een overzicht van de betalingen.
+                <br/>
+                De betalingen die onder <em>Betalingsontwerpen</em> staan zijn de betalingen waar nog geen mail voor is
+                verstuurd. Door op de knop <strong>Mail</strong> te klikken kan je een mail versturen met het betalingsvoorstel
+                <br/>
+                De betalingen onder <em>Verstuurd</em> zijn reeds verstuurd, maar nog niet betaald. Hiervoor kan je een <strong>herinnering
+            sturen</strong>
         </p>
-        <p>
-            Hieronder vind je een veld waar je CSV files kan uploaden om de betalingen automatisch in te lezen.
-        </p>
+        <p>Hieronder vind je een veld waar je CSV files kan uploaden om de betalingen automatisch in te lezen.</p>
     </div>
 </article>
 <div class="level">
@@ -32,7 +32,10 @@ Betalingen
             {% csrf_token %}
             <div class="input-group">
                 <div class="custom-file">
-                    <input type="file" name="file" class="custom-file-input" id="inputGroupFile02"/>
+                    <input type="file"
+                           name="file"
+                           class="custom-file-input"
+                           id="inputGroupFile02"/>
                     <label class="custom-file-label" for="inputGroupFile02">Betalingen inlezen</label>
                 </div>
                 <div class="input-group-append">
@@ -43,11 +46,9 @@ Betalingen
     </div>
 </div>
 {% for table in tables %}
-<div class="section has-text-centered">
-    <h1 class="title is-2">
-        {{table.title}}
-    </h1>
-    {% render_table table 'django_tables2/bootstrap4.html' %}
-</div>
+    <div class="section has-text-centered">
+        <h1 class="title is-2">{{ table.title }}</h1>
+        {% render_table table 'django_tables2/bootstrap4.html' %}
+    </div>
 {% endfor %}
 {% endblock content %}

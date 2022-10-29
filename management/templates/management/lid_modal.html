@@ -1,69 +1,66 @@
 <!DOCTYPE html>
-
 <header class="modal-card-head">
-    <h3 class="modal-card-title">Details van {{lid.voornaam}} {{lid.familienaam}}</h3>
+    <h3 class="modal-card-title">Details van {{ lid.voornaam }} {{ lid.familienaam }}</h3>
     <button class="delete modal-close-inside" aria-label="close"></button>
 </header>
-
 <section class="modal-card-body">
     <div class="content">
         <table class="table">
             <tbody>
-            <tr>
-                <th>Naam</th>
-                <th>{{ lid.voornaam }} {{ lid.familienaam }}</th>
-            </tr>
-            <tr>
-                <th>Gsm</th>
-                <th>{{ lid.gsmnummer }}</th>
-            </tr>
-            <tr>
-                <th>Adres</th>
-                <th>{{ lid.straatnaam_en_huisnummer }} {{ lid.gemeente }} ({{ lid.postcode }})</th>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <th>{{ lid.email }}</th>
-            </tr>
+                <tr>
+                    <th>Naam</th>
+                    <th>{{ lid.voornaam }} {{ lid.familienaam }}</th>
+                </tr>
+                <tr>
+                    <th>Gsm</th>
+                    <th>{{ lid.gsmnummer }}</th>
+                </tr>
+                <tr>
+                    <th>Adres</th>
+                    <th>{{ lid.straatnaam_en_huisnummer }} {{ lid.gemeente }} ({{ lid.postcode }})</th>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <th>{{ lid.email }}</th>
+                </tr>
             </tbody>
         </table>
         {% if lid.moeder.gsmnummer or lid.moeder.email %}
-        <hr/>
-        <h2>Ouder 1</h2>
-        <hr/>
-        <table class="table">
-            <tbody>
-            <tr>
-                <th>GSM</th>
-                <th>{{ lid.moeder.gsmnummer}}</th>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <th>{{ lid.moeder.email }}</th>
-            </tr>
-            </tbody>
-        </table>
+            <hr/>
+            <h2>Ouder 1</h2>
+            <hr/>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>GSM</th>
+                        <th>{{ lid.moeder.gsmnummer }}</th>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <th>{{ lid.moeder.email }}</th>
+                    </tr>
+                </tbody>
+            </table>
         {% endif %}
         {% if lid.vader.gsmnummer or lid.vader.email %}
-        <hr/>
-        <h2>Ouder 2</h2>
-        <hr/>
-        <table class="table">
-            <tbody>
-            <tr>
-                <th>GSM</th>
-                <th>{{ lid.vader.gsmnummer}}</th>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <th>{{ lid.vader.email }}</th>
-            </tr>
-            </tbody>
-        </table>
+            <hr/>
+            <h2>Ouder 2</h2>
+            <hr/>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>GSM</th>
+                        <th>{{ lid.vader.gsmnummer }}</th>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <th>{{ lid.vader.email }}</th>
+                    </tr>
+                </tbody>
+            </table>
         {% endif %}
     </div>
 </section>
-
 <footer class="modal-card-foot">
     <button type="button" class="btn btn-default modal-close-inside">Close</button>
 </footer>

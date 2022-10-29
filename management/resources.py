@@ -1,41 +1,52 @@
-from import_export import resources, fields
+from import_export import fields, resources
 from import_export.widgets import ForeignKeyWidget
 from openpyxl import Workbook
 from openpyxl.styles import Font
 
-from .models import Lid, Ouder, Functie, PloegLid, Seizoen
+from .models import Functie, Lid, Ouder, PloegLid, Seizoen
 
 # A mapping of the string representation of Lid to the actual field.
 # No better reverse determination of fields was found so bit of a hack
-LID_FIELDS = dict(zip(
-    [str(field) for field in Lid._meta.get_fields() if not field.is_relation],
-    [field for field in Lid._meta.get_fields() if not field.is_relation]
-))
+LID_FIELDS = dict(
+    zip(
+        [
+            str(field)
+            for field in Lid._meta.get_fields()
+            if not field.is_relation
+        ],
+        [field for field in Lid._meta.get_fields() if not field.is_relation],
+    )
+)
 
-OUDER_FIELDS = ['ouder 1: gsm', 'ouder 1: email', 'ouder 2: gsm', 'ouder 2: email']
-BETALING_FIELDS = ['origineel bedrag', 'afgelost bedrag']
+OUDER_FIELDS = [
+    "ouder 1: gsm",
+    "ouder 1: email",
+    "ouder 2: gsm",
+    "ouder 2: email",
+]
+BETALING_FIELDS = ["origineel bedrag", "afgelost bedrag"]
 
 
 class CoachLidDownloadResource(resources.ModelResource):
     ouder_1_gsm = fields.Field(
         attribute="moeder",
         column_name="Ouder 1: Gsmnummer",
-        widget=ForeignKeyWidget(Ouder, "gsmnummer")
+        widget=ForeignKeyWidget(Ouder, "gsmnummer"),
     )
     ouder_2_gsm = fields.Field(
         attribute="vader",
         column_name="Ouder 2: Gsmnummer",
-        widget=ForeignKeyWidget(Ouder, "gsmnummer")
+        widget=ForeignKeyWidget(Ouder, "gsmnummer"),
     )
     ouder_1_mail = fields.Field(
         attribute="moeder",
         column_name="Ouder 1: Mail",
-        widget=ForeignKeyWidget(Ouder, "email")
+        widget=ForeignKeyWidget(Ouder, "email"),
     )
     ouder_2_mail = fields.Field(
         attribute="vader",
         column_name="Ouder 2: Mail",
-        widget=ForeignKeyWidget(Ouder, "email")
+        widget=ForeignKeyWidget(Ouder, "email"),
     )
 
     class Meta:
@@ -52,30 +63,38 @@ class CoachLidDownloadResource(resources.ModelResource):
         )
 
 
-def create_team_workbook(queryset_coaches, queryset_spelers, queryset_pvn, queryset_hh):
+def create_team_workbook(
+    queryset_coaches, queryset_spelers, queryset_pvn, queryset_hh
+):
     workbook = Workbook()
 
     # --- SPELERS ---
     # Get active worksheet/tab
     columns = [
-        "Voornaam", "Familienaam", "Gsmnummer", "Email",
-        "GSM Ouder 1", "Email Ouder 1", "GSM Ouder 2", "Email Ouder 2"
+        "Voornaam",
+        "Familienaam",
+        "Gsmnummer",
+        "Email",
+        "GSM Ouder 1",
+        "Email Ouder 1",
+        "GSM Ouder 2",
+        "Email Ouder 2",
     ]
     worksheet = workbook.active
-    worksheet.title = 'Spelers'
+    worksheet.title = "Spelers"
 
     cell = worksheet.cell(row=2, column=2)
     cell.value = "SPELERS"
-    cell.font = Font(name='Calibri', bold=True, size=20)
+    cell.font = Font(name="Calibri", bold=True, size=20)
     row_num = 4
 
-    create_team_sheet(columns, queryset_spelers, row_num, worksheet, minimal=False)
+    create_team_sheet(
+        columns, queryset_spelers, row_num, worksheet, minimal=False
+    )
 
     # --- COACHES ---
     # Create new worksheet
-    columns = [
-        "Voornaam", "Familienaam", "Gsmnummer", "Email"
-    ]
+    columns = ["Voornaam", "Familienaam", "Gsmnummer", "Email"]
     worksheet = workbook.create_sheet(
         title="Coaches",
         index=1,
@@ -83,15 +102,15 @@ def create_team_workbook(queryset_coaches, queryset_spelers, queryset_pvn, query
 
     cell = worksheet.cell(row=2, column=2)
     cell.value = "COACHES"
-    cell.font = Font(name='Calibri', bold=True, size=20)
+    cell.font = Font(name="Calibri", bold=True, size=20)
     row_num = 4
 
-    create_team_sheet(columns, queryset_coaches, row_num, worksheet, minimal=True)
+    create_team_sheet(
+        columns, queryset_coaches, row_num, worksheet, minimal=True
+    )
 
     # --- PLOEGVERANTWOORDELIJKEN ---
-    columns = [
-        "Voornaam", "Familienaam", "Gsmnummer", "Email"
-    ]
+    columns = ["Voornaam", "Familienaam", "Gsmnummer", "Email"]
     worksheet = workbook.create_sheet(
         title="Ploegverantwoordelijken",
         index=1,
@@ -99,15 +118,13 @@ def create_team_workbook(queryset_coaches, queryset_spelers, queryset_pvn, query
 
     cell = worksheet.cell(row=2, column=2)
     cell.value = "PLOEGVERANTWOORDELIJKEN"
-    cell.font = Font(name='Calibri', bold=True, size=20)
+    cell.font = Font(name="Calibri", bold=True, size=20)
     row_num = 4
 
     create_team_sheet(columns, queryset_pvn, row_num, worksheet, minimal=True)
 
     # --- HELPENDE HANDEN ---
-    columns = [
-        "Voornaam", "Familienaam", "Gsmnummer", "Email"
-    ]
+    columns = ["Voornaam", "Familienaam", "Gsmnummer", "Email"]
     worksheet = workbook.create_sheet(
         title="Helpende Handen",
         index=1,
@@ -115,7 +132,7 @@ def create_team_workbook(queryset_coaches, queryset_spelers, queryset_pvn, query
 
     cell = worksheet.cell(row=2, column=2)
     cell.value = "HELPENDE HANDEN"
-    cell.font = Font(name='Calibri', bold=True, size=20)
+    cell.font = Font(name="Calibri", bold=True, size=20)
     row_num = 4
 
     create_team_sheet(columns, queryset_hh, row_num, worksheet, minimal=True)
@@ -177,11 +194,17 @@ def create_general_workbook(ploegen, selected_fields):
 
     seizoen = ploegen[0].seizoen
 
-    if 'management.ouders' in selected_fields:
-        selected_fields = [field for field in selected_fields if field != 'management.ouders']
+    if "management.ouders" in selected_fields:
+        selected_fields = [
+            field for field in selected_fields if field != "management.ouders"
+        ]
         include_ouders = True
-    if 'management.betaling' in selected_fields:
-        selected_fields = [field for field in selected_fields if field != 'management.betaling']
+    if "management.betaling" in selected_fields:
+        selected_fields = [
+            field
+            for field in selected_fields
+            if field != "management.betaling"
+        ]
         include_betaling = True
 
     selected_fields = [LID_FIELDS[field] for field in selected_fields]
@@ -190,10 +213,18 @@ def create_general_workbook(ploegen, selected_fields):
     worksheet = workbook.active
 
     # --- SPELERS ---
-    worksheet.title = 'Spelers'
+    worksheet.title = "Spelers"
 
     speler = Functie.objects.get(functie="Speler")
-    create_sheet(ploegen, selected_fields, worksheet, speler, include_ouders, include_betaling, seizoen)
+    create_sheet(
+        ploegen,
+        selected_fields,
+        worksheet,
+        speler,
+        include_ouders,
+        include_betaling,
+        seizoen,
+    )
 
     # --- COACHES ---
     worksheet = workbook.create_sheet(
@@ -201,15 +232,27 @@ def create_general_workbook(ploegen, selected_fields):
         index=1,
     )
     coach = Functie.objects.get(functie="Coach")
-    create_sheet(ploegen, selected_fields, worksheet, coach, False, False, seizoen)
+    create_sheet(
+        ploegen, selected_fields, worksheet, coach, False, False, seizoen
+    )
 
     # --- PLOEGVERANTWOORDELIJKEN ---
     worksheet = workbook.create_sheet(
         title="Ploegverantwoordelijken",
         index=1,
     )
-    ploegverantwoordelijke = Functie.objects.get(functie="Ploegverantwoordelijke")
-    create_sheet(ploegen, selected_fields, worksheet, ploegverantwoordelijke, False, False, seizoen)
+    ploegverantwoordelijke = Functie.objects.get(
+        functie="Ploegverantwoordelijke"
+    )
+    create_sheet(
+        ploegen,
+        selected_fields,
+        worksheet,
+        ploegverantwoordelijke,
+        False,
+        False,
+        seizoen,
+    )
 
     # --- HELPENDE HANDEN ---
     worksheet = workbook.create_sheet(
@@ -217,12 +260,27 @@ def create_general_workbook(ploegen, selected_fields):
         index=1,
     )
     helpende_handen = Functie.objects.get(functie="Helpende Handen")
-    create_sheet(ploegen, selected_fields, worksheet, helpende_handen, False, False, seizoen)
+    create_sheet(
+        ploegen,
+        selected_fields,
+        worksheet,
+        helpende_handen,
+        False,
+        False,
+        seizoen,
+    )
     return workbook
 
 
-def create_sheet(ploegen, selected_fields, worksheet, functie: Functie, include_ouders: bool, include_betaling: bool,
-                 seizoen: Seizoen):
+def create_sheet(
+    ploegen,
+    selected_fields,
+    worksheet,
+    functie: Functie,
+    include_ouders: bool,
+    include_betaling: bool,
+    seizoen: Seizoen,
+):
     """
     Create a sheet for the specific function
     :param ploegen: the ploegen for which the exported xlsx should be generated
@@ -230,13 +288,13 @@ def create_sheet(ploegen, selected_fields, worksheet, functie: Functie, include_
     :param worksheet:
     :param functie: the functie for which to create the sheet
     :param include_ouders: if the export should include the ouders or not
-    :param include_betaling: if the export should include payment records or not
+    :param include_betaling: if the export should include payment records
     :param seizoen: the seizoen to export the betalingen for
     :return:
     """
     cell = worksheet.cell(row=2, column=2)
     cell.value = functie.functie
-    cell.font = Font(name='Calibri', bold=True, size=20)
+    cell.font = Font(name="Calibri", bold=True, size=20)
     row_num = 4
     # Assign the titles for each cell of the header
     cell = worksheet.cell(row=row_num, column=1)
@@ -269,34 +327,41 @@ def create_sheet(ploegen, selected_fields, worksheet, functie: Functie, include_
         for lid in queryset_spelers:
             row_num += 1
 
-            if 'management.ouders' in selected_fields:
-                s_fields = [field for field in selected_fields if field is not 'management.ouders']
-                pass
+            if "management.ouders" in selected_fields:
+                selected_fields = [
+                    field
+                    for field in selected_fields
+                    if field != "management.ouders"
+                ]
 
-            row = [str(getattr(lid, field.name)) if getattr(lid, field.name) is not None else '' for field in
-                   selected_fields]
+            row = [
+                str(getattr(lid, field.name))
+                if getattr(lid, field.name) is not None
+                else ""
+                for field in selected_fields
+            ]
 
             if include_ouders:
                 if lid.vader:
                     row.append(str(lid.vader.gsmnummer))
                     row.append(str(lid.vader.email))
                 else:
-                    row.append('')
-                    row.append('')
+                    row.append("")
+                    row.append("")
                 if lid.moeder:
                     row.append(str(lid.moeder.gsmnummer))
                     row.append(str(lid.moeder.email))
                 else:
-                    row.append('')
-                    row.append('')
+                    row.append("")
+                    row.append("")
             if include_betaling:
                 betaling = lid.betaling_set.filter(seizoen=seizoen)
                 if betaling:
                     row.append(betaling[0].origineel_bedrag)
                     row.append(betaling[0].afgelost_bedrag)
                 else:
-                    row.append('nvt.')
-                    row.append('nvt.')
+                    row.append("nvt.")
+                    row.append("nvt.")
 
             # Assign the data for each cell of the row
             cell = worksheet.cell(row=row_num, column=1)

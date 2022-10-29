@@ -5,15 +5,15 @@ from django.http import HttpResponse
 from guardian.admin import GuardedModelAdmin
 
 from .models import (
-    Lid,
+    Betaling,
     Functie,
+    Lid,
+    LidgeldKlasse,
     Ouder,
     Ploeg,
     PloegKenmerk,
     PloegLid,
     Seizoen,
-    LidgeldKlasse,
-    Betaling,
 )
 
 
@@ -23,12 +23,14 @@ class ExportCsvMixin:
         field_names = [field.name for field in meta.fields]
 
         response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = "attachment; filename={}.csv".format(meta)
+        response["Content-Disposition"] = "attachment; filename={}.csv".format(
+            meta
+        )
         writer = csv.writer(response)
 
         writer.writerow(field_names)
         for obj in queryset:
-            row = writer.writerow([getattr(obj, field) for field in field_names])
+            writer.writerow([getattr(obj, field) for field in field_names])
 
         return response
 

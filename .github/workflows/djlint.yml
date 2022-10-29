@@ -1,0 +1,13 @@
+name: djlint formatting & linting
+
+on: [push, pull_request]
+
+jobs:
+  format-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install djlint
+        run: pip install djlint
+      - name: Run djlint
+        run: djlint --reformat --lint management/templates

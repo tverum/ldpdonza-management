@@ -58,3 +58,11 @@ a {
   display: block;
   overflow: visible;
 }
+
+.black {
+  background-color: #000000;
+}
+
+.center {
+  text-align: center;
+}

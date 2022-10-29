@@ -1,30 +1,26 @@
 from datetime import datetime as datetime
-from management.mail.group_mail import group_mail
-from pprint import pprint
-from tempfile import template
 
 from bootstrap_modal_forms.generic import BSModalReadView
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.contrib.auth.decorators import login_required
-from django.contrib.messages.api import warning
-from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect, reverse, render
+from django.http import Http404, HttpResponse
+from django.shortcuts import redirect, render, reverse
 from django.template import loader
 from django.views import generic
 from django.views.generic.edit import FormView, UpdateView
 from django_filters.views import FilterView
-from django_tables2.views import SingleTableMixin, MultiTableMixin
-from guardian.mixins import PermissionRequiredMixin as GuardianPermissionMixin
+from django_tables2.views import MultiTableMixin, SingleTableMixin
 
-from .mail.send_mail import lidgeld_mail, send_herinnering, bevestig_betaling
+from management.mail.group_mail import group_mail
+
+from .mail.send_mail import bevestig_betaling, lidgeld_mail, send_herinnering
 from .main.betalingen import genereer_betalingen, registreer_betalingen
 from .main.ledenbeheer import import_from_csv, lid_update_uid
-from .models import Lid, Ploeg, PloegLid, Betaling, Functie
+from .models import Betaling, Functie, Lid, Ploeg, PloegLid
 from .resources import (
     CoachLidDownloadResource,
-    create_team_workbook,
     create_general_workbook,
+    create_team_workbook,
 )
 
 # Deze lijn moet er in blijven staan om de TeamSelector te kunnen laden
@@ -32,16 +28,11 @@ from .resources import (
 from .utils import get_current_seizoen
 from .visual.filters import LidFilter
 from .visual.forms import LidForm, OuderForm, PloegForm
-from .visual.tables import (
-    LidTable,
-    DraftTable,
-    VerstuurdTable,
-    BetaaldTable,
-)
+from .visual.tables import BetaaldTable, DraftTable, LidTable, VerstuurdTable
 
 PERMISSION_DENIED = """
             Je hebt niet de juiste permissies om deze pagina te bekijken.
-            Indien je dit wel nodig hebt, contacteer de webmaster. (TODO: add link)
+            Indien je dit wel nodig hebt, contacteer de webmaster.
             """
 
 """
@@ -80,9 +71,9 @@ class IndexView(generic.TemplateView):
             Betaling.objects.filter(seizoen=get_current_seizoen(self.request))
         )
         aantal_onbetaalde = len(
-            Betaling.objects.filter(seizoen=get_current_seizoen(self.request)).exclude(
-                status="voltooid"
-            )
+            Betaling.objects.filter(
+                seizoen=get_current_seizoen(self.request)
+            ).exclude(status="voltooid")
         )
         aantal_draft_betalingen = len(
             Betaling.objects.filter(
@@ -169,7 +160,9 @@ class LidTableView(PermissionRequiredMixin, SingleTableMixin, FilterView):
         return redirect(reverse("management:leden"), permanent=True)
 
 
-class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.TemplateView):
+class BetalingTableView(
+    PermissionRequiredMixin, MultiTableMixin, generic.TemplateView
+):
     model = Betaling
     permission_required = ("management.view_betaling",)
     template_name = "management/betalingen.html"
@@ -178,7 +171,9 @@ class BetalingTableView(PermissionRequiredMixin, MultiTableMixin, generic.Templa
     def get_tables(self):
         request = self.request
         seizoen = get_current_seizoen(request)
-        draft_queryset = Betaling.objects.filter(status="draft", seizoen=seizoen).all()
+        draft_queryset = Betaling.objects.filter(
+            status="draft", seizoen=seizoen
+        ).all()
         verstuurd_queryset = Betaling.objects.filter(
             status="mail_sent", seizoen=seizoen
         ).all()
@@ -237,19 +232,17 @@ def genereer(request):
         # genereer de betalingen voor de geselecteerde leden
         genereer_betalingen(geselecteerde_leden, seizoen)
 
-        messages.success(request, "Betalingen voor geselecteerde leden gegenereerd")
+        messages.success(
+            request, "Betalingen voor geselecteerde leden gegenereerd"
+        )
         return redirect(reverse("management:leden"), permanent=True)
     else:
         raise Http404("Methode bestaat niet. Deze pagina is niet beschikbaar.")
 
 
 def create_ouder(request):
-    lid_form = LidForm(request.POST.get("lid_form"))
     ouder_form = OuderForm(request.POST)
     redirect_path = request.POST.get("next")
-    context = {
-        "form": lid_form,
-    }
     if ouder_form.is_valid():
         ouder_form.save()
     else:
@@ -336,7 +329,9 @@ def export_ploeg_csv(request, pk):
     coachdownload_resource = CoachLidDownloadResource()
     dataset = coachdownload_resource.export(queryset)
     response = HttpResponse(dataset.csv, content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="{}"'.format(download_name)
+    response["Content-Disposition"] = 'attachment; filename="{}"'.format(
+        download_name
+    )
     return response
 
 
@@ -356,7 +351,7 @@ def export_ploeg_xlsx(request, pk):
     ) = retrieve_querysets(pk)
 
     response = HttpResponse(
-        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        content_type="application/vnd.ms-excel",
     )
     response[
         "Content-Disposition"
@@ -376,9 +371,15 @@ def export_ploeg_xlsx(request, pk):
 def retrieve_querysets(pk):
     """
     Retrieve the querysets corresponding with the primary key.
-    Help function for the export to xlsx
-    :param pk: the primary key of the team for which the download should be executed
-    :return:
+    Help function for the export to xlsx.
+    Will retrieve:
+        - Ploeg
+        - Coaches
+        - Spelers
+        - Ploegverantwoordelijken
+        - Helpende handen
+    :param pk: the primary key of the team
+    :return: De ploeg, querysets van de coaches, spelers, pvn en hhn.
     """
     ploeg = Ploeg.objects.get(pk=pk)
     functie_speler = Functie.objects.get(functie="Speler")
@@ -402,9 +403,10 @@ def retrieve_querysets(pk):
 
 def export_ploeg_preview(request):
     """
-    After selecting the ploegen to export, save these in the session and proceed to selecting the variables to export
+    After selecting the ploegen to export
+    Save in session and select variables to export
     :param request: request containing the requested teams
-    :return:
+    :return: HttpResponse
     """
     # Retrieve the selection of teams to be exported from the request
     pks = request.POST.getlist("selection")
@@ -424,7 +426,9 @@ def export_ploeg_preview(request):
     fields = Lid._meta.get_fields(include_parents=False)
     fields = [field for field in fields if not field.is_relation]
     return HttpResponse(
-        template.render(request=request, context={"fields": fields, "ploegen": ploegen})
+        template.render(
+            request=request, context={"fields": fields, "ploegen": ploegen}
+        )
     )
 
 
@@ -438,7 +442,9 @@ def exporteer_ploegen(request):
     # Retrieve the selected fields from the form
     ploegen = request.session.get("ploegen", [])
     selected_ploegen = list(Ploeg.objects.filter(pk__in=ploegen))
-    selected_fields = [f for f in request.POST.values() if f.startswith("management")]
+    selected_fields = [
+        f for f in request.POST.values() if f.startswith("management")
+    ]
 
     if not selected_fields:
         messages.warning(
@@ -448,7 +454,7 @@ def exporteer_ploegen(request):
 
     # Create a response with the returned export file
     response = HttpResponse(
-        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        content_type="application/vnd.ms-excel",
     )
     response[
         "Content-Disposition"
@@ -456,7 +462,6 @@ def exporteer_ploegen(request):
         date=datetime.now().strftime("%d-%m-%Y"),
     )
 
-    # Create a workbook which shows the selected fields for the selected ploegen
     workbook = create_general_workbook(selected_ploegen, selected_fields)
     workbook.save(response)
     return response
@@ -489,7 +494,8 @@ def groep_mail(request):
             request,
             """
         Er ontbreken velden om een geldige mail te construeren.
-        Zorg er zeker voor dat er een mail-template geselecteerd is, er een groep geselecteerd is om naar te sturen 
+        Zorg er zeker voor dat er een mail-template geselecteerd is,
+        er een groep geselecteerd is om naar te sturen
         en er een onderwerp en reply veld is ingesteld.
         """,
         )

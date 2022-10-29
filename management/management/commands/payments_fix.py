@@ -1,12 +1,11 @@
-from django.core.management.base import BaseCommand
-
-from ...models import Lid, Betaling
-from ...utils import get_current_seizoen
-
+import csv
 from datetime import datetime
 
 import pandas as pd
-import csv
+from django.core.management.base import BaseCommand
+
+from ...models import Betaling, Lid
+from ...utils import get_current_seizoen
 
 
 class Command(BaseCommand):
@@ -25,7 +24,9 @@ class Command(BaseCommand):
         for _, _lidgeld in cleaned_lidgelden.iterrows():
             _lid = Lid.objects.get(club_id=_lidgeld["club id"])
 
-            _betaling_filter = Betaling.objects.filter(lid=_lid, seizoen=_seizoen)
+            _betaling_filter = Betaling.objects.filter(
+                lid=_lid, seizoen=_seizoen
+            )
 
             if _betaling_filter.exists():
                 continue
@@ -80,7 +81,9 @@ def clean(_lidgelden: pd.DataFrame) -> pd.DataFrame:
 
     Returns: Een gecleande lijst met lidgelden
     """
-    _lidgelden["Lidgeld"] = _lidgelden.groupby(["club id"])["Lidgeld"].transform("max")
+    _lidgelden["Lidgeld"] = _lidgelden.groupby(["club id"])[
+        "Lidgeld"
+    ].transform("max")
     _lidgelden = _lidgelden.drop_duplicates(subset=["club id"])
     _lidgelden = _lidgelden[_lidgelden["Lidgeld"].notna()]
     return _lidgelden

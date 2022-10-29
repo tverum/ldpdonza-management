@@ -6,20 +6,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('management', '0017_auto_20201019_1952'),
+        ("management", "0017_auto_20201019_1952"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PloegKenmerk',
+            name="PloegKenmerk",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('kenmerk', models.CharField(max_length=20)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("kenmerk", models.CharField(max_length=20)),
             ],
         ),
         migrations.AddField(
-            model_name='ploeg',
-            name='kenmerken',
-            field=models.ManyToManyField(blank=True, to='management.PloegKenmerk'),
+            model_name="ploeg",
+            name="kenmerken",
+            field=models.ManyToManyField(
+                blank=True, to="management.PloegKenmerk"
+            ),
         ),
     ]

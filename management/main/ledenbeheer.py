@@ -4,14 +4,14 @@ Documentatie voor ledenbeheer.
 Omvat alle functies voor het importeren, wijzigen en verwijderen van leden
 """
 
-import io
 import csv
 import datetime
+import io
 import re
 
 from django.contrib import messages
 
-from ..models import Ouder, Lid, Functie, MAN, VROUW, ANDER
+from ..models import ANDER, MAN, VROUW, Functie, Lid, Ouder
 from .utils import generate_uid
 
 GSM_PATTERN = r"0(\d{3})/(\d+)"
@@ -26,11 +26,13 @@ def import_from_csv(csv_file, request):
     :return: None
     """
     # set up the filestream
-    data_set = csv_file.read().decode('UTF-8')
+    data_set = csv_file.read().decode("UTF-8")
     io_string = io.StringIO(data_set)
 
     keys = []
-    for index, row in enumerate(csv.reader(io_string, delimiter=';', quotechar="|")):
+    for index, row in enumerate(
+        csv.reader(io_string, delimiter=";", quotechar="|")
+    ):
         if index == 0:
             # something is messed up with the first column of the csv file
             keys = [key.strip() for key in row]
@@ -42,12 +44,10 @@ def import_from_csv(csv_file, request):
                 gescheiden = True if row["Gescheiden ouders?"] else False
 
                 ouder_1, _ = Ouder.objects.get_or_create(
-                    gsmnummer=row["Gsm Mama"],
-                    email=row["Email Mama"]
+                    gsmnummer=row["Gsm Mama"], email=row["Email Mama"]
                 )
                 ouder_2, _ = Ouder.objects.get_or_create(
-                    gsmnummer=row["Gsm Papa"],
-                    email=row["Email Papa"]
+                    gsmnummer=row["Gsm Papa"], email=row["Email Papa"]
                 )
 
                 gsm_nummer = format_gsm_nummer(row)
@@ -59,17 +59,32 @@ def import_from_csv(csv_file, request):
                 else:
                     geslacht = ANDER
 
-                update_lid(geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2, row)
+                update_lid(
+                    geboortedatum,
+                    gescheiden,
+                    gsm_nummer,
+                    geslacht,
+                    ouder_1,
+                    ouder_2,
+                    row,
+                )
 
             except Exception as e:
                 if row["Voornaam"] and row["Familienaam"]:
-                    messages.error(request, """
+                    messages.error(
+                        request,
+                        """
                     <p>Probleem bij het processen van rij {}: {} {}</p>
                     <p>{}</p>
-                    """.format(index + 1, row["Voornaam"], row["Familienaam"], e))
+                    """.format(
+                            index + 1, row["Voornaam"], row["Familienaam"], e
+                        ),
+                    )
 
 
-def update_lid(geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2, row):
+def update_lid(
+    geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2, row
+):
     """
     Update het lid in de database
     :param geboortedatum: geboortedatum in correct format
@@ -83,7 +98,9 @@ def update_lid(geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2
     """
 
     # Fetch het lid van de database, add functie en save
-    lid, created = get_lid(geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2, row)
+    lid, created = get_lid(
+        geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2, row
+    )
 
     # Update de velden
     lid_update_functies(lid, row)
@@ -109,24 +126,23 @@ def lid_update_uid(lid):
 def lid_update_familieleden(lid):
     """
     Update de familieleden van het lid.
-    Gebeurt op basis van het adres. Mensen die op hetzelfde adres wonen worden verondersteld om tot hetzelfde gezin te behoren
+    Gebeurt op basis van het adres.
+    Het gezin wordt bepaald op basis van adres.
     :param lid: Het lid dat moet geupdate worden
     :return: None
     """
-    # selecteer alle leden die op hetzelfde adres wonen, met uitzondering van het lid zelf
     familieleden = Lid.objects.filter(
         straatnaam_en_huisnummer=lid.straatnaam_en_huisnummer,
-        postcode=lid.postcode
-    ).exclude(
-        club_id=lid.club_id
-    )
+        postcode=lid.postcode,
+    ).exclude(club_id=lid.club_id)
     for familielid in familieleden:
         lid.familieleden.add(familielid.club_id)
 
 
 def lid_update_functies(lid, row):
     """
-    Voeg de functies van het lid toe. Pas ook eventuele flags aan op basis van de functie.
+    Voeg de functies van het lid toe.
+    Pas ook eventuele flags aan op basis van de functie.
     :param lid: Het lid dat geupdate moet worden
     :param row: Row van de csv-reader
     :return:
@@ -134,9 +150,7 @@ def lid_update_functies(lid, row):
     # Retrieve de functie, of creëer indien die nog niet bestaat
     if not row["Functie"]:
         return
-    functie, _ = Functie.objects.get_or_create(
-        functie=row["Functie"]
-    )
+    functie, _ = Functie.objects.get_or_create(functie=row["Functie"])
     lid.functies.add(functie)
 
     # Alleen spelers gelden als sportieve leden en moeten lidgeld betalen
@@ -145,11 +159,14 @@ def lid_update_functies(lid, row):
         lid.betalend_lid = True
 
 
-def get_lid(geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2, row):
+def get_lid(
+    geboortedatum, gescheiden, gsm_nummer, geslacht, ouder_1, ouder_2, row
+):
     """
-    Creëer het lid indien het nog niet bestaat, anders, fetch het uit de database.
+    Creëer het lid indien het nog niet bestaat.
+    Anders, fetch het uit de database.
     :param geboortedatum: Correct geformatte geboortedatum
-    :param gescheiden: Boolean die aanduidt of er sprake is van gescheiden ouders
+    :param gescheiden: vlag voor gescheiden ouders
     :param gsm_nummer: Correct geformat gsmnummer
     :param geslacht: Correct geformat geslacht
     :param ouder_1: Ouder instantie
@@ -196,6 +213,11 @@ def format_geboortedatum(row):
     :return: De geboortedatum in het correcte formaat
     """
     # parse the birthdate to the correct format
-    geboortedatum = datetime.datetime.strptime(
-        row["Geboortedatum"], '%d/%m/%Y').strftime('%Y-%m-%d') if row["Geboortedatum"] else None
+    geboortedatum = (
+        datetime.datetime.strptime(row["Geboortedatum"], "%d/%m/%Y").strftime(
+            "%Y-%m-%d"
+        )
+        if row["Geboortedatum"]
+        else None
+    )
     return geboortedatum

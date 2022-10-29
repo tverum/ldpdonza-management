@@ -104,7 +104,7 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa: E501
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
@@ -163,4 +163,4 @@ FIXTURE_DIRS = (os.path.join(os.path.dirname(BASE_DIR), "config", "fixtures"),)
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 # set default type of auto-created primary keys
-DEFAULT_AUTO_FIELD='django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

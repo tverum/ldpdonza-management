@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 {% load static %}
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1,
-            shrink-to-fit=no">
-
+    <title>Lidgeld LDP Donza</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous"/>
+    <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext'
+          rel='stylesheet'
+          type='text/css'/>
 </head>
-
 <body class="container-fluid">
     <main role="main" class="flex-shrink-0">
         <div class="content container pt-5">
@@ -19,16 +21,15 @@
                 <div class="alert alert-secondary">
                     Mail verstuurd naar:
                     <ul>
-                        {% for adres in emailadressen %}
-                        <li>{{adres}}</li>
-                        {% endfor %}
+                        {% for adres in emailadressen %}<li>{{ adres }}</li>{% endfor %}
                     </ul>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
                     <p>
-                        Beste Ouders,<br>
+                        Beste Ouders,
+                        <br/>
                         Beste Speler/Speelster,
                     </p>
                     <p>
@@ -49,9 +50,9 @@
                         waar we u trouwens zo snel als mogelijk opnieuw willen ontvangen.
                     </p>
                     <p>
-                        Het inschrijvingsgeld bedraagt voor jullie <b>{{betaling.origineel_bedrag}} EUR per speler per
-                            seizoen</b> en is te
-                        betalen op <b>rekeningnummer BE91 7370 3583 5176</b> van LDP Donza <b>voor {{datum_verval}}</b>.
+                        Het inschrijvingsgeld bedraagt voor jullie <strong>{{ betaling.origineel_bedrag }} EUR per speler per
+                        seizoen</strong> en is te
+                        betalen op <strong>rekeningnummer BE91 7370 3583 5176</strong> van LDP Donza <strong>voor {{ datum_verval }}</strong>.
                         Gebruik aub
                         uitsluitend onderstaande gestructureerde mededeling bij de betaling, dat vereenvoudigt de
                         verdere
@@ -59,8 +60,8 @@
                     </p>
                     <div class="card mb-2">
                         <div class="card-body">
-                            <strong>Gestructureerde mededeling voor <b>{{lid.voornaam}} {{lid.familienaam}}</b>:
-                                <b>{{betaling.mededeling}}</b></strong>
+                            <strong>Gestructureerde mededeling voor <strong>{{ lid.voornaam }} {{ lid.familienaam }}</strong>:
+                            <strong>{{ betaling.mededeling }}</strong></strong>
                         </div>
                     </div>
                     <p>
@@ -82,15 +83,19 @@
                         senioren te komen bekijken. Meer info hierover op www.ldpdonza.be.
                     </p>
                     <p>
-                        <img src='cid:signature' />
+                        <img src="cid:signature" alt="signature.png" height="100" width="200"/>
                     </p>
                     <footer>
                         <p>
                             <small>
-                                B.B.C. LDP Donza V.Z.W.<br>
-                                's Gravenstraat 130, 9810 Nazareth<br>
-                                BE0464.016.722<br>
-                                RPR Gent afdeling Gent<br>
+                                B.B.C. LDP Donza V.Z.W.
+                                <br/>
+                                's Gravenstraat 130, 9810 Nazareth
+                                <br/>
+                                BE0464.016.722
+                                <br/>
+                                RPR Gent afdeling Gent
+                                <br/>
                                 info@ldpdonza.be - www.ldpdonza.be
                             </small>
                         </p>
