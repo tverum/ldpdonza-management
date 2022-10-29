@@ -1,6 +1,6 @@
 name: djlint formatting & linting
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   format-and-lint:
