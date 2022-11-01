@@ -63,3 +63,7 @@ python manage.py runserver              # start up development server
 ```
 
 Tadaaaa, you can start developing. The development server will update
+
+## TODO:
+
+- Add grant all privileges on TEST database for running tests.
