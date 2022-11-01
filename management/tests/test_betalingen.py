@@ -22,7 +22,21 @@ class GenerateBetalingTeamSuccessTestCase(GenericBetalingTestCase):
         - Single person, single team. Betaling should contain the correct amount
     """
 
-    def test_single_team_success(self):
+    def test_no_team(self):
+        """
+        Test that no betalingen are generated when a person is not in a team.
+        """
+        seizoen = Seizoen.objects.get(pk=1)
+        lid = Lid.objects.get(pk=1)
+
+        # Genereer betaling
+        genereer_betaling(lid=lid, seizoen=seizoen)
+
+        # Check that there is no betaling generated
+        betalingen = Betaling.objects.all()
+        self.assertEqual(len(betalingen), 0)
+
+    def test_single_team(self):
         """
         Test the successful generation of Betaling for a single person in a single team.
         """
@@ -51,7 +65,7 @@ class GenerateBetalingTeamSuccessTestCase(GenericBetalingTestCase):
         self.assertEqual(res_betaling.seizoen, seizoen)
         self.assertNotEqual(res_betaling.mededeling, "")
 
-    def test_multiple_teams_success_1(self):
+    def test_multiple_teams_1(self):
         """
         Test the succesful generation of Betaling for a single person who is in multiple teams.
         """
