@@ -16,11 +16,15 @@ TEST_LIDGELD_STARTERS = 200
 TEST_LIDGELD_SENIOREN = 0
 
 
-class GenerateBetalingTeamSuccessTestCase(GenericBetalingTestCase):
+class GenerateBetalingTestCase(GenericBetalingTestCase):
     """
     Testcase to check the successful generation of betalingen.
     To test:
-        - Single person, single team. Betaling should contain the correct amount
+        - Single person, no team. There should be no betaling generated
+        - Single person, single team (youth team). Betaling should contain the correct amount
+        - Single person, single team (senior team). No betaling should be generated
+        - Single person, multiple teams (youth teams). Betaling should contain the highest of the 2 amounts.
+        - Single person, multiple teams (senior + youth). Betaling should contain amount of youth.
     """
 
     def test_generate_no_team(self):
