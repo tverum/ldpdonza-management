@@ -23,10 +23,20 @@ Daarnaast gaat Nginx alle requests naar statische files cachen en zo sneller aan
 De configuratie voor deze service kan gevonden worden in `/etc/nginx/sites-available/secretariaat.ldpdonza.be`
 De logs kunnen gevonden worden in `/var/log/nginx/access.log` (access logs) en `/var/log/nginx/error.log` (error logs).
 
+Om Nginx opnieuw op te starten gebruik je `sudo systemctl restart nginx`.
+
 ### Gunicorn
 
 Gunicorn is een django WSGI-server.
 Dit betekent dat deze server een wsgi-application neemt (geschreven in Django) en de requests hiernaar gaat verwerken.
 
-De configuratie van gunicorn kan gevonden worden in de project root in `/config/gunicorn/prod.py`. Configuratie is dus in python.
-De logs van gunicorn kunnen gevonden worden in `/var/log/gunicorn/access.log` (accesss logs) en `/var/log/gunicorn/error.log` (error logs) op de server.
+De configuratie van gunicorn kan gevonden worden in de beschrijving van de gunicorn service.
+In `/etc/systemd/system/gunicorn.service` vind je de configuratie hiervan.
+
+De logs van gunicorn kan je raadplegen via `sudo systemctl status gunicorn` en `sudo journalctl -u gunicorn`
+Gunicorn kan je opnieuw opstarten met behulp van de volgende commando's.
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart gunicorn
+```
