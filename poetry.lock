@@ -325,7 +325,7 @@ tablib = ["tablib"]
 
 [[package]]
 name = "djlint"
-version = "1.19.3"
+version = "1.19.9"
 description = "HTML Template Linter and Formatter"
 category = "dev"
 optional = false
@@ -1194,8 +1194,8 @@ django-tables2 = [
     {file = "django_tables2-2.4.1-py2.py3-none-any.whl", hash = "sha256:50762bf3d7c61a4eb70e763c3e278650d7266bb78d0497fc8fafcf4e507c9a64"},
 ]
 djlint = [
-    {file = "djlint-1.19.3-py3-none-any.whl", hash = "sha256:86f0626c2186fd84a1236ec295b4ba0896b53221467733e72a4443d0f9c6ffce"},
-    {file = "djlint-1.19.3.tar.gz", hash = "sha256:806d9fe477042ad8cd84b6714119a3243b0a5eec0d069e623571195b74cbca96"},
+    {file = "djlint-1.19.9-py3-none-any.whl", hash = "sha256:154a5bdc811484c39ce2e772ae9c709752f01de12fd4dfffd6b1302fc29d2b63"},
+    {file = "djlint-1.19.9.tar.gz", hash = "sha256:91178c070c3ac2d2e9a5438181bcdcf52d45630b771eead861bc10142edd9c98"},
 ]
 docformatter = [
     {file = "docformatter-1.5.0-py3-none-any.whl", hash = "sha256:ae56c64822c3184602ac83ec37650c9785e80dfec17b4eba4f49ad68815d71c0"},

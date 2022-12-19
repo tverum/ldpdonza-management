@@ -178,7 +178,7 @@ class BetalingTableView(
             status="mail_sent", seizoen=seizoen
         ).all()
         betaald_queryset = Betaling.objects.filter(
-            status="voltooid", seizoen=seizoen
+            status="betaald", seizoen=seizoen
         ).all()
         return [
             DraftTable(draft_queryset, prefix="draft-"),
