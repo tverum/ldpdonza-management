@@ -74,6 +74,7 @@ def get_discount(lid, seizoen):
         for lid in lid.familieleden.all()
         if lid.sportief_lid and has_team(lid, seizoen)
     ]
+    breakpoint()
     if not familieleden:
         return 0
     elif oldest(lid, familieleden, seizoen):
