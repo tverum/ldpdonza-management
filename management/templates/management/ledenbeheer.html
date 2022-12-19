@@ -38,7 +38,6 @@
                                 <div class="col-sm-8">{{ field }}</div>
                             {% endwith %}
                         </div>
-                        <!-- {% bootstrap_form filter.form layout='inline' %} -->
                         <button class="btn btn-block btn-primary" form="filter" action="submit">Filter Resultaten</button>
                     </form>
                 {% endif %}
@@ -93,4 +92,4 @@
 {% endblock content %}
 {% block customscripts %}
     <script src="{% static 'management/js/toggle.js'%}"></script>
-{% endblock %}
+{% endblock customscripts %}

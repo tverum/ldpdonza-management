@@ -179,7 +179,9 @@
                         <span aria-hidden="true">U+00D7</span>
                     </button>
                 </div>
-                <form action="/management/ouder/new" method="post" id="ouder-form">
+                <form action="{% url 'management:new_ouder' %}"
+                      method="post"
+                      id="ouder-form">
                     <div class="modal-body">
                         {% csrf_token %}
                         {{ ouderform|bootstrap }}

@@ -4,7 +4,9 @@
 <html lang="nl">
     <head>
         <title>
-            {% block title %}LDP Donza{% endblock %}
+            {% block title %}
+                LDP Donza
+            {% endblock title %}
         </title>
         <link rel="shortcut icon"
               type="image/png"
@@ -66,7 +68,8 @@
                         {% endfor %}
                     </div>
                 {% endif %}
-                {% block content %}{% endblock %}
+                {% block content %}
+                {% endblock content %}
             </div>
         </section>
         <!-- Footer -->
@@ -84,9 +87,11 @@
                 </div>
                 <div class="footer-copyright text-center py-3">© 2020 Copyright: Tim Van Erum</div>
             </footer>
-            {% block customscripts %}{% endblock %}
+            {% block customscripts %}
+            {% endblock customscripts %}
         </body>
         <!-- place to keep the modals at the top-level -->
-        {% block modals %}{% endblock %}
+        {% block modals %}
+        {% endblock modals %}
         {% include "slowmodal.html" %}
     </html>

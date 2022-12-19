@@ -57,6 +57,10 @@ profile = "black"
 line_length = 79
 multi_line_output = 3
 
+[tool.djlint]
+profile="django"
+max_line_length=120
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
