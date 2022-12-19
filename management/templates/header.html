@@ -6,7 +6,8 @@
     <!-- Brand & Collapse -->
     <div class="container">
         <div class="navbar-brand">
-            <a class="navbar-item" href="{% url 'management:index' %}">
+            <a class="navbar-item"
+               href="{% url 'management:index' %}">
                 <img src="{% static 'management/images/logo_header.png' %}"
                      alt="Logo LDP Donza"
                      width="120"
@@ -23,19 +24,25 @@
                 <span aria-hidden="true"></span>
             </a>
         </div>
-        <div id="navbar-menu-id" class="navbar-menu" id="navbarCollapse">
+        <div id="navbar-menu-id"
+             class="navbar-menu"
+             id="navbarCollapse">
             <div class="navbar-start">
-                <a class="navbar-item" href="{% url 'management:index' %}">Home</a>
+                <a class="navbar-item"
+                   href="{% url 'management:index' %}">Home</a>
                 {% if perms.management.view_lid %}
-                    <a class="navbar-item slow-link" data-url="{% url 'management:leden' %}">Leden</a
+                    <a class="navbar-item slow-link"
+                       data-url="{% url 'management:leden' %}">Leden</a
                         >
                     {% endif %}
                     {% if perms.management.view_betaling %}
-                        <a class="navbar-item" href="{% url 'management:betalingen' %}">Betalingen</a
+                        <a class="navbar-item"
+                           href="{% url 'management:betalingen' %}">Betalingen</a
                             >
                         {% endif %}
                         {% if perms.management.view_mails %}
-                            <a class="navbar-item" href="{% url 'management:mails' %}">Mails</a>
+                            <a class="navbar-item"
+                               href="{% url 'management:mails' %}">Mails</a>
                         {% endif %}
                         {% if perms.management.view_functie %}<a class="navbar-item">Functies</a>{% endif %}
                     </div>

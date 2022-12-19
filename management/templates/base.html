@@ -1,16 +1,18 @@
 {% load static %}
 <!DOCTYPE html>
-<!--suppress ALL -->
+{# djlint:on #}
 <html lang="nl">
     <head>
         <title>
-            {% block title %}LDP Donza{% endblock %}
+            {% block title %}
+                LDP Donza
+            {% endblock title %}
         </title>
         <link rel="shortcut icon"
               type="image/png"
               href="{% static 'management/images/logo.png' %}"/>
         <!-- Required meta tags -->
-        <meta charset="utf-8" />
+        <meta charset="utf-8"/>
         <meta name="viewport"
               content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <!-- Bootstrap CSS -->
@@ -33,19 +35,26 @@
         <link rel="stylesheet"
               href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css"/>
         <!-- Scripts -->
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+                integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+                crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+        <script defer
+                src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
         <script src="{% static 'management/js/script.js'%}"></script>
         <script src="{% static 'management/js/bulma.js' %}"></script>
         <script src="{% static 'management/js/nav.js' %}"></script>
         <script src="{% static 'management/js/slowlink.js' %}"></script>
         <script src="{% static 'fontawesome_free/js/all.min.js' %}"></script>
         <meta charset="UTF-8"/>
-        <meta name="description" content="LDP Donza internal management tooling"/>
-        <meta name="keywords" content="Django, HTML, JS"/>
-        <meta name="author" content="Tim Van Erum"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="description"
+              content="LDP Donza internal management tooling"/>
+        <meta name="keywords"
+              content="Django, HTML, JS"/>
+        <meta name="author"
+              content="Tim Van Erum"/>
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1.0"/>
     </head>
     <body class="main">
         <!-- Header -->
@@ -66,7 +75,8 @@
                         {% endfor %}
                     </div>
                 {% endif %}
-                {% block content %}{% endblock %}
+                {% block content %}
+                {% endblock content %}
             </div>
         </section>
         <!-- Footer -->
@@ -84,9 +94,11 @@
                 </div>
                 <div class="footer-copyright text-center py-3">© 2020 Copyright: Tim Van Erum</div>
             </footer>
-            {% block customscripts %}{% endblock %}
+            {% block customscripts %}
+            {% endblock customscripts %}
         </body>
         <!-- place to keep the modals at the top-level -->
-        {% block modals %}{% endblock %}
+        {% block modals %}
+        {% endblock modals %}
         {% include "slowmodal.html" %}
     </html>
