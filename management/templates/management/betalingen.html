@@ -25,10 +25,12 @@
 </article>
 <div class="level">
     <div class="level-item has-text-centered">
-        <a class="btn btn-secondary" href="#mail-verstuurd">Ga naar openstaande betalingen</a>
+        <a class="btn btn-secondary"
+           href="#mail-verstuurd">Ga naar openstaande betalingen</a>
     </div>
     <div class="level-item has-text-centered">
-        <form method="post" enctype="multipart/form-data">
+        <form method="post"
+              enctype="multipart/form-data">
             {% csrf_token %}
             <div class="input-group">
                 <div class="custom-file">
@@ -36,10 +38,13 @@
                            name="file"
                            class="custom-file-input"
                            id="inputGroupFile02"/>
-                    <label class="custom-file-label" for="inputGroupFile02">Betalingen inlezen</label>
+                    <label class="custom-file-label"
+                           for="inputGroupFile02">Betalingen inlezen</label>
                 </div>
                 <div class="input-group-append">
-                    <button class="btn btn-secondary" name="button" type="submit">Upload</button>
+                    <button class="btn btn-secondary"
+                            name="button"
+                            type="submit">Upload</button>
                 </div>
             </div>
         </form>

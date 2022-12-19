@@ -60,6 +60,10 @@ multi_line_output = 3
 [tool.djlint]
 profile="django"
 max_line_length=120
+format_attribute_template_tags=true
+max_attribute_length=10
+format_js=true
+format_css=true
 
 [build-system]
 requires = ["poetry-core"]

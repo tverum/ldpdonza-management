@@ -13,7 +13,9 @@
         <div class="row mb-3 pt-3 pb-3 border rounded">
             <div class="col-6">
                 {% if filter %}
-                    <form method="get" class="form" id="filter">
+                    <form method="get"
+                          class="form"
+                          id="filter">
                         <div class="form-group row">
                             {% with field=filter.form.voornaam %}
                                 <label class="col-sm-4 col-form-label">{{ field.label_tag }}</label>
@@ -38,7 +40,9 @@
                                 <div class="col-sm-8">{{ field }}</div>
                             {% endwith %}
                         </div>
-                        <button class="btn btn-block btn-primary" form="filter" action="submit">Filter Resultaten</button>
+                        <button class="btn btn-block btn-primary"
+                                form="filter"
+                                action="submit">Filter Resultaten</button>
                     </form>
                 {% endif %}
             </div>
@@ -53,7 +57,9 @@
                 <a type="button"
                    class="btn btn-secondary btn-block mb-3"
                    href="{% url 'management:nieuw_lid' %}">Nieuw Lid</a>
-                <form class="mb-3" method="post" enctype="multipart/form-data">
+                <form class="mb-3"
+                      method="post"
+                      enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="input-group">
                         <div class="custom-file">
@@ -61,10 +67,12 @@
                                    name="file"
                                    class="custom-file-input"
                                    id="inputGroupFile02"/>
-                            <label class="custom-file-label" for="inputGroupFile02">Kies CSV-bestand</label>
+                            <label class="custom-file-label"
+                                   for="inputGroupFile02">Kies CSV-bestand</label>
                         </div>
                         <div class="input-group-append">
-                            <button class="btn btn-secondary" type="submit">Upload</button>
+                            <button class="btn btn-secondary"
+                                    type="submit">Upload</button>
                         </div>
                     </div>
                 </form>

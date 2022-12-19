@@ -17,7 +17,9 @@
             </p>
         </div>
     </article>
-    <form method="post" action="{% url 'management:groep_mail' %}" id="mail">
+    <form method="post"
+          action="{% url 'management:groep_mail' %}"
+          id="mail">
         {% csrf_token %}
         <section>
             <p class="title">Selecteer mail</p>
@@ -32,7 +34,8 @@
                     </ul>
                     <p class="menu-label">Meer volgt (Coming soon)</p>
                 </aside>
-                <div id="preview" class="container column is-9 box mb-3">
+                <div id="preview"
+                     class="container column is-9 box mb-3">
                     <section class="hero is-large has-text-centered">
                         <div class="hero-body">
                             <div class="container">
@@ -70,7 +73,10 @@
                         <div class="field">
                             <div class="control">
                                 <label class="checkbox">
-                                    <input type="checkbox" id="group-all-active" name="group" value="all-active"/>
+                                    <input type="checkbox"
+                                           id="group-all-active"
+                                           name="group"
+                                           value="all-active"/>
                                     Alle actieve spelers
                                     <p class="help">
                                         Dit zijn alle spelers die in het vorige seizoen
@@ -97,7 +103,10 @@
                         <div class="field">
                             <div class="control">
                                 <label class="checkbox">
-                                    <input type="checkbox" id="group-active-men" name="group" value="active-men"/>
+                                    <input type="checkbox"
+                                           id="group-active-men"
+                                           name="group"
+                                           value="active-men"/>
                                     Alle actieve heren
                                     <p class="help">
                                         Dit zijn alle spelers die in het vorige seizoen
@@ -135,7 +144,10 @@
                         <div class="field">
                             <div class="control">
                                 <label class="checkbox">
-                                    <input type="checkbox" id="group-onderbouw" name="group" value="onderbouw"/>
+                                    <input type="checkbox"
+                                           id="group-onderbouw"
+                                           name="group"
+                                           value="onderbouw"/>
                                     Onderbouw
                                     <p class="help">Alle spelers die op lage doelen spelen</p>
                                 </label>
@@ -144,7 +156,10 @@
                         <div class="field">
                             <div class="control">
                                 <label class="checkbox">
-                                    <input type="checkbox" id="group-senioren" name="group" value="senioren"/>
+                                    <input type="checkbox"
+                                           id="group-senioren"
+                                           name="group"
+                                           value="senioren"/>
                                     Senioren
                                 </label>
                             </div>
@@ -194,7 +209,9 @@
         </section>
         <hr/>
         <section class="has-text-centered">
-            <input type="hidden" name="previous" value="{{ request.path }}"/>
+            <input type="hidden"
+                   name="previous"
+                   value="{{ request.path }}"/>
             <button class="button">Verstuur mail</button>
         </section>
     </form>

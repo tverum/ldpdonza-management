@@ -9,7 +9,9 @@
         <div class="row justify-content-center">
             <div class="col-md-4"></div>
             <div class="col-md-4">
-                <form class="form-signin" method="post" id="form_login">
+                <form class="form-signin"
+                      method="post"
+                      id="form_login">
                     <img class="img-thumbnail mb-4 rounded-circle"
                          src="{% static 'management/images/logo.png' %}"
                          alt="Logo LDP Donza"
@@ -20,13 +22,15 @@
                     </div>
                     {% csrf_token %}
                     {% if form.non_field_errors %}
-                        <div class="alert alert-danger" role="alert">
+                        <div class="alert alert-danger"
+                             role="alert">
                             Combinatie gebruikersnaam en wachtwoord is niet gekend.
                             {{ form.non }}
                         </div>
                     {% endif %}
                     <div class="form-group">
-                        <label for="username" class="sr-only">User Name</label>
+                        <label for="username"
+                               class="sr-only">User Name</label>
                         <input type="text"
                                name="username"
                                id="username"
@@ -36,7 +40,8 @@
                                autofocus/>
                     </div>
                     <div class="form-group">
-                        <label for="password" class="sr-only">Password</label>
+                        <label for="password"
+                               class="sr-only">Password</label>
                         <input type="password"
                                name="password"
                                id="password"
@@ -47,7 +52,8 @@
                     </div>
                     <div class="form-group">
                         <div class="submit">
-                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+                            <button type="submit"
+                                    class="btn btn-primary btn-block">Login</button>
                         </div>
                     </div>
                 </form>
