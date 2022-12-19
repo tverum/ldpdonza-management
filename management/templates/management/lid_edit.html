@@ -191,7 +191,7 @@
                       id="ouder-form">
                     <div class="modal-body">
                         {% csrf_token %}
-                        {{ ouderform|bootstrap }}
+                        {{ ouderform }}
                         <input type="hidden"
                                name="next"
                                value="{{ request.path }}"/>
