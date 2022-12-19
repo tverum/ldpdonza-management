@@ -164,47 +164,4 @@
             </div>
         </div>
     </form>
-    <!-- Modal -->
-    <div class="modal fade"
-         id="ouderModal"
-         tabindex="-1"
-         role="dialog"
-         aria-labelledby="ouderModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog"
-             role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"
-                        id="ouderModalLabel">
-                        Nieuwe Ouder
-                    </h5>
-                    <button type="button"
-                            class="close"
-                            data-dismiss="modal"
-                            aria-label="Close">
-                        <span aria-hidden="true">U+00D7</span>
-                    </button>
-                </div>
-                <form action="{% url 'management:new_ouder' %}"
-                      method="post"
-                      id="ouder-form">
-                    <div class="modal-body">
-                        {% csrf_token %}
-                        {{ ouderform|bootstrap }}
-                        <input type="hidden"
-                               name="next"
-                               value="{{ request.path }}"/>
-                        <input type="hidden"
-                               name="lid_form"
-                               value="{{ form.fields }}"/>
-                        <button type="submit"
-                                class="btn btn-success">
-                            Opslaan
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 {% endblock content %}
