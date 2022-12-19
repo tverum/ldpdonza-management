@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<!--suppress ALL -->
+{# djlint:on #}
 <html lang="nl">
     <head>
         <title>
@@ -35,11 +35,12 @@
         <link rel="stylesheet"
               href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css"/>
         <!-- Scripts -->
-        {# djlint:off #}
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-        {# djlint:on #}
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+                integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+                crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+        <script defer
+                src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
         <script src="{% static 'management/js/script.js'%}"></script>
         <script src="{% static 'management/js/bulma.js' %}"></script>
         <script src="{% static 'management/js/nav.js' %}"></script>
