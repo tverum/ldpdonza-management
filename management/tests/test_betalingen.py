@@ -1,3 +1,5 @@
+import logging
+
 from management.main.betalingen import genereer_betaling
 from management.models import (
     Betaling,
@@ -9,6 +11,8 @@ from management.models import (
     Seizoen,
 )
 from management.tests.generic_test_case import GenericBetalingTestCase
+
+logger = logging.getLogger(__name__)
 
 TEST_LIDGELD_3MAAL = 360
 TEST_LIDGELD_2MAAL = 315
@@ -31,6 +35,9 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         """
         Test that no betalingen are generated when a person is not in a team.
         """
+        logger.info(
+            "Running test to check that no betalingen are generated when a person is not in a team"
+        )
         seizoen = Seizoen.objects.get(pk=1)
         lid = Lid.objects.get(pk=1)
 
@@ -45,7 +52,9 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         """
         Test the successful generation of Betaling for a single person in a single team.
         """
-        # TODO: add logging
+        logger.info(
+            "Running test to check that a betaling is generated successfully when a person is in 1 team"
+        )
         # Add ploeglid to ploeg with specific lidgeldklasse
         klasse = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_3MAAL)
         seizoen = Seizoen.objects.get(pk=1)
@@ -58,11 +67,14 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
 
         # Genereer betaling
         genereer_betaling(lid=lid, seizoen=seizoen)
-
+        logger.info("There should be only 1 betaling")
         # Check that there is only 1 betaling generated
         betalingen = Betaling.objects.all()
         self.assertEqual(len(betalingen), 1)
 
+        logger.info(
+            "Betaling should have the correct member, amount, seizoen, and should have 0 pay. Next to this, the mededeling should not be empty"
+        )
         res_betaling = betalingen[0]
         self.assertEqual(res_betaling.lid, lid)
         self.assertEqual(res_betaling.origineel_bedrag, TEST_LIDGELD_3MAAL)
@@ -74,7 +86,9 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         """
         Test that no betaling is generated when the member is only in a seniors team.
         """
-        # TODO: add logging
+        logger.info(
+            "Running test to check that no betaling is generated when the member is exclusively in a seniors team"
+        )
         # Add ploeglid to ploeg with specific lidgeldklasse
         klasse = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_SENIOREN)
         seizoen = Seizoen.objects.get(pk=1)
@@ -96,6 +110,9 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         """
         Test the succesful generation of Betaling for a single person who is in multiple teams.
         """
+        logger.info(
+            "Running test to check that when a member is in multiple teams, the correct amount is generated"
+        )
         # Add the member to the 2 different teams
         klasse_1 = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_3MAAL)
         klasse_2 = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_2MAAL)
@@ -118,14 +135,21 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         # Genereer betaling
         genereer_betaling(lid=lid, seizoen=seizoen)
 
+        logger.info("Check to see that there is only a single betaling")
         # Check that there is only 1 betaling generated
         betalingen = Betaling.objects.all()
         self.assertEqual(len(betalingen), 1)
 
+        logger.info(
+            "Check to see that the betaling has the highest of the 2 bedragen listed."
+        )
         # Betaling should be for the highest of the 2 bedragen
         res_betaling = betalingen[0]
         self.assertEqual(res_betaling.lid, lid)
-        self.assertEqual(res_betaling.origineel_bedrag, TEST_LIDGELD_3MAAL)
+        self.assertEqual(
+            res_betaling.origineel_bedrag,
+            max(TEST_LIDGELD_3MAAL, TEST_LIDGELD_2MAAL),
+        )
         self.assertEqual(res_betaling.afgelost_bedrag, 0)
         self.assertEqual(res_betaling.seizoen, seizoen)
         self.assertNotEqual(res_betaling.mededeling, "")
@@ -135,6 +159,9 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         Test the succesful generation of Betaling for a single person in multiple teams.
         In this case, the person is in a) a youth team, and b) a senior team.
         """
+        logger.info(
+            "Running a test to check that when a person is in a youth team and a senior team, the correct amount is generated"
+        )
         # Add the member to the 2 different teams
         klasse_1 = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_3MAAL)
         klasse_2 = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_SENIOREN)
