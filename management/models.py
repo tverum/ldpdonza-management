@@ -165,6 +165,7 @@ class Betaling(models.Model):
     )
     mededeling = models.CharField(max_length=20)
     type = models.CharField(max_length=20)
+    # TODO: make this a dynamic field
     status = models.CharField(max_length=20)
     aflossingen = models.CharField(max_length=500, default="")
     objects = models.Manager()

@@ -34,7 +34,8 @@ def oldest(lid, familieleden, seizoen):
     for fl in familieleden:
         if not has_team(fl, seizoen):
             continue
-        if fl.geboortedatum > lid.geboortedatum:
+        if fl.geboortedatum < lid.geboortedatum:
+            # time_a < time_b -> a is vroeger dan b
             return False
     return True
 
