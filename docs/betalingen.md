@@ -53,3 +53,5 @@ De volgende tests zijn geschreven om bovenstaand gedrag te garanderen:
 TODO:
 
 - Voor coaches, helpende handen, etc. mogen er geen betalingen gegenereerd worden.
+- Github action opzetten voor automatische testen.
+
