@@ -52,6 +52,9 @@ De volgende tests zijn geschreven om bovenstaand gedrag te garanderen:
 
 TODO:
 
-- Voor coaches, helpende handen, etc. mogen er geen betalingen gegenereerd worden.
+- Test: voor coaches, helpende handen, etc. mogen er geen betalingen gegenereerd worden.
+- Test: als er reeds een betaling is, mag er geen nieuwe gecreëerd worden
+- Test: wanneer er een familielid is zonder team
+- Test: facturatie/afbetaling
+- Test: voor meerdere leden test genereren
 - Github action opzetten voor automatische testen.
-
