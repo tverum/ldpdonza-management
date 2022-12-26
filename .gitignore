@@ -139,6 +139,3 @@ venv/**
 
 # Ignore runtime information
 .run/**
-
-# Ignore logging files
-**/log/**
