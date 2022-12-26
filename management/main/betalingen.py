@@ -34,7 +34,8 @@ def oldest(lid, familieleden, seizoen):
     for fl in familieleden:
         if not has_team(fl, seizoen):
             continue
-        if fl.geboortedatum > lid.geboortedatum:
+        if fl.geboortedatum < lid.geboortedatum:
+            # time_a < time_b -> a is vroeger dan b
             return False
     return True
 
@@ -74,7 +75,6 @@ def get_discount(lid, seizoen):
         for lid in lid.familieleden.all()
         if lid.sportief_lid and has_team(lid, seizoen)
     ]
-    breakpoint()
     if not familieleden:
         return 0
     elif oldest(lid, familieleden, seizoen):

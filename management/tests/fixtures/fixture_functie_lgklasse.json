@@ -1,0 +1,84 @@
+[
+{
+    "model": "management.functie",
+    "pk": 1,
+    "fields": {
+        "functie": "Speler"
+    }
+},
+{
+    "model": "management.functie",
+    "pk": 2,
+    "fields": {
+        "functie": "Coach"
+    }
+},
+{
+    "model": "management.functie",
+    "pk": 3,
+    "fields": {
+        "functie": "Ploegverantwoordelijke"
+    }
+},
+{
+    "model": "management.functie",
+    "pk": 4,
+    "fields": {
+        "functie": "Tafelfunctie (Nietbindend)"
+    }
+},
+{
+    "model": "management.functie",
+    "pk": 5,
+    "fields": {
+        "functie": "Sportief Coordinator"
+    }
+},
+{
+    "model": "management.functie",
+    "pk": 6,
+    "fields": {
+        "functie": "Helpende Handen"
+    }
+},
+{
+    "model": "management.lidgeldklasse",
+    "pk": 1,
+    "fields": {
+        "naam": "Senioren A & B",
+        "lidgeld": 0
+    }
+},
+{
+    "model": "management.lidgeldklasse",
+    "pk": 2,
+    "fields": {
+        "naam": "Driemaal per week",
+        "lidgeld": 360
+    }
+},
+{
+    "model": "management.lidgeldklasse",
+    "pk": 3,
+    "fields": {
+        "naam": "Tweemaal per week",
+        "lidgeld": 315
+    }
+},
+{
+    "model": "management.lidgeldklasse",
+    "pk": 4,
+    "fields": {
+        "naam": "Starters",
+        "lidgeld": 200
+    }
+},
+{
+    "model": "management.lidgeldklasse",
+    "pk": 5,
+    "fields": {
+        "naam": "G-Basket",
+        "lidgeld": -100
+    }
+}
+]

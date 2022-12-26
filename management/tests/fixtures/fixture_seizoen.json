@@ -1,0 +1,22 @@
+[
+    {
+        "model": "management.seizoen",
+        "pk": 1,
+        "fields": {
+            "naam": "Seizoen 1",
+            "startdatum": "2019-09-01",
+            "einddatum": "2020-08-31",
+            "bezig": true
+        }
+    },
+    {
+        "model": "management.seizoen",
+        "pk": 2,
+        "fields": {
+            "naam": "Seizoen 2",
+            "startdatum": "2020-08-01",
+            "einddatum": "2021-06-30",
+            "bezig": false
+        }
+    }
+]
