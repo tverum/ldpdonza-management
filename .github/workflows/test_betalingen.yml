@@ -25,5 +25,5 @@ jobs:
         run: poetry install --no-interaction --no-root
       - name: Run tests
         run: |
-          poetry run python manage.py test management --parallel
+          poetry run python manage.py test management --parallel --settings=donza.settings.test
           poetry run coverage report
