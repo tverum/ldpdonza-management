@@ -1,5 +1,18 @@
+# flake8: noqa
 import os
-from .common import *
+
+from .common import (
+    AUTHENTICATION_BACKENDS,
+    BASE_DIR,
+    DEBUG,
+    DEFAULT_AUTO_FIELD,
+    INSTALLED_APPS,
+    MIDDLEWARE,
+    TEMPLATES,
+    TIME_ZONE,
+    USE_TZ,
+    WSGI_APPLICATION,
+)
 
 LOGGING = {
     "version": 1,
