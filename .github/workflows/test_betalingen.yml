@@ -26,4 +26,3 @@ jobs:
       - name: Run tests
         run: |
           poetry run python manage.py test management --parallel --settings=donza.settings.test
-          poetry run coverage report
