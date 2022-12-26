@@ -1,0 +1,77 @@
+[
+    {
+        "model": "management.ploeg",
+        "pk": 1,
+        "fields": {
+            "seizoen": 1,
+            "naam": "Testploeg 1",
+            "korte_naam": "TP1",
+            "min_geboortejaar": 2013,
+            "max_geboortejaar": 2014,
+            "uitzonderings_geboortejaar": 2014,
+            "geslacht": "g",
+            "lidgeldklasse": 1,
+            "kenmerken": []
+        }
+    },
+    {
+        "model": "management.ploeg",
+        "pk": 2,
+        "fields": {
+            "seizoen": 1,
+            "naam": "Testploeg 2",
+            "korte_naam": "TP2",
+            "min_geboortejaar": 2013,
+            "max_geboortejaar": 2014,
+            "uitzonderings_geboortejaar": 2014,
+            "geslacht": "g",
+            "lidgeldklasse": 2,
+            "kenmerken": []
+        }
+    },
+    {
+        "model": "management.ploeg",
+        "pk": 3,
+        "fields": {
+            "seizoen": 1,
+            "naam": "Testploeg 3",
+            "korte_naam": "TP3",
+            "min_geboortejaar": 2013,
+            "max_geboortejaar": 2014,
+            "uitzonderings_geboortejaar": 2014,
+            "geslacht": "g",
+            "lidgeldklasse": 3,
+            "kenmerken": []
+        }
+    },
+    {
+        "model": "management.ploeg",
+        "pk": 4,
+        "fields": {
+            "seizoen": 1,
+            "naam": "Testploeg 4",
+            "korte_naam": "TP4",
+            "min_geboortejaar": 2013,
+            "max_geboortejaar": 2014,
+            "uitzonderings_geboortejaar": 2014,
+            "geslacht": "g",
+            "lidgeldklasse": 4,
+            "kenmerken": []
+        }
+    },
+    {
+        "model": "management.ploeg",
+        "pk": 5,
+        "fields": {
+            "seizoen": 1,
+            "naam": "Testploeg 5",
+            "korte_naam": "TP5",
+            "min_geboortejaar": 2013,
+            "max_geboortejaar": 2014,
+            "uitzonderings_geboortejaar": 2014,
+            "geslacht": "g",
+            "lidgeldklasse": 5,
+            "kenmerken": []
+        }
+    }
+]

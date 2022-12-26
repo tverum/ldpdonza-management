@@ -1,0 +1,138 @@
+[
+    {
+        "model": "management.lid",
+        "pk": 1,
+        "fields": {
+            "voornaam": "John",
+            "familienaam": "Doe",
+            "geslacht": "m",
+            "sportief_lid": true,
+            "betalend_lid": false,
+            "actief_lid": false,
+            "straatnaam_en_huisnummer": "Test 123",
+            "postcode": 1234,
+            "gemeente": "Test",
+            "geboortedatum": "2000-01-01",
+            "gsmnummer": "+32123456789",
+            "moeder": null,
+            "vader": null,
+            "email": null,
+            "gescheiden_ouders": false,
+            "extra_informatie": "",
+            "rekeningnummer": null,
+            "lidnummer_vbl": null,
+            "updated_at": "2021-06-18T14:49:29.389Z",
+            "created_at": "2020-05-11T16:50:28.024Z",
+            "facturatie": false,
+            "afbetaling": false,
+            "uid": "7798711679",
+            "functies": [
+                1
+            ],
+            "familieleden": [
+                2
+            ]
+        }
+    },
+    {
+        "model": "management.lid",
+        "pk": 2,
+        "fields": {
+            "voornaam": "Jane",
+            "familienaam": "Doe",
+            "geslacht": "v",
+            "sportief_lid": true,
+            "betalend_lid": false,
+            "actief_lid": false,
+            "straatnaam_en_huisnummer": "Test 123",
+            "postcode": 1234,
+            "gemeente": "Test",
+            "geboortedatum": "2001-01-01",
+            "gsmnummer": "+32123456789",
+            "moeder": null,
+            "vader": null,
+            "email": null,
+            "gescheiden_ouders": false,
+            "extra_informatie": "",
+            "rekeningnummer": null,
+            "lidnummer_vbl": null,
+            "updated_at": "2021-06-18T14:49:29.389Z",
+            "created_at": "2020-05-11T16:50:28.024Z",
+            "facturatie": false,
+            "afbetaling": false,
+            "uid": "9380184655",
+            "functies": [
+                1
+            ],
+            "familieleden": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "management.lid",
+        "pk": 3,
+        "fields": {
+            "voornaam": "Emma",
+            "familienaam": "Smedt",
+            "geslacht": "v",
+            "sportief_lid": true,
+            "betalend_lid": false,
+            "actief_lid": false,
+            "straatnaam_en_huisnummer": "Test 124",
+            "postcode": 1234,
+            "gemeente": "Test",
+            "geboortedatum": "2000-01-01",
+            "gsmnummer": "+32123456789",
+            "moeder": null,
+            "vader": null,
+            "email": null,
+            "gescheiden_ouders": false,
+            "extra_informatie": "",
+            "rekeningnummer": null,
+            "lidnummer_vbl": null,
+            "updated_at": "2021-06-18T14:49:29.389Z",
+            "created_at": "2020-05-11T16:50:28.024Z",
+            "facturatie": false,
+            "afbetaling": false,
+            "uid": "9380184656",
+            "functies": [
+                1
+            ],
+            "familieleden": []
+        }
+    },
+    {
+        "model": "management.lid",
+        "pk": 4,
+        "fields": {
+            "voornaam": "Paul",
+            "familienaam": "Smith",
+            "geslacht": "m",
+            "sportief_lid": false,
+            "betalend_lid": false,
+            "actief_lid": false,
+            "straatnaam_en_huisnummer": "Test 125",
+            "postcode": 1234,
+            "gemeente": "Test",
+            "geboortedatum": "2000-01-01",
+            "gsmnummer": "+32123456789",
+            "moeder": null,
+            "vader": null,
+            "email": null,
+            "gescheiden_ouders": false,
+            "extra_informatie": "",
+            "rekeningnummer": null,
+            "lidnummer_vbl": null,
+            "updated_at": "2021-06-18T14:49:29.389Z",
+            "created_at": "2020-05-11T16:50:28.024Z",
+            "facturatie": false,
+            "afbetaling": false,
+            "uid": "9380184657",
+            "functies": [
+                1
+            ],
+            "familieleden": []
+        }
+    }
+]
