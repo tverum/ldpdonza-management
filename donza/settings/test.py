@@ -28,3 +28,5 @@ DATABASES = {
         "NAME": "ID309280_secretariaat",
     }
 }
+
+FIXTURE_DIRS = ["management/tests/fixtures"]
