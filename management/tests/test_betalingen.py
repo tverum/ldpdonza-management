@@ -38,6 +38,7 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         """
         create_basic_teams()
         create_lid_personas()
+        return super().setUp()
 
     def test_generate_no_team(self):
         """

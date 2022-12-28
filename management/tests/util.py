@@ -18,8 +18,10 @@ def create_basic_teams():
     - Seniors women
     - Youth men - 3 practices
     - Youth women - 3 practices
+    - Youth mixed - 3 practices
     - Youth men - 2 practices
     - Youth women - 2 practices
+    - Youth mixed - 2 practices
     """
     t_seizoen = Seizoen.objects.get(pk=1)  # There's only 1 season
 
@@ -71,6 +73,17 @@ def create_basic_teams():
         geslacht="v",
         lidgeldklasse=klasse_3_maal,
     )
+    # Create gemengd jeugd - 3 maal
+    Ploeg.objects.create(
+        seizoen=t_seizoen,
+        naam="Gemengd Jeugd (3 maal)",
+        korte_naam="GJ3",
+        min_geboortejaar=2001,
+        max_geboortejaar=2002,
+        uitzonderings_geboortejaar=2004,
+        geslacht="g",
+        lidgeldklasse=klasse_3_maal,
+    )
     # Create mannen jeugd - 2 maal
     Ploeg.objects.create(
         seizoen=t_seizoen,
@@ -91,6 +104,83 @@ def create_basic_teams():
         max_geboortejaar=2002,
         uitzonderings_geboortejaar=2004,
         geslacht="v",
+        lidgeldklasse=klasse_2_maal,
+    )
+    # Create gemengd jeugd - 2 maal
+    Ploeg.objects.create(
+        seizoen=t_seizoen,
+        naam="Gemengd Jeugd (2 maal)",
+        korte_naam="GJ2",
+        min_geboortejaar=2001,
+        max_geboortejaar=2002,
+        uitzonderings_geboortejaar=2004,
+        geslacht="g",
+        lidgeldklasse=klasse_2_maal,
+    )
+    # Create mannen jeugd - 2 maal
+    Ploeg.objects.create(
+        seizoen=t_seizoen,
+        naam="Mannen Jeugd (3 maal) - 2",
+        korte_naam="MJ3-2",
+        min_geboortejaar=2013,
+        max_geboortejaar=2014,
+        uitzonderings_geboortejaar=2016,
+        geslacht="m",
+        lidgeldklasse=klasse_3_maal,
+    )
+    # Create vrouwen jeugd - 2 maal
+    Ploeg.objects.create(
+        seizoen=t_seizoen,
+        naam="Vrouwen Jeugd (3 maal) - 2",
+        korte_naam="VJ3-2",
+        min_geboortejaar=2013,
+        max_geboortejaar=2014,
+        uitzonderings_geboortejaar=2016,
+        geslacht="v",
+        lidgeldklasse=klasse_3_maal,
+    )
+    # Create gemengd jeugd - 2 maal
+    Ploeg.objects.create(
+        seizoen=t_seizoen,
+        naam="Gemengd Jeugd (3 maal) - 2",
+        korte_naam="GJ3-2",
+        min_geboortejaar=2013,
+        max_geboortejaar=2014,
+        uitzonderings_geboortejaar=2016,
+        geslacht="g",
+        lidgeldklasse=klasse_3_maal,
+    )
+    # Create mannen jeugd - 2 maal - jong
+    Ploeg.objects.create(
+        seizoen=t_seizoen,
+        naam="Mannen Jeugd (2 maal) - 2",
+        korte_naam="MJ2-2",
+        min_geboortejaar=2013,
+        max_geboortejaar=2014,
+        uitzonderings_geboortejaar=2016,
+        geslacht="m",
+        lidgeldklasse=klasse_2_maal,
+    )
+    # Create vrouwen jeugd - 2 maal - jong
+    Ploeg.objects.create(
+        seizoen=t_seizoen,
+        naam="Vrouwen Jeugd (2 maal) - 2",
+        korte_naam="VJ2-2",
+        min_geboortejaar=2013,
+        max_geboortejaar=2014,
+        uitzonderings_geboortejaar=2016,
+        geslacht="v",
+        lidgeldklasse=klasse_2_maal,
+    )
+    # Create gemengd jeugd - 2 maal - jong
+    Ploeg.objects.create(
+        seizoen=t_seizoen,
+        naam="Gemengd Jeugd (2 maal) - 2",
+        korte_naam="GJ2-2",
+        min_geboortejaar=2013,
+        max_geboortejaar=2014,
+        uitzonderings_geboortejaar=2016,
+        geslacht="g",
         lidgeldklasse=klasse_2_maal,
     )
 

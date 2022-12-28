@@ -118,11 +118,17 @@ class PloegLid(models.Model):
             self.ploeg.geslacht != "g"
             and self.ploeg.geslacht != self.lid.geslacht
         ):
-            logger.error(
-                f"Lid {self.lid.voornaam} {self.lid.familienaam} kan niet in ploeg {self.ploeg.naam} zitten, aangezien het lid het verkeerde geslacht heeft."
-            )
             raise ValidationError(
                 f"Lid {self.lid.voornaam} {self.lid.familienaam} kan niet in ploeg {self.ploeg.naam} zitten, aangezien het lid het verkeerde geslacht heeft."
+            )
+
+        if (
+            not self.ploeg.min_geboortejaar
+            <= self.lid.geboortedatum.year
+            <= self.ploeg.uitzonderings_geboortejaar
+        ):
+            raise ValidationError(
+                f"Lid {self.lid.voornaam + ' ' + self.lid.familienaam} kan niet in ploeg {self.ploeg.naam} zitten, aangezien het lid niet de correcte leeftijd heeft."
             )
 
     def save(self, *args, **kwargs):

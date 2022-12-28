@@ -46,13 +46,7 @@ class GenericBetalingTestCase(GenericTestCase):
 class GenericPloegLidTestCase(TestCase):
     """
     This is a generic test case for the tests of the creation of ploegleden
-    It loads the ploegen and the leden.
-    It creates 5 ploegen:
-    - Jongeren gemengd
-    - Jongeren jongens
-    - Jongeren meisjes
-    - Senioren mannen
-    - Senioren vrouwen
+    It creates 6 ploegen:
 
     It also creates 4 leden:
     - John Doe, 2000, m
@@ -66,6 +60,4 @@ class GenericPloegLidTestCase(TestCase):
     fixtures = [
         "fixture_functie_lgklasse.json",
         "fixture_seizoen.json",
-        "fixture_ploeg.json",
-        "fixture_lid.json",
     ]
