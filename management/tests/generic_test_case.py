@@ -40,6 +40,24 @@ class GenericBetalingTestCase(GenericTestCase):
     fixtures = [
         "fixture_functie_lgklasse.json",
         "fixture_seizoen.json",
-        "fixture_ploeg.json",
-        "fixture_lid.json",
+    ]
+
+
+class GenericPloegLidTestCase(TestCase):
+    """
+    This is a generic test case for the tests of the creation of ploegleden
+    It creates 6 ploegen:
+
+    It also creates 4 leden:
+    - John Doe, 2000, m
+    - Jane Doe, 2001, v
+    - Emma Smedt, 2014, v
+    - Paul Smith, 2014, m
+
+    Inherits from django.test.TestCase
+    """
+
+    fixtures = [
+        "fixture_functie_lgklasse.json",
+        "fixture_seizoen.json",
     ]

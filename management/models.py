@@ -1,5 +1,7 @@
+import logging
 from datetime import datetime
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from localflavor.generic.models import IBANField
 from phonenumber_field.modelfields import PhoneNumberField
@@ -18,6 +20,8 @@ PLOEG_GESLACHT_CHOICES = [
     (VROUW, "Vrouw"),
     (GEMENGD, "Gemengd"),
 ]
+
+logger = logging.getLogger(__name__)
 
 
 class Functie(models.Model):
@@ -100,6 +104,45 @@ class PloegLid(models.Model):
         return "Ploeg: {} -- Lid: {} ({})".format(
             self.ploeg, self.lid, self.functie
         )
+
+    def clean(self) -> None:
+        """
+        Clean method. Called during validation of the model during instance creation.
+        Overwritten to implement custom validation logic.
+
+        Raises:
+            ValidationError: Raises a ValidationError when validation fails
+        """
+        if (
+            self.ploeg.geslacht != "g"
+            and self.ploeg.geslacht != self.lid.geslacht
+        ):
+            raise ValidationError(
+                f"Lid {self.lid.voornaam} {self.lid.familienaam} kan \
+                    niet in ploeg {self.ploeg.naam} zitten, aangezien \
+                        het lid het verkeerde geslacht heeft."
+            )
+
+        if (
+            not self.ploeg.min_geboortejaar
+            <= self.lid.geboortedatum.year
+            <= self.ploeg.uitzonderings_geboortejaar
+        ):
+            raise ValidationError(
+                f"Lid {self.lid.voornaam + ' ' + self.lid.familienaam} kan \
+                    niet in ploeg {self.ploeg.naam} zitten, aangezien het \
+                        lid niet de correcte leeftijd heeft."
+            )
+
+    def save(self, *args, **kwargs):
+        """
+        Overwrite the save method to include a full validation
+
+        Returns:
+            _type_: _description_
+        """
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
 
 class Lid(models.Model):
