@@ -1,4 +1,4 @@
-name: Run tests for betalingen
+name: Run tests for PloegLid-relatie
 
 on: [pull_request]
 
@@ -25,4 +25,4 @@ jobs:
         run: poetry install --no-interaction --no-root --without dev
       - name: Run tests
         run: |
-          poetry run python manage.py test management --parallel --settings=donza.settings.test --tag=betaling
+          poetry run python manage.py test management --parallel --settings=donza.settings.test --tag=ploeglid

@@ -1,6 +1,7 @@
 import logging
 
 from django.core.exceptions import ValidationError
+from django.test import tag
 
 from management.tests.generic_test_case import GenericPloegLidTestCase
 from management.models import Functie, Lid, Ploeg, PloegLid
@@ -28,6 +29,7 @@ class PloegLidTestCase(GenericPloegLidTestCase):
         create_lid_personas()
         return super().setUp()
 
+    @tag("ploeglid")
     def test_ploeglid_succesful(self):
         """
         Test the succesful creation of ploeglid relaties
@@ -84,6 +86,7 @@ class PloegLidTestCase(GenericPloegLidTestCase):
                 "Validation Error bij het toewijzen van correcte PloegLid relaties"
             )
 
+    @tag("ploeglid")
     def test_ploeglid_geslacht(self):
         """
         Test dat een lid van een bepaald geslacht niet in een ploeg van het andere geslacht kan terechtkomen.
@@ -127,6 +130,7 @@ class PloegLidTestCase(GenericPloegLidTestCase):
                 ploeg=vrouwen_jeugd_jong, lid=paul, functie=speler
             )
 
+    @tag("ploeglid")
     def test_ploeglid_leeftijd(self):
         """
         Test dat een ploeglid van een bepaalde leeftijd niet in een ploeg kan terechtkomen die niet voor zijn leeftijd is.

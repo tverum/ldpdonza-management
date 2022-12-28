@@ -1,5 +1,7 @@
 import logging
 
+from django.test import tag
+
 from management.main.betalingen import genereer_betaling, get_discount
 from management.models import (
     Betaling,
@@ -40,6 +42,7 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         create_lid_personas()
         return super().setUp()
 
+    @tag("betaling")
     def test_generate_no_team(self):
         """
         Test that no betalingen are generated when a person is not in a team.
@@ -57,6 +60,7 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         betalingen = Betaling.objects.all()
         self.assertEqual(len(betalingen), 0)
 
+    @tag("betaling")
     def test_generate_single_team_1(self):
         """
         Test the successful generation of Betaling for a single person in a single team.
@@ -88,6 +92,7 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         self.assertEqual(res_betaling.seizoen, seizoen)
         self.assertNotEqual(res_betaling.mededeling, "")
 
+    @tag("betaling")
     def test_generate_single_team_2(self):
         """
         Test that no betaling is generated when the member is only in a seniors team.
@@ -113,6 +118,7 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         betalingen = Betaling.objects.all()
         self.assertEqual(len(betalingen), 0)
 
+    @tag("betaling")
     def test_generate_multiple_teams_1(self):
         """
         Test the succesful generation of Betaling for a single person who is in multiple teams.
@@ -154,6 +160,7 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         self.assertEqual(res_betaling.seizoen, huidig_seizoen)
         self.assertNotEqual(res_betaling.mededeling, "")
 
+    @tag("betaling")
     def test_generate_multiple_teams_2(self):
         """
         Test the succesful generation of Betaling for a single person in multiple teams.
@@ -192,6 +199,7 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         self.assertEqual(res_betaling.seizoen, seizoen)
         self.assertNotEqual(res_betaling.mededeling, "")
 
+    @tag("betaling")
     def test_generate_with_family_member(self):
         """
         Test the successful generation of Betaling for a person that has an older sibling at the club.
@@ -237,6 +245,7 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
             jong_betaling.origineel_bedrag, TEST_LIDGELD_3MAAL - 50
         )
 
+    @tag("betaling")
     def test_generate_with_family_member_2(self):
         """
         Test that when both siblings play for senior teams, ther is no betaling generated.
