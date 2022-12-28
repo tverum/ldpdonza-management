@@ -20,17 +20,28 @@ LOGGING = {
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
+            "formatter": "simple",
         }
     },
     "root": {
         "handlers": ["console"],
-        "level": "INFO",
+        "level": "WARN",
     },
     "loggers": {
         "django": {
             "handlers": ["console"],
             "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
             "propagate": False,
+        },
+    },
+    "formatters": {
+        "verbose": {
+            "format": "{filename}{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{filename} {levelname} {message}",
+            "style": "{",
         },
     },
 }

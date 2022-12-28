@@ -4,13 +4,13 @@
         "pk": 1,
         "fields": {
             "seizoen": 1,
-            "naam": "Testploeg 1",
+            "naam": "Gemengd Jeugd",
             "korte_naam": "TP1",
             "min_geboortejaar": 2013,
             "max_geboortejaar": 2014,
-            "uitzonderings_geboortejaar": 2014,
+            "uitzonderings_geboortejaar": 2016,
             "geslacht": "g",
-            "lidgeldklasse": 1,
+            "lidgeldklasse": 4,
             "kenmerken": []
         }
     },
@@ -19,12 +19,12 @@
         "pk": 2,
         "fields": {
             "seizoen": 1,
-            "naam": "Testploeg 2",
+            "naam": "Mannen Jeugd (3 maal)",
             "korte_naam": "TP2",
-            "min_geboortejaar": 2013,
-            "max_geboortejaar": 2014,
-            "uitzonderings_geboortejaar": 2014,
-            "geslacht": "g",
+            "min_geboortejaar": 2002,
+            "max_geboortejaar": 2003,
+            "uitzonderings_geboortejaar": 2005,
+            "geslacht": "m",
             "lidgeldklasse": 2,
             "kenmerken": []
         }
@@ -34,13 +34,13 @@
         "pk": 3,
         "fields": {
             "seizoen": 1,
-            "naam": "Testploeg 3",
+            "naam": "Vrouwen Jeugd (3 maal)",
             "korte_naam": "TP3",
-            "min_geboortejaar": 2013,
-            "max_geboortejaar": 2014,
-            "uitzonderings_geboortejaar": 2014,
-            "geslacht": "g",
-            "lidgeldklasse": 3,
+            "min_geboortejaar": 2002,
+            "max_geboortejaar": 2003,
+            "uitzonderings_geboortejaar": 2005,
+            "geslacht": "v",
+            "lidgeldklasse": 2,
             "kenmerken": []
         }
     },
@@ -49,13 +49,13 @@
         "pk": 4,
         "fields": {
             "seizoen": 1,
-            "naam": "Testploeg 4",
+            "naam": "Mannen Senioren",
             "korte_naam": "TP4",
-            "min_geboortejaar": 2013,
-            "max_geboortejaar": 2014,
-            "uitzonderings_geboortejaar": 2014,
-            "geslacht": "g",
-            "lidgeldklasse": 4,
+            "min_geboortejaar": 0,
+            "max_geboortejaar": 1999,
+            "uitzonderings_geboortejaar": 2002,
+            "geslacht": "m",
+            "lidgeldklasse": 1,
             "kenmerken": []
         }
     },
@@ -64,13 +64,43 @@
         "pk": 5,
         "fields": {
             "seizoen": 1,
-            "naam": "Testploeg 5",
+            "naam": "Vrouwen Senioren",
             "korte_naam": "TP5",
-            "min_geboortejaar": 2013,
-            "max_geboortejaar": 2014,
-            "uitzonderings_geboortejaar": 2014,
-            "geslacht": "g",
-            "lidgeldklasse": 5,
+            "min_geboortejaar": 0,
+            "max_geboortejaar": 1999,
+            "uitzonderings_geboortejaar": 2002,
+            "geslacht": "v",
+            "lidgeldklasse": 1,
+            "kenmerken": []
+        }
+    },
+    {
+        "model": "management.ploeg",
+        "pk": 6,
+        "fields": {
+            "seizoen": 1,
+            "naam": "Mannen Jeugd (2 maal)",
+            "korte_naam": "TP6",
+            "min_geboortejaar": 2002,
+            "max_geboortejaar": 2003,
+            "uitzonderings_geboortejaar": 2005,
+            "geslacht": "m",
+            "lidgeldklasse": 3,
+            "kenmerken": []
+        }
+    },
+    {
+        "model": "management.ploeg",
+        "pk": 7,
+        "fields": {
+            "seizoen": 1,
+            "naam": "Vrouwen Jeugd (2 maal)",
+            "korte_naam": "TP3",
+            "min_geboortejaar": 2002,
+            "max_geboortejaar": 2003,
+            "uitzonderings_geboortejaar": 2005,
+            "geslacht": "v",
+            "lidgeldklasse": 3,
             "kenmerken": []
         }
     }

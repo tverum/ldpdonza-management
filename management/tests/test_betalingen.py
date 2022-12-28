@@ -5,19 +5,19 @@ from management.models import (
     Betaling,
     Functie,
     Lid,
-    LidgeldKlasse,
     Ploeg,
     PloegLid,
     Seizoen,
 )
 from management.tests.generic_test_case import GenericBetalingTestCase
+from management.tests.util import (
+    TEST_LIDGELD_2MAAL,
+    create_basic_teams,
+    create_lid_personas,
+    TEST_LIDGELD_3MAAL,
+)
 
 logger = logging.getLogger(__name__)
-
-TEST_LIDGELD_3MAAL = 360
-TEST_LIDGELD_2MAAL = 315
-TEST_LIDGELD_STARTERS = 200
-TEST_LIDGELD_SENIOREN = 0
 
 
 class GenerateBetalingTestCase(GenericBetalingTestCase):
@@ -31,6 +31,14 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         - Single person, multiple teams (senior + youth). Betaling should contain amount of youth.
     """
 
+    def setUp(self) -> None:
+        """
+        Setup function.
+        Create the scaffolding to run the test.
+        """
+        create_basic_teams()
+        create_lid_personas()
+
     def test_generate_no_team(self):
         """
         Test that no betalingen are generated when a person is not in a team.
@@ -39,7 +47,7 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
             "Running test to check that no betalingen are generated when a person is not in a team"
         )
         seizoen = Seizoen.objects.get(pk=1)
-        lid = Lid.objects.get(pk=1)
+        lid = Lid.objects.get(voornaam="John", familienaam="Doe")
 
         # Genereer betaling
         genereer_betaling(lid=lid, seizoen=seizoen)
@@ -51,32 +59,29 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
     def test_generate_single_team_1(self):
         """
         Test the successful generation of Betaling for a single person in a single team.
+        In this case the team should be a paying team. So not MS or VS
         """
         logger.info(
             "Running test to check that a betaling is generated successfully when a person is in 1 team"
         )
-        # Add ploeglid to ploeg with specific lidgeldklasse
-        klasse = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_3MAAL)
         seizoen = Seizoen.objects.get(pk=1)
-        ploeg = Ploeg.objects.get(lidgeldklasse=klasse, seizoen=seizoen)
-        lid = Lid.objects.get(pk=1)
+        mannen_jeugd_3 = Ploeg.objects.get(korte_naam="MJ3")
+        john = Lid.objects.get(voornaam="John", familienaam="Doe")
 
         PloegLid.objects.create(
-            ploeg=ploeg, lid=lid, functie=Functie.objects.get(functie="Speler")
+            ploeg=mannen_jeugd_3,
+            lid=john,
+            functie=Functie.objects.get(functie="Speler"),
         )
 
         # Genereer betaling
-        genereer_betaling(lid=lid, seizoen=seizoen)
-        logger.info("There should be only 1 betaling")
+        genereer_betaling(lid=john, seizoen=seizoen)
         # Check that there is only 1 betaling generated
         betalingen = Betaling.objects.all()
         self.assertEqual(len(betalingen), 1)
 
-        logger.info(
-            "Betaling should have the correct member, amount, seizoen, and should have 0 pay. Next to this, the mededeling should not be empty"
-        )
         res_betaling = betalingen[0]
-        self.assertEqual(res_betaling.lid, lid)
+        self.assertEqual(res_betaling.lid, john)
         self.assertEqual(res_betaling.origineel_bedrag, TEST_LIDGELD_3MAAL)
         self.assertEqual(res_betaling.afgelost_bedrag, 0)
         self.assertEqual(res_betaling.seizoen, seizoen)
@@ -90,17 +95,18 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
             "Running test to check that no betaling is generated when the member is exclusively in a seniors team"
         )
         # Add ploeglid to ploeg with specific lidgeldklasse
-        klasse = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_SENIOREN)
         seizoen = Seizoen.objects.get(pk=1)
-        ploeg = Ploeg.objects.get(lidgeldklasse=klasse, seizoen=seizoen)
-        lid = Lid.objects.get(pk=1)
+        mannen_senioren = Ploeg.objects.get(korte_naam="MS")
+        john = Lid.objects.get(pk=1)
 
         PloegLid.objects.create(
-            ploeg=ploeg, lid=lid, functie=Functie.objects.get(functie="Speler")
+            ploeg=mannen_senioren,
+            lid=john,
+            functie=Functie.objects.get(functie="Speler"),
         )
 
         # Genereer betaling
-        genereer_betaling(lid=lid, seizoen=seizoen)
+        genereer_betaling(lid=john, seizoen=seizoen)
 
         # Check that there is only 1 betaling generated
         betalingen = Betaling.objects.all()
@@ -114,44 +120,37 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
             "Running test to check that when a member is in multiple teams, the correct amount is generated"
         )
         # Add the member to the 2 different teams
-        klasse_1 = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_3MAAL)
-        klasse_2 = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_2MAAL)
-        seizoen = Seizoen.objects.get(pk=1)
-        ploeg_1 = Ploeg.objects.get(lidgeldklasse=klasse_1, seizoen=seizoen)
-        ploeg_2 = Ploeg.objects.get(lidgeldklasse=klasse_2, seizoen=seizoen)
-        lid = Lid.objects.get(pk=1)
+        huidig_seizoen = Seizoen.objects.get(pk=1)
+        mannen_jeugd_3 = Ploeg.objects.get(korte_naam="MJ3")
+        mannen_jeugd_2 = Ploeg.objects.get(korte_naam="MJ2")
+        john = Lid.objects.get(voornaam="John", familienaam="Doe")
 
         PloegLid.objects.create(
-            ploeg=ploeg_1,
-            lid=lid,
+            ploeg=mannen_jeugd_3,
+            lid=john,
             functie=Functie.objects.get(functie="Speler"),
         )
         PloegLid.objects.create(
-            ploeg=ploeg_2,
-            lid=lid,
+            ploeg=mannen_jeugd_2,
+            lid=john,
             functie=Functie.objects.get(functie="Speler"),
         )
 
         # Genereer betaling
-        genereer_betaling(lid=lid, seizoen=seizoen)
+        genereer_betaling(lid=john, seizoen=huidig_seizoen)
 
-        logger.info("Check to see that there is only a single betaling")
         # Check that there is only 1 betaling generated
         betalingen = Betaling.objects.all()
         self.assertEqual(len(betalingen), 1)
-
-        logger.info(
-            "Check to see that the betaling has the highest of the 2 bedragen listed."
-        )
         # Betaling should be for the highest of the 2 bedragen
         res_betaling = betalingen[0]
-        self.assertEqual(res_betaling.lid, lid)
+        self.assertEqual(res_betaling.lid, john)
         self.assertEqual(
             res_betaling.origineel_bedrag,
             max(TEST_LIDGELD_3MAAL, TEST_LIDGELD_2MAAL),
         )
         self.assertEqual(res_betaling.afgelost_bedrag, 0)
-        self.assertEqual(res_betaling.seizoen, seizoen)
+        self.assertEqual(res_betaling.seizoen, huidig_seizoen)
         self.assertNotEqual(res_betaling.mededeling, "")
 
     def test_generate_multiple_teams_2(self):
@@ -160,37 +159,33 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         In this case, the person is in a) a youth team, and b) a senior team.
         """
         logger.info(
-            "Running a test to check that when a person is in a youth team and a senior team, the correct amount is generated"
+            "Running a test to check that when a person is in a youth team and a senior team, the correct amount is generated."
         )
-        # Add the member to the 2 different teams
-        klasse_1 = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_3MAAL)
-        klasse_2 = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_SENIOREN)
         seizoen = Seizoen.objects.get(pk=1)
-        ploeg_1 = Ploeg.objects.get(lidgeldklasse=klasse_1, seizoen=seizoen)
-        ploeg_2 = Ploeg.objects.get(lidgeldklasse=klasse_2, seizoen=seizoen)
-        lid = Lid.objects.get(pk=1)
+        mannen_jeugd_3 = Ploeg.objects.get(korte_naam="MJ3")
+        mannen_senioren = Ploeg.objects.get(korte_naam="MS")
+        john = Lid.objects.get(voornaam="John", familienaam="Doe")
 
         PloegLid.objects.create(
-            ploeg=ploeg_1,
-            lid=lid,
+            ploeg=mannen_jeugd_3,
+            lid=john,
             functie=Functie.objects.get(functie="Speler"),
         )
         PloegLid.objects.create(
-            ploeg=ploeg_2,
-            lid=lid,
+            ploeg=mannen_senioren,
+            lid=john,
             functie=Functie.objects.get(functie="Speler"),
         )
 
         # Genereer betaling
-        genereer_betaling(lid=lid, seizoen=seizoen)
+        genereer_betaling(lid=john, seizoen=seizoen)
 
         # Check that there is only 1 betaling generated
         betalingen = Betaling.objects.all()
         self.assertEqual(len(betalingen), 1)
 
-        # Betaling should be for the highest of the 2 bedragen
         res_betaling = betalingen[0]
-        self.assertEqual(res_betaling.lid, lid)
+        self.assertEqual(res_betaling.lid, john)
         self.assertEqual(res_betaling.origineel_bedrag, TEST_LIDGELD_3MAAL)
         self.assertEqual(res_betaling.afgelost_bedrag, 0)
         self.assertEqual(res_betaling.seizoen, seizoen)
@@ -204,73 +199,69 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         logger.info(
             "Running a test to check that when a person has (an) older sibling(s), they get a 50 euro discount."
         )
-        klasse_1 = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_3MAAL)
-        klasse_2 = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_2MAAL)
+
         seizoen = Seizoen.objects.get(pk=1)
-        ploeg_1 = Ploeg.objects.get(lidgeldklasse=klasse_1, seizoen=seizoen)
-        ploeg_2 = Ploeg.objects.get(lidgeldklasse=klasse_2, seizoen=seizoen)
-        oudste_lid = Lid.objects.get(pk=1)
-        jongste_lid = Lid.objects.get(pk=2)
+        mannen_jeugd_3 = Ploeg.objects.get(korte_naam="MJ3")
+        vrouwen_jeugd_3 = Ploeg.objects.get(korte_naam="VJ3")
+        john = Lid.objects.get(voornaam="John", familienaam="Doe")
+        jane = Lid.objects.get(voornaam="Jane", familienaam="Doe")
 
         PloegLid.objects.create(
-            ploeg=ploeg_1,
-            lid=oudste_lid,
+            ploeg=mannen_jeugd_3,
+            lid=john,
             functie=Functie.objects.get(functie="Speler"),
         )
         PloegLid.objects.create(
-            ploeg=ploeg_2,
-            lid=jongste_lid,
+            ploeg=vrouwen_jeugd_3,
+            lid=jane,
             functie=Functie.objects.get(functie="Speler"),
         )
 
-        discount_oudste = get_discount(oudste_lid, seizoen)
-        discount_jongste = get_discount(jongste_lid, seizoen)
-        genereer_betaling(lid=oudste_lid, seizoen=seizoen)
-        genereer_betaling(lid=jongste_lid, seizoen=seizoen)
+        discount_oudste = get_discount(john, seizoen)
+        discount_jongste = get_discount(jane, seizoen)
+        genereer_betaling(lid=john, seizoen=seizoen)
+        genereer_betaling(lid=jane, seizoen=seizoen)
 
         # Two betalingen should be generated
         betalingen = Betaling.objects.all()
         self.assertEqual(len(betalingen), 2)
 
         # Check betaling voor oudste lid
-        oud_betaling = betalingen.get(lid=oudste_lid)
-        jong_betaling = betalingen.get(lid=jongste_lid)
+        oud_betaling = betalingen.get(lid=john)
+        jong_betaling = betalingen.get(lid=jane)
         self.assertEqual(discount_oudste, 0)
         self.assertEqual(discount_jongste, 50)
         self.assertEqual(oud_betaling.origineel_bedrag, TEST_LIDGELD_3MAAL)
         self.assertEqual(
-            jong_betaling.origineel_bedrag, TEST_LIDGELD_2MAAL - 50
+            jong_betaling.origineel_bedrag, TEST_LIDGELD_3MAAL - 50
         )
 
     def test_generate_with_family_member_2(self):
         """
-        Test that when both siblings play for senior teams, their is no betaling generated.
+        Test that when both siblings play for senior teams, ther is no betaling generated.
         """
         logger.info(
             "Running a test case to chack that when 2 siblings play in senior teams, still no betaling is generated."
         )
-        klasse_1 = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_SENIOREN)
-        klasse_2 = LidgeldKlasse.objects.get(lidgeld=TEST_LIDGELD_SENIOREN)
         seizoen = Seizoen.objects.get(pk=1)
-        ploeg_1 = Ploeg.objects.get(lidgeldklasse=klasse_1, seizoen=seizoen)
-        ploeg_2 = Ploeg.objects.get(lidgeldklasse=klasse_2, seizoen=seizoen)
-        oudste_lid = Lid.objects.get(pk=1)
-        jongste_lid = Lid.objects.get(pk=2)
+        mannen_senioren = Ploeg.objects.get(korte_naam="MS")
+        vrouwen_senioren = Ploeg.objects.get(korte_naam="VS")
+        john = Lid.objects.get(voornaam="John", familienaam="Doe")
+        jane = Lid.objects.get(voornaam="Jane", familienaam="Doe")
 
         PloegLid.objects.create(
-            ploeg=ploeg_1,
-            lid=oudste_lid,
+            ploeg=mannen_senioren,
+            lid=john,
             functie=Functie.objects.get(functie="Speler"),
         )
         PloegLid.objects.create(
-            ploeg=ploeg_2,
-            lid=jongste_lid,
+            ploeg=vrouwen_senioren,
+            lid=jane,
             functie=Functie.objects.get(functie="Speler"),
         )
 
-        genereer_betaling(lid=oudste_lid, seizoen=seizoen)
-        genereer_betaling(lid=jongste_lid, seizoen=seizoen)
+        genereer_betaling(lid=john, seizoen=seizoen)
+        genereer_betaling(lid=jane, seizoen=seizoen)
 
-        # Two betalingen should be generated
         betalingen = Betaling.objects.all()
         self.assertEqual(len(betalingen), 0)
