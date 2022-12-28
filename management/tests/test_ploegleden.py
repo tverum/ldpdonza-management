@@ -3,8 +3,8 @@ import logging
 from django.core.exceptions import ValidationError
 from django.test import tag
 
-from management.tests.generic_test_case import GenericPloegLidTestCase
 from management.models import Functie, Lid, Ploeg, PloegLid
+from management.tests.generic_test_case import GenericPloegLidTestCase
 from management.tests.util import create_basic_teams, create_lid_personas
 
 logger = logging.getLogger(__name__)
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class PloegLidTestCase(GenericPloegLidTestCase):
     """
     Testcase to check that only correct PloegLid-relations can be created.
-    This is a proxy to make sure that members of the club can only end up in teams that are suited for them.
+    Proxyo make sure that members only end up in teams that are suited for them.
     For this we take into account:
     - Age
     - Gender
@@ -89,7 +89,8 @@ class PloegLidTestCase(GenericPloegLidTestCase):
     @tag("ploeglid")
     def test_ploeglid_geslacht(self):
         """
-        Test dat een lid van een bepaald geslacht niet in een ploeg van het andere geslacht kan terechtkomen.
+        Test dat een lid van een bepaald geslacht \
+            niet in een ploeg van het andere geslacht kan terechtkomen.
         """
         mannen_jeugd_oud = Ploeg.objects.get(korte_naam="MJ3")
         vrouwen_jeugd_oud = Ploeg.objects.get(korte_naam="VJ3")
@@ -133,7 +134,8 @@ class PloegLidTestCase(GenericPloegLidTestCase):
     @tag("ploeglid")
     def test_ploeglid_leeftijd(self):
         """
-        Test dat een ploeglid van een bepaalde leeftijd niet in een ploeg kan terechtkomen die niet voor zijn leeftijd is.
+        Test dat een ploeglid van een bepaalde leeftijd \
+            niet in een ploeg kan terechtkomen die niet voor zijn leeftijd is.
         """
         gemengd_jeugd_oud = Ploeg.objects.get(korte_naam="GJ3")
         mannen_jeugd_oud = Ploeg.objects.get(korte_naam="MJ3")

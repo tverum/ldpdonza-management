@@ -3,20 +3,13 @@ import logging
 from django.test import tag
 
 from management.main.betalingen import genereer_betaling, get_discount
-from management.models import (
-    Betaling,
-    Functie,
-    Lid,
-    Ploeg,
-    PloegLid,
-    Seizoen,
-)
+from management.models import Betaling, Functie, Lid, Ploeg, PloegLid, Seizoen
 from management.tests.generic_test_case import GenericBetalingTestCase
 from management.tests.util import (
     TEST_LIDGELD_2MAAL,
+    TEST_LIDGELD_3MAAL,
     create_basic_teams,
     create_lid_personas,
-    TEST_LIDGELD_3MAAL,
 )
 
 logger = logging.getLogger(__name__)
@@ -27,10 +20,10 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
     Testcase to check the successful generation of betalingen.
     To test:
         - Single person, no team. There should be no betaling generated
-        - Single person, single team (youth team). Betaling should contain the correct amount
-        - Single person, single team (senior team). No betaling should be generated
-        - Single person, multiple teams (youth teams). Betaling should contain the highest of the 2 amounts.
-        - Single person, multiple teams (senior + youth). Betaling should contain amount of youth.
+        - 1 person, 1 team (youth team). Betaling should contain the correct amount
+        - 1 person, 1 team (senior team). No betaling should be generated
+        - 1 person, ++ teams (youth teams). Should contain the highest amount.
+        - 1 person, ++ teams (s + y). Betaling should contain amount of youth.
     """
 
     def setUp(self) -> None:
@@ -48,7 +41,8 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         Test that no betalingen are generated when a person is not in a team.
         """
         logger.info(
-            "Running test to check that no betalingen are generated when a person is not in a team"
+            "Running test to check that no betalingen are generated \
+                when a person is not in a team"
         )
         seizoen = Seizoen.objects.get(pk=1)
         lid = Lid.objects.get(voornaam="John", familienaam="Doe")
@@ -67,7 +61,8 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         In this case the team should be a paying team. So not MS or VS
         """
         logger.info(
-            "Running test to check that a betaling is generated successfully when a person is in 1 team"
+            "Running test to check that a betaling is generated \
+                successfully when a person is in 1 team"
         )
         seizoen = Seizoen.objects.get(pk=1)
         mannen_jeugd_3 = Ploeg.objects.get(korte_naam="MJ3")
@@ -98,7 +93,8 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         Test that no betaling is generated when the member is only in a seniors team.
         """
         logger.info(
-            "Running test to check that no betaling is generated when the member is exclusively in a seniors team"
+            "Running test to check that no betaling is generated \
+                when the member is exclusively in a seniors team"
         )
         # Add ploeglid to ploeg with specific lidgeldklasse
         seizoen = Seizoen.objects.get(pk=1)
@@ -121,10 +117,12 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
     @tag("betaling")
     def test_generate_multiple_teams_1(self):
         """
-        Test the succesful generation of Betaling for a single person who is in multiple teams.
+        Test the succesful generation of Betaling for a single person \
+            who is in multiple teams.
         """
         logger.info(
-            "Running test to check that when a member is in multiple teams, the correct amount is generated"
+            "Running test to check that when a member is in multiple teams, \
+                the correct amount is generated"
         )
         # Add the member to the 2 different teams
         huidig_seizoen = Seizoen.objects.get(pk=1)
@@ -167,7 +165,8 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
         In this case, the person is in a) a youth team, and b) a senior team.
         """
         logger.info(
-            "Running a test to check that when a person is in a youth team and a senior team, the correct amount is generated."
+            "Running a test to check that when a person is in a youth team \
+                and a senior team, the correct amount is generated."
         )
         seizoen = Seizoen.objects.get(pk=1)
         mannen_jeugd_3 = Ploeg.objects.get(korte_naam="MJ3")
@@ -202,11 +201,13 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
     @tag("betaling")
     def test_generate_with_family_member(self):
         """
-        Test the successful generation of Betaling for a person that has an older sibling at the club.
+        Test the successful generation of Betaling for a person \
+            that has an older sibling at the club.
         In this case, their should be a €50 discount.
         """
         logger.info(
-            "Running a test to check that when a person has (an) older sibling(s), they get a 50 euro discount."
+            "Running a test to check that when a person has (an) older sibling(s), \
+                they get a 50 euro discount."
         )
 
         seizoen = Seizoen.objects.get(pk=1)
@@ -248,10 +249,12 @@ class GenerateBetalingTestCase(GenericBetalingTestCase):
     @tag("betaling")
     def test_generate_with_family_member_2(self):
         """
-        Test that when both siblings play for senior teams, ther is no betaling generated.
+        Test that when both siblings play for senior teams, \
+            there is no betaling generated.
         """
         logger.info(
-            "Running a test case to chack that when 2 siblings play in senior teams, still no betaling is generated."
+            "Running a test case to chack that when 2 siblings \
+                play in senior teams, still no betaling is generated."
         )
         seizoen = Seizoen.objects.get(pk=1)
         mannen_senioren = Ploeg.objects.get(korte_naam="MS")

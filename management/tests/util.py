@@ -1,9 +1,9 @@
 import random
 import string
 from typing import List
-from management.models import Functie, Lid, LidgeldKlasse, Ploeg, Seizoen
-from management.main.utils import generate_uid
 
+from management.main.utils import generate_uid
+from management.models import Functie, Lid, LidgeldKlasse, Ploeg, Seizoen
 
 TEST_LIDGELD_3MAAL = 360
 TEST_LIDGELD_2MAAL = 315

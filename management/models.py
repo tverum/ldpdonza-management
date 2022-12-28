@@ -1,9 +1,8 @@
+import logging
 from datetime import datetime
 
-import logging
-
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.db import models
 from localflavor.generic.models import IBANField
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -119,7 +118,9 @@ class PloegLid(models.Model):
             and self.ploeg.geslacht != self.lid.geslacht
         ):
             raise ValidationError(
-                f"Lid {self.lid.voornaam} {self.lid.familienaam} kan niet in ploeg {self.ploeg.naam} zitten, aangezien het lid het verkeerde geslacht heeft."
+                f"Lid {self.lid.voornaam} {self.lid.familienaam} kan \
+                    niet in ploeg {self.ploeg.naam} zitten, aangezien \
+                        het lid het verkeerde geslacht heeft."
             )
 
         if (
@@ -128,7 +129,9 @@ class PloegLid(models.Model):
             <= self.ploeg.uitzonderings_geboortejaar
         ):
             raise ValidationError(
-                f"Lid {self.lid.voornaam + ' ' + self.lid.familienaam} kan niet in ploeg {self.ploeg.naam} zitten, aangezien het lid niet de correcte leeftijd heeft."
+                f"Lid {self.lid.voornaam + ' ' + self.lid.familienaam} kan \
+                    niet in ploeg {self.ploeg.naam} zitten, aangezien het \
+                        lid niet de correcte leeftijd heeft."
             )
 
     def save(self, *args, **kwargs):
